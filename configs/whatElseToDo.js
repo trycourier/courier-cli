@@ -64,13 +64,23 @@ const whatElseToDoPrompt = () => {
     inquirer.prompt(whatElseToDoQuestions).then((answers) => {
         switch (answers.whatElseToDo) {
             case "goAgain":
-                 main();
-                
+                main();
+
                 break;
 
             case "viewLogs":
-                const url = `https://app.courier.com/data/messages?message=${store.get('sentMessageId')}`;
-                console.log(url);
+                const logsURL = `https://app.courier.com/data/messages?message=${store.get('sentMessageId')}`;
+                console.log(logsURL);
+                break;
+
+            case "courierDocs":
+                const docsURL = `https://www.courier.com/docs`;
+                console.log(docsURL);
+                break;
+
+            case "howTosOnYoutube":
+                const youtubeURL = `https://www.youtube.com/channel/UCuONBIOzl-hypZ5qqWKDeeg`;
+                console.log(youtubeURL);
                 break;
 
             default:

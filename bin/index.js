@@ -59,7 +59,7 @@ const main = async () => {
                 randomJoke().then((joke) => console.log(joke))
                 setTimeout(() => {
                     clear()
-                    main()    
+                    main()
                 }, 10000)
                 break;
 
