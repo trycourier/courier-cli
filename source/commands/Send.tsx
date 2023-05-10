@@ -14,6 +14,12 @@ type TRecipient = {
   email: string;
 } | {
   phone_number: string;
+} | {
+  apn: {
+    token: string;
+  };
+} | {
+  firebaseToken: string;
 };
 
 interface IPayload {
@@ -38,12 +44,14 @@ type Params = {
   audience?: string;
   email?: string;
   tel?: string;
+  apn?: string;
+  fcm?: string;
   title?: string;
   body?: string;
   message?: string;
   channel?: string;
   channels?: string;
-  route?: string;
+  all?: boolean;
 }
 
 const constructPayload = (params: Params): IPayload => {
@@ -61,7 +69,13 @@ const constructPayload = (params: Params): IPayload => {
     to.push({ email: params.email})
   }
   if (params.tel) {
-    to.push({ phone_number: params.tel.toString()})
+    to.push({ phone_number: params.tel})
+  }
+  if (params.apn) {
+    to.push({ apn: { token: params.apn } })
+  }
+  if (params.fcm) {
+    to.push({ firebaseToken: params.fcm })
   }
 
   let content : { title?: string, body?: string } = {
@@ -77,30 +91,23 @@ const constructPayload = (params: Params): IPayload => {
     content.body = params.message
   }
 
-  let routing = undefined;
+  let routing : { channels: string[], method: string } = {
+    channels: [],
+    method: params.all ? 'all' : 'single'
+  };
   if (params.channel) {
-    routing = {
-      method: 'single',
-      channels: params.channel.split(',')
-    }
+    routing.channels = params.channel.split(',')
+  } else if (params.channels) {
+    routing.channels = params.channels.split(',')
   }
-  if (params.channels) {
-    routing = {
-      method: params.route || 'all',
-      channels: params.channels.split(',')
-    }
+  if (params.email && params.email.length) {
+    routing.channels.push('email')
   }
-  if (!routing && params.email && params.email.length) {
-    routing = {
-      method: 'single',
-      channels: ['email']
-    }
+  if (params.tel && params.tel.length) {
+    routing.channels.push('sms')
   }
-  if (!routing && params.tel && params.tel.length) {
-    routing = {
-      method: 'single',
-      channels: ['sms']
-    }
+  if ((params.apn && params.apn.length) || (params.fcm && params.fcm.length)) {
+    routing.channels.push('push')
   }
 
   const {_, user, list, audience, email, tel, title, body,
@@ -110,6 +117,7 @@ const constructPayload = (params: Params): IPayload => {
     message: {
       to: to.length === 1 ? to[0] : to,
       content,
+      routing: routing.channels.length ? routing : undefined,
       data
     }
 	};

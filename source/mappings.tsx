@@ -34,36 +34,40 @@ mappings.set('send', {
 	instructions: 'Send a notification to a user, list, or audience',
 	options: [
 		{
-			option: '--email',
-			value: '<email address>'
+			option: '--email <email address>',
+			value: ''
 		},
 		{
-			option: '--tel',
-			value: '<phone number>'
+			option: '--tel <phone number>',
+			value: ''
 		},
 		{
-			option: '--user',
-			value: '<user ID>'
+			option: '--user <user ID>',
+			value: ''
 		},
 		{
-			option: '--list',
-			value: '<list ID>'
+			option: '--list <list ID>',
+			value: ''
 		},
 		{
-			option: '--audience',
-			value: '<audience ID>'
+			option: '--audience <audience ID>',
+			value: ''
 		},
 		{
-			option: '--body',
-			value: '<body of the message>'
+			option: '--body <message body>',
+			value: ''
 		},
 		{
-			option: '--title',
-			value: '<title or subject of the message>'
+			option: '--title <message title/subject>',
+			value: ''
 		},
 		{
-			option: '--channel',
-			value: '<which channel to send through: email, push, sms, etc.>'
+			option: '--channels <channel>',
+			value: 'comma-delimted list of channels to send to'
+		},
+		{
+			option: '--all',
+			value: 'send to all channels for each recipient (default is "single")'
 		}
 	],
 	example: `courier send --tel 555-867-5309 --body "Hey Jenny\\!"`,
@@ -76,8 +80,8 @@ mappings.set('events:track', {
 	instructions: 'Send an event to test your Courier Automations',
 	options: [
 		{
-			option: '--<key>',
-			value: '<value>'
+			option: '--<key> <value>',
+			value: ''
 		}
 	],
 	example: `courier events:track EXAMPLE_EVENT user123 --name "Pip the Pigeon"`,
