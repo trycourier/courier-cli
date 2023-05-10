@@ -1,0 +1,47 @@
+import React, { useEffect, useState } from 'react';
+import { Text } from 'ink';
+import spinners from 'cli-spinners';
+
+/*
+some of my favorites:
+- spinners.dots
+- spinners.triangle
+- spinners.binary
+- spinners.arc
+- spinners.arrow
+- spinners.bouncingBar
+- spinners.pong
+- spinners.aesthetic
+*/
+const spinner = spinners.aesthetic;
+const spinnerColor = '#FF5E5E';
+const textColor = 'white';
+
+type Props = {
+	text?: string;
+}
+
+export default ({ text }: Props) => {
+	const [index, setIndex] = useState(0);
+
+	useEffect(() => {
+		const timer = setInterval(() => {
+			setIndex(i => {
+				if ((i + 1) >= spinner.frames.length) {
+					return 0;
+				} else {
+					return i + 1;
+				}
+			});
+		}, spinner.interval);
+
+		return () => {
+			clearInterval(timer);
+		};
+	}, []);
+
+	return <Text>
+		<Text bold={true} color={spinnerColor}>{spinner.frames[index]}</Text>
+		{text && <Text color={textColor}> {text}</Text>}
+	</Text>
+}
