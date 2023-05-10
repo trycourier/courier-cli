@@ -42,7 +42,7 @@ type Params = {
   body?: string;
   message?: string;
   channel?: string;
-  channels?: string[];
+  channels?: string;
   route?: string;
 }
 
@@ -81,13 +81,13 @@ const constructPayload = (params: Params): IPayload => {
   if (params.channel) {
     routing = {
       method: 'single',
-      channels: [params.channel]
+      channels: params.channel.split(',')
     }
   }
   if (params.channels) {
     routing = {
       method: params.route || 'all',
-      channels: [params.channels]
+      channels: params.channels.split(',')
     }
   }
   if (!routing && params.email && params.email.length) {
