@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Text} from 'ink';
+import {Box, Text} from 'ink';
 import Spinner from '../components/Spinner.js';
 import UhOh from '../components/UhOh.js';
 import api from '../lib/api.js';
@@ -19,14 +19,13 @@ export default ({params}: {params: any}) => {
 	}
 
 	const {_, ...properties} = params;
+	const body = {
+		event_id: eventId,
+		user_id: userId,
+		properties,
+	};
 
 	useEffect(() => {
-		const body = {
-			event_id: eventId,
-			user_id: userId,
-			properties,
-		};
-		console.log(body);
 
 		api('/events/track', 'POST', {
 			body: JSON.stringify(body),
@@ -37,10 +36,20 @@ export default ({params}: {params: any}) => {
 	}, []);
 
 	if (error) {
-		return <UhOh text={error} />;
+		return (
+			<Box flexDirection='column'>
+				<UhOh text={error} />
+				<Text>{JSON.stringify(body, undefined, '  ')}</Text>
+			</Box>
+		);
 	} else if (resp) {
 		return <Text color="green">Success 🎉</Text>;
 	} else {
-		return <Spinner text="air-mailing those bits & bytes..." />;
+		return (
+			<Box flexDirection='column'>
+				<Spinner text="air-mailing those bits & bytes..." />
+				<Text>{JSON.stringify(body, undefined, '  ')}</Text>
+			</Box>
+		);
 	}
 };
