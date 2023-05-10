@@ -1,25 +1,37 @@
+interface IRequest {
+  url: string;
+  method: string;
+  body?: object | string;
+	options?: RequestInit
+}
+
 interface IResponse {
 	res: Response;
 	json?: any;
+  err?: Error
 }
 
-export default async (
-	path: string,
-	method: string,
-	options?: RequestInit,
-): Promise<IResponse> => {
+const isString = (s: any): boolean => {
+	return typeof s === 'string' || s instanceof String;
+}
+
+export default async (request: IRequest): Promise<IResponse> => {
 	const baseUrl = process.env['COURIER_DOMAIN'] || 'https://api.courier.com';
-	return fetch(`${baseUrl}${path}`, {
-		method,
+	return fetch(`${baseUrl}${request.url}`, {
+		method: request.method,
 		headers: {
 			Authorization: `Bearer ${process.env['COURIER_API_KEY']}`,
 			'Content-Type': 'application/json',
 			'User-Agent': `courier-cli/0.0.1`,
 		},
-		...options,
+		body: request.body && !isString(request.body) ? JSON.stringify(request.body) : undefined,
+		...request.options,
 	}).then(res => {
 		if (res.status > 400) {
-			throw new Error(`${res.status}: ${res.statusText}`);
+			return {
+				res,
+				err: new Error(`${res.status}: ${res.statusText}`)
+			}
 		} else if (res.status === 204) {
 			return {res};
 		} else {

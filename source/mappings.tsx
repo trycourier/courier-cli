@@ -24,7 +24,7 @@ mappings.set('whoami', {
 	},
 });
 mappings.set('send', {
-	instructions: 'Send a message',
+	instructions: 'Send a notification to a user, list, or audience',
 	component: params => {
 		return <Send params={params} />;
 	},

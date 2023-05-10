@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Text} from 'ink';
+import {Box, Text} from 'ink';
 import spinners from 'cli-spinners';
 import constants from '../constants.js';
 
@@ -42,11 +42,11 @@ export default ({text}: Props) => {
 	}, []);
 
 	return (
-		<Text>
+		<Box borderStyle="classic" borderColor="gray">
 			<Text bold={true} color={spinnerColor}>
 				{spinner.frames[index]}
 			</Text>
 			{text && <Text color={textColor}> {text}</Text>}
-		</Text>
+		</Box>
 	);
 };

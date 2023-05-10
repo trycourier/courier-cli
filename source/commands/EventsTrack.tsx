@@ -1,12 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Text} from 'ink';
-import Spinner from '../components/Spinner.js';
+import {Box} from 'ink';
 import UhOh from '../components/UhOh.js';
+import Request from '../components/Request.js';
 import api from '../lib/api.js';
 
+interface IResponse {
+	res: Response,
+	json?: any,
+	err?: Error
+}
+
 export default ({params}: {params: any}) => {
-	const [resp, setResp] = useState<object | undefined>();
-	const [error, setError] = useState<string | undefined>();
+	const [resp, setResp] = useState<IResponse | undefined>();
 
 	const eventId = params?._?.[0];
 	if (!eventId) {
@@ -24,32 +29,19 @@ export default ({params}: {params: any}) => {
 		user_id: userId,
 		properties,
 	};
+	const request = {
+		method: 'POST',
+		url: '/events/track',
+		body: payload
+	};
 
 	useEffect(() => {
-
-		api('/events/track', 'POST', {
-			body: JSON.stringify(payload),
-		}).then(
-			({json}) => setResp(json),
-			(err: Error) => setError(err.message),
-		);
+		api(request).then((res) => setResp(res));
 	}, []);
 
-	if (error) {
-		return (
-			<Box flexDirection='column'>
-				<UhOh text={error} />
-				<Text>{JSON.stringify(payload, undefined, '  ')}</Text>
-			</Box>
-		);
-	} else if (resp) {
-		return <Text color="green">Success 🎉</Text>;
-	} else {
-		return (
-			<Box flexDirection='column'>
-				<Spinner text="air-mailing those bits & bytes..." />
-				<Text>{JSON.stringify(payload, undefined, '  ')}</Text>
-			</Box>
-		);
-	}
+	return <Box flexDirection='column'>
+		<Request request={request} response={resp} />
+		{resp && resp.json ? <>
+		</> : null}
+	</Box>;
 };
