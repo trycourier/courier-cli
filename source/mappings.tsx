@@ -25,7 +25,7 @@ mappings.set('help', {
 	},
 });
 mappings.set('whoami', {
-	instructions: 'Type "whoami" to see who you are.',
+	instructions: 'Display the currently authenticated workspace',
 	component: () => {
 		return <WhoAmI />;
 	},
