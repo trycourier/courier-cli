@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Text } from 'ink';
 import spinners from 'cli-spinners';
+import constants from '../constants.js'
 
 /*
 some of my favorites:
@@ -14,7 +15,7 @@ some of my favorites:
 - spinners.aesthetic
 */
 const spinner = spinners.aesthetic;
-const spinnerColor = '#FF5E5E';
+const spinnerColor = constants.colors.primary;
 const textColor = 'white';
 
 type Props = {

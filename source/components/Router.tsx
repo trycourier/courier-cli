@@ -1,8 +1,8 @@
 import React from 'react';
-import Help from "./Help.js";
+import Help from "../commands/Help.js";
 
 interface IMapping {
-  instructions: string;
+  instructions?: string;
   component: (params: (string | undefined)[]) => React.ReactElement;
 }
 

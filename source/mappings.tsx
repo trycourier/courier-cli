@@ -1,16 +1,15 @@
 import React from 'react';
-import Help from "./components/Help.js";
-import WhoAmI from "./components/WhoAmI.js";
+import Help from "./commands/Help.js";
+import WhoAmI from "./commands/WhoAmI.js";
 
 interface IMapping {
-  instructions: string;
+  instructions?: string;
   component: (params: (string | undefined)[]) => React.ReactElement;
 }
 
 const mappings: Map<string, IMapping> = new Map();
 
 mappings.set('help', {
-  instructions: 'Type "help" to see this list again.',
   component: () => { return <Help mappings={mappings} />; }
 });
 mappings.set('whoami', {

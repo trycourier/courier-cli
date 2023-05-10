@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Box } from 'ink';
-import Spinner from './Spinner.js';
-import KVP from './KVP.js';
-import UhOh from './UhOh.js';
+import Spinner from '../components/Spinner.js';
+import KVP from '../components/KVP.js';
+import UhOh from '../components/UhOh.js';
 import api from '../lib/api.js';
 
 interface IDebug {
@@ -26,24 +26,20 @@ export default () => {
   useEffect(() => {
     delay(2000)
     .then(() => api('/debug', 'POST'))
-    .then(res => {
-      if (res.status > 400) {
-        throw new Error(`${res.status}: ${res.statusText}`)
-      } else {
-        return res.json()
-      }
-    })
-    .then(json => setResp(json), (err: Error) => setError(err.message))
+    .then(
+      ({ json }) => setResp(json),
+      (err: Error) => setError(err.message)
+    );
   }, []);
 
   if (error) {
     return <UhOh text={error} />;
   } else if (resp) {
     return <Box flexDirection="column">
-      <KVP label="Workspace Name" value={resp.tenantName} />
-      <KVP label="Workspace ID" value={resp.tenantId} />
-      <KVP label="API Key Environment" value={resp.environment} />
-      <KVP label="API Key Scope" value={resp.scope} />
+      <KVP width={20} label="Workspace Name" value={resp.tenantName} />
+      <KVP width={20} label="Workspace ID" value={resp.tenantId} />
+      <KVP width={20} label="API Key Environment" value={resp.environment} />
+      <KVP width={20} label="API Key Scope" value={resp.scope} />
     </Box>
   } else {
     return <Spinner text="pondering your existence..." />
