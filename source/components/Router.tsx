@@ -1,27 +1,27 @@
 import React from 'react';
-import Help from "../commands/Help.js";
+import Help from '../commands/Help.js';
 
 interface IMapping {
-  instructions?: string;
-  component: (params: (string | undefined)[]) => React.ReactElement;
+	instructions?: string;
+	component: (params: (string | undefined)[]) => React.ReactElement;
 }
 
 type Props = {
-  args: string[];
-  mappings: Map<string, IMapping>;
-}
+	args: string[];
+	mappings: Map<string, IMapping>;
+};
 
 export default ({args, mappings}: Props) => {
-  if (!args.length || !args[0]) {
-    return <Help mappings={mappings} />;
-  }
+	if (!args.length || !args[0]) {
+		return <Help mappings={mappings} />;
+	}
 
-  const mapping = mappings.get(args[0]); 
-  const params = [, ...args];
+	const mapping = mappings.get(args[0]);
+	const params = [, ...args];
 
-  if (mapping) {
-    return mapping.component(params);
-  } else {
-    return <Help mappings={mappings} />;
-  }
-}
+	if (mapping) {
+		return mapping.component(params);
+	} else {
+		return <Help mappings={mappings} />;
+	}
+};

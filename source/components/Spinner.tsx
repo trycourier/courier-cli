@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Text } from 'ink';
+import React, {useEffect, useState} from 'react';
+import {Text} from 'ink';
 import spinners from 'cli-spinners';
-import constants from '../constants.js'
+import constants from '../constants.js';
 
 /*
 some of my favorites:
@@ -20,15 +20,15 @@ const textColor = 'white';
 
 type Props = {
 	text?: string;
-}
+};
 
-export default ({ text }: Props) => {
+export default ({text}: Props) => {
 	const [index, setIndex] = useState(0);
 
 	useEffect(() => {
 		const timer = setInterval(() => {
 			setIndex(i => {
-				if ((i + 1) >= spinner.frames.length) {
+				if (i + 1 >= spinner.frames.length) {
 					return 0;
 				} else {
 					return i + 1;
@@ -41,8 +41,12 @@ export default ({ text }: Props) => {
 		};
 	}, []);
 
-	return <Text>
-		<Text bold={true} color={spinnerColor}>{spinner.frames[index]}</Text>
-		{text && <Text color={textColor}> {text}</Text>}
-	</Text>
-}
+	return (
+		<Text>
+			<Text bold={true} color={spinnerColor}>
+				{spinner.frames[index]}
+			</Text>
+			{text && <Text color={textColor}> {text}</Text>}
+		</Text>
+	);
+};
