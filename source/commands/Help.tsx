@@ -5,7 +5,7 @@ import constants from '../constants.js';
 
 interface IMapping {
 	instructions?: string;
-	component: (params: (string | undefined)[]) => React.ReactElement;
+	component: (params?: any) => React.ReactElement;
 }
 
 export default ({mappings}: {mappings: Map<string, IMapping>}) => {
@@ -14,7 +14,6 @@ export default ({mappings}: {mappings: Map<string, IMapping>}) => {
 		<Box flexDirection="column">
 			<Text bold={true}>Usage</Text>
 			<Text>
-				{' '}
 				$ <Text color={constants.colors.primary}>courier</Text>{' '}
 				<Text color="gray">&lt;command&gt;</Text>
 				<Newline />
@@ -30,7 +29,7 @@ export default ({mappings}: {mappings: Map<string, IMapping>}) => {
 				return (
 					<KVP
 						key={k}
-						width={12}
+						width={22}
 						indent="  • "
 						label={k}
 						labelColor={constants.colors.primary}

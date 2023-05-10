@@ -17,7 +17,7 @@ $ npm install -g @trycourier/cli
 
 ### Requirements
 
-- Courier CLI has only been tested on node.js v20.1.0+
+- Courier CLI has only been tested on node.js v16+
 
 ## Authenticate the CLI
 
@@ -33,8 +33,8 @@ You can find your Courier API key in your [Courier Settings](https://app.courier
 
 - `courier whoami` – Display the currently authenticated workspace
 - `courier events:track` - Send an event to test your Courier Automations
-- `courier translate:pull` - Pull translation files from your Courier workspace
 - `courier translate:push` - Push translation files to your Courier workspace
+- `courier translate:pull` - Pull translation files from your Courier workspace
 
 For more details, run `courier help`.
 
