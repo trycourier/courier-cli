@@ -3,7 +3,7 @@ import Help from "./Help.js";
 
 interface IMapping {
   instructions: string;
-  component: any;
+  component: (params: (string | undefined)[]) => React.ReactElement;
 }
 
 type Props = {
@@ -17,8 +17,10 @@ export default ({args, mappings}: Props) => {
   }
 
   const mapping = mappings.get(args[0]); 
+  const params = [, ...args];
+
   if (mapping) {
-    return mapping.component();
+    return mapping.component(params);
   } else {
     return <Help mappings={mappings} />;
   }

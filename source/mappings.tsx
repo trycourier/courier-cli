@@ -4,7 +4,7 @@ import WhoAmI from "./components/WhoAmI.js";
 
 interface IMapping {
   instructions: string;
-  component: any;
+  component: (params: (string | undefined)[]) => React.ReactElement;
 }
 
 const mappings: Map<string, IMapping> = new Map();

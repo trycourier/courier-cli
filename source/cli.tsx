@@ -9,7 +9,14 @@ const CLI = async () => {
   const params = args(process.argv)
   const mappings = (await import('./mappings.js')).default;
   const Router = (await import('./components/Router.js')).default;
-  render(<Router args={params} mappings={mappings} />)
+  const UhOh = (await import('./components/UhOh.js')).default;
+
+  const apiKey = process.env['API_KEY'];
+  if (apiKey && apiKey.length) {
+    render(<Router args={params} mappings={mappings} />)
+  } else {
+    render(<UhOh text="No API_KEY specified; add that to your environment or ~/.courier file" />);
+  }
 }
 
 (async () => {
