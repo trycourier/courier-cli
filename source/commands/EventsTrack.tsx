@@ -19,7 +19,7 @@ export default ({params}: {params: any}) => {
 	}
 
 	const {_, ...properties} = params;
-	const body = {
+	const payload = {
 		event_id: eventId,
 		user_id: userId,
 		properties,
@@ -28,7 +28,7 @@ export default ({params}: {params: any}) => {
 	useEffect(() => {
 
 		api('/events/track', 'POST', {
-			body: JSON.stringify(body),
+			body: JSON.stringify(payload),
 		}).then(
 			({json}) => setResp(json),
 			(err: Error) => setError(err.message),
@@ -39,7 +39,7 @@ export default ({params}: {params: any}) => {
 		return (
 			<Box flexDirection='column'>
 				<UhOh text={error} />
-				<Text>{JSON.stringify(body, undefined, '  ')}</Text>
+				<Text>{JSON.stringify(payload, undefined, '  ')}</Text>
 			</Box>
 		);
 	} else if (resp) {
@@ -48,7 +48,7 @@ export default ({params}: {params: any}) => {
 		return (
 			<Box flexDirection='column'>
 				<Spinner text="air-mailing those bits & bytes..." />
-				<Text>{JSON.stringify(body, undefined, '  ')}</Text>
+				<Text>{JSON.stringify(payload, undefined, '  ')}</Text>
 			</Box>
 		);
 	}

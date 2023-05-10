@@ -3,6 +3,7 @@ import Help from './commands/Help.js';
 import WhoAmI from './commands/WhoAmI.js';
 import NotYetImplemented from './commands/NotYetImplemented.js';
 import EventsTrack from './commands/EventsTrack.js';
+import Send from './commands/Send.js';
 
 interface IMapping {
 	instructions?: string;
@@ -20,6 +21,12 @@ mappings.set('whoami', {
 	instructions: 'Type "whoami" to see who you are.',
 	component: () => {
 		return <WhoAmI />;
+	},
+});
+mappings.set('send', {
+	instructions: 'Send a message',
+	component: params => {
+		return <Send params={params} />;
 	},
 });
 mappings.set('events:track', {
