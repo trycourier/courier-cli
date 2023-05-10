@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Box, Text} from 'ink';
+import fs from 'fs';
 import UhOh from '../components/UhOh.js';
 import Request from '../components/Request.js';
 import api from '../lib/api.js';
@@ -22,13 +23,15 @@ type TRecipient = {
   firebaseToken: string;
 };
 
+type TElemental = any;
+
 interface IPayload {
   message: {
     to?: TRecipient | TRecipient[];
     content: {
       title?: string;
       body?: string;
-    };
+    } | TElemental;
     routing?: {
       method: string;
       channels: string[];
@@ -52,6 +55,7 @@ type Params = {
   channel?: string;
   channels?: string;
   all?: boolean;
+  elemental?: string;
 }
 
 const constructPayload = (params: Params): IPayload => {
@@ -110,7 +114,7 @@ const constructPayload = (params: Params): IPayload => {
     routing.channels.push('push')
   }
 
-  const {_, user, list, audience, email, tel, title, body,
+  const {_, user, list, audience, email, tel, apn, fcm, title, body, elemental,
     ...data} = params;  
 
 	return {
@@ -118,7 +122,7 @@ const constructPayload = (params: Params): IPayload => {
       to: to.length === 1 ? to[0] : to,
       content,
       routing: routing.channels.length ? routing : undefined,
-      data
+      data: data ? data : undefined
     }
 	};
 }
@@ -136,9 +140,15 @@ export default ({params}: {params: any}) => {
 	if (!payload.message.to) {
 		return <UhOh text="You must specify a recipient." />;
 	}
-	if (!payload.message.content.body || !payload.message.content.body?.length) {
+	if (!params.elemental && (!payload.message.content.body || !payload.message.content.body?.length)) {
 		return <UhOh text="You must specify a body for the message." />;
 	}
+  if (params.elemental) {
+    if (!fs.existsSync(params.elemental)) {
+      return <UhOh text="Invalid file path to Elemental document." />;
+    }
+    payload.message.content = JSON.parse(fs.readFileSync(params.elemental, 'utf8'));
+  }
 
   const request = {
     method: 'POST',
