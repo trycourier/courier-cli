@@ -12,20 +12,12 @@ interface IDebug {
   tenantName: string
 }
 
-function delay(ms: number) {
-  if (ms === 0) {
-    return Promise.resolve();
-  }
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 export default () => {
   const [resp, setResp] = useState<IDebug | undefined>();
   const [error, setError] = useState<string | undefined>();
 
   useEffect(() => {
-    delay(2000)
-    .then(() => api('/debug', 'POST'))
+    api('/debug', 'POST')
     .then(
       ({ json }) => setResp(json),
       (err: Error) => setError(err.message)
