@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Text} from 'ink';
 import UhOh from '../components/UhOh.js';
 import Request from '../components/Request.js';
 import api from '../lib/api.js';
@@ -43,14 +42,5 @@ export default ({params}: {params: any}) => {
 		api(request).then(res => setResp(res));
 	}, []);
 
-	return (
-		<Box flexDirection="column">
-			<Request request={request} response={resp} />
-			{resp && resp.json ? (
-				<>
-					<Text>{JSON.stringify(resp.json, undefined, '  ')}</Text>
-				</>
-			) : null}
-		</Box>
-	);
+	return <Request request={request} response={resp} />;
 };
