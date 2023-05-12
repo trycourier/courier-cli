@@ -2,7 +2,9 @@ import React, {useEffect, useState} from 'react';
 import fs from 'fs';
 import UhOh from '../components/UhOh.js';
 import Request from '../components/Request.js';
+import Elemental from '../components/Elemental.js';
 import api from '../lib/api.js';
+import {Box, Text} from 'ink';
 
 type TRecipient =
 	| {
@@ -64,6 +66,7 @@ type Params = {
 	channels?: string;
 	all?: boolean;
 	elemental?: string;
+	mock?: boolean;
 };
 
 const constructPayload = (params: Params): IPayload => {
@@ -134,6 +137,7 @@ const constructPayload = (params: Params): IPayload => {
 		title,
 		body,
 		elemental,
+		mock,
 		...data
 	} = params;
 
@@ -148,9 +152,14 @@ const constructPayload = (params: Params): IPayload => {
 };
 
 interface IResponse {
-	res: Response;
+	res: IHttpResponse;
 	json?: any;
 	err?: Error;
+}
+
+interface IHttpResponse {
+	status: number;
+	statusText: string;
 }
 
 export default ({params}: {params: any}) => {
@@ -182,8 +191,26 @@ export default ({params}: {params: any}) => {
 	};
 
 	useEffect(() => {
+		if (params.mock) {
+			setResp({res: {status: 999, statusText: 'MOCKED'}});
+			return;
+		}
 		api(request).then(res => setResp(res));
 	}, []);
 
-	return <Request request={request} response={resp} />;
+	return (
+		<Box flexDirection="column">
+			{params.elemental ? (
+				<>
+					<Box borderStyle="bold" borderColor="white">
+						<Text> Elemental</Text>
+					</Box>
+					<Box>
+						<Elemental elemental={payload.message.content} />
+					</Box>
+				</>
+			) : null}
+			<Request request={request} response={resp} />
+		</Box>
+	);
 };

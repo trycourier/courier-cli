@@ -11,9 +11,14 @@ interface IRequest {
 }
 
 interface IResponse {
-	res: Response;
+	res: IHttpResponse;
 	json?: any;
 	err?: Error;
+}
+
+interface IHttpResponse {
+	status: number;
+	statusText: string;
 }
 
 type Props = {
@@ -28,6 +33,7 @@ export default (props: Props) => {
 		<Box flexDirection="column">
 			<Box borderStyle="bold" borderColor="blue">
 				<Text>
+					{' '}
 					<Text bold={true}>{props.request.method}</Text>{' '}
 					https://api.courier.com{props.request.url}
 				</Text>
@@ -45,12 +51,18 @@ export default (props: Props) => {
 					borderColor={props.response?.err ? 'red' : 'green'}
 				>
 					<Text>
+						{' '}
 						HTTP{' '}
 						<Text bold={true}>
 							{props.response.err
 								? props.response.err.message
 								: props.response?.res?.status}
-						</Text>
+						</Text>{' '}
+						{!props.response.err ? (
+							<>
+								<Text>• {props.response.res.statusText}</Text>
+							</>
+						) : null}
 					</Text>
 				</Box>
 			) : null}
