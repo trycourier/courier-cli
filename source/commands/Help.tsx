@@ -32,25 +32,42 @@ export default ({mappings}: {mappings: Map<string, IMapping>}) => {
 					return null;
 				}
 
-				return <React.Fragment key={k}>
-					<Box>
-						<Text>
-							{"   • "}
-							<Text color={constants.colors.primary}>{k}</Text>
-							{v.params ? <Text color="gray">{" "}{v.params}</Text> : null}
-						</Text>
-  				</Box>
-					<Box>
-						<Text>{"     "}{v.instructions}</Text>
-  				</Box>
-					{v.options ? v.options.map((o) => <React.Fragment key={o.option}>
+				return (
+					<React.Fragment key={k}>
 						<Box>
-							<Text color="gray">{"     "}{o.option}</Text>
-							<Text>{" "}{o.value}</Text>
+							<Text>
+								{'   • '}
+								<Text color={constants.colors.primary}>{k}</Text>
+								{v.params ? <Text color="gray"> {v.params}</Text> : null}
+							</Text>
 						</Box>
-					</React.Fragment>) : null}
-					{v.example ? <Text color="cyan">{"     "}{v.example}</Text> : null}
-				</React.Fragment>;
+						<Box>
+							<Text>
+								{'     '}
+								{v.instructions}
+							</Text>
+						</Box>
+						{v.options
+							? v.options.map(o => (
+									<React.Fragment key={o.option}>
+										<Box>
+											<Text color="gray">
+												{'     '}
+												{o.option}
+											</Text>
+											<Text> {o.value}</Text>
+										</Box>
+									</React.Fragment>
+							  ))
+							: null}
+						{v.example ? (
+							<Text color="cyan">
+								{'     '}
+								{v.example}
+							</Text>
+						) : null}
+					</React.Fragment>
+				);
 			})}
 		</Box>
 	);

@@ -13,9 +13,9 @@ interface IDebug {
 }
 
 interface IResponse {
-	res: Response,
-	json?: IDebug,
-	err?: Error
+	res: Response;
+	json?: IDebug;
+	err?: Error;
 }
 
 export default () => {
@@ -23,20 +23,28 @@ export default () => {
 
 	const request = {
 		url: '/debug',
-		method: 'POST'
+		method: 'POST',
 	};
 
 	useEffect(() => {
-		api(request).then((res) => setResp(res));
+		api(request).then(res => setResp(res));
 	}, []);
 
-	return <Box flexDirection='column'>
-		<Request request={request} response={resp} />
-		{resp && resp.json ? <>
-			<KVP width={20} label="Workspace Name" value={resp.json.tenantName} />
-			<KVP width={20} label="Workspace ID" value={resp.json.tenantId} />
-			<KVP width={20} label="API Key Environment" value={resp.json.environment} />
-			<KVP width={20} label="API Key Scope" value={resp.json.scope} />
-		</> : null}
-  </Box>
+	return (
+		<Box flexDirection="column">
+			<Request request={request} response={resp} />
+			{resp && resp.json ? (
+				<>
+					<KVP width={20} label="Workspace Name" value={resp.json.tenantName} />
+					<KVP width={20} label="Workspace ID" value={resp.json.tenantId} />
+					<KVP
+						width={20}
+						label="API Key Environment"
+						value={resp.json.environment}
+					/>
+					<KVP width={20} label="API Key Scope" value={resp.json.scope} />
+				</>
+			) : null}
+		</Box>
+	);
 };

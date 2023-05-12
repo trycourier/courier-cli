@@ -5,9 +5,9 @@ import Request from '../components/Request.js';
 import api from '../lib/api.js';
 
 interface IResponse {
-	res: Response,
-	json?: any,
-	err?: Error
+	res: Response;
+	json?: any;
+	err?: Error;
 }
 
 export default ({params}: {params: any}) => {
@@ -30,23 +30,27 @@ export default ({params}: {params: any}) => {
 		messageId: Math.random().toString(36).substring(2),
 		properties: {
 			userId,
-			...properties
-		}
+			...properties,
+		},
 	};
 	const request = {
 		method: 'POST',
 		url: '/inbound/courier',
-		body: payload
+		body: payload,
 	};
 
 	useEffect(() => {
-		api(request).then((res) => setResp(res));
+		api(request).then(res => setResp(res));
 	}, []);
 
-	return <Box flexDirection='column'>
-		<Request request={request} response={resp} />
-		{resp && resp.json ? <>
-      <Text>{JSON.stringify(resp.json, undefined, '  ')}</Text>
-		</> : null}
-	</Box>;
+	return (
+		<Box flexDirection="column">
+			<Request request={request} response={resp} />
+			{resp && resp.json ? (
+				<>
+					<Text>{JSON.stringify(resp.json, undefined, '  ')}</Text>
+				</>
+			) : null}
+		</Box>
+	);
 };

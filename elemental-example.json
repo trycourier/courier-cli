@@ -1,13 +1,13 @@
 {
-  "version": "2022-01-01",
-  "elements": [
-    {
-      "type": "meta",
-      "title": "Example Title"
-    },
-    {
-      "type": "text",
-      "content": "Hello, **{name}**!"
-    }
-  ]
+	"version": "2022-01-01",
+	"elements": [
+		{
+			"type": "meta",
+			"title": "Example Title"
+		},
+		{
+			"type": "text",
+			"content": "Hello, **{name}**!"
+		}
+	]
 }

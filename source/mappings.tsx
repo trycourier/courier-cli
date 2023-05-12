@@ -34,40 +34,40 @@ mappings.set('send', {
 	options: [
 		{
 			option: '--email <email address>',
-			value: ''
+			value: '',
 		},
 		{
 			option: '--tel <phone number>',
-			value: ''
+			value: '',
 		},
 		{
 			option: '--user <user ID>',
-			value: ''
+			value: '',
 		},
 		{
 			option: '--list <list ID>',
-			value: ''
+			value: '',
 		},
 		{
 			option: '--audience <audience ID>',
-			value: ''
+			value: '',
 		},
 		{
 			option: '--body <message body>',
-			value: ''
+			value: '',
 		},
 		{
 			option: '--title <message title/subject>',
-			value: ''
+			value: '',
 		},
 		{
 			option: '--channels <channel>',
-			value: 'comma-delimted list of channels to send to'
+			value: 'comma-delimted list of channels to send to',
 		},
 		{
 			option: '--all',
-			value: 'send to all channels for each recipient (default is "single")'
-		}
+			value: 'send to all channels for each recipient (default is "single")',
+		},
 	],
 	example: `courier send --tel 555-867-5309 --body "Hey Jenny\\!"`,
 	component: params => {
@@ -80,8 +80,8 @@ mappings.set('track', {
 	options: [
 		{
 			option: '--<key> <value>',
-			value: ''
-		}
+			value: '',
+		},
 	],
 	example: `courier track EXAMPLE_EVENT user123 --name "Pip the Pigeon"`,
 	component: params => {
