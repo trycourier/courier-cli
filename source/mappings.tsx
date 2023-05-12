@@ -41,16 +41,24 @@ mappings.set('send', {
 			value: '',
 		},
 		{
-			option: '--user <user ID>',
+			option: '--apn <Apple push token>',
 			value: '',
+		},
+		{
+			option: '--fcm <Firebase push token>',
+			value: '',
+		},
+		{
+			option: '--user <user ID>',
+			value: 'ID of a Courier User in your workspace',
 		},
 		{
 			option: '--list <list ID>',
-			value: '',
+			value: 'ID of a Courier List in your workspace',
 		},
 		{
 			option: '--audience <audience ID>',
-			value: '',
+			value: 'ID of a Courier Audience in your workspace',
 		},
 		{
 			option: '--body <message body>',
@@ -59,6 +67,10 @@ mappings.set('send', {
 		{
 			option: '--title <message title/subject>',
 			value: '',
+		},
+		{
+			option: '--elemental <filepath>',
+			value: 'path to Courier Elemental JSON file',
 		},
 		{
 			option: '--channels <channel>',
@@ -80,7 +92,7 @@ mappings.set('track', {
 	options: [
 		{
 			option: '--<key> <value>',
-			value: '',
+			value: 'arbitrary key/value properties for your event',
 		},
 	],
 	example: `courier track EXAMPLE_EVENT user123 --name "Pip the Pigeon"`,

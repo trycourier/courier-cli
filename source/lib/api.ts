@@ -1,3 +1,5 @@
+const VERSION = '1.0.0';
+
 interface IRequest {
 	url: string;
 	method: string;
@@ -22,7 +24,7 @@ export default async (request: IRequest): Promise<IResponse> => {
 		headers: {
 			Authorization: `Bearer ${process.env['COURIER_API_KEY']}`,
 			'Content-Type': 'application/json',
-			'User-Agent': `courier-cli/0.0.1`,
+			'User-Agent': `courier-cli/${VERSION}`,
 		},
 		body:
 			request.body && !isString(request.body)
