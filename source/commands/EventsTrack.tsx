@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Box} from 'ink';
+import {Box, Text} from 'ink';
 import UhOh from '../components/UhOh.js';
 import Request from '../components/Request.js';
 import api from '../lib/api.js';
@@ -25,13 +25,17 @@ export default ({params}: {params: any}) => {
 
 	const {_, ...properties} = params;
 	const payload = {
-		event_id: eventId,
-		user_id: userId,
-		properties,
+		type: 'track',
+		event: eventId,
+		messageId: Math.random().toString(36).substring(2),
+		properties: {
+			userId,
+			...properties
+		}
 	};
 	const request = {
 		method: 'POST',
-		url: '/events/track',
+		url: '/inbound/courier',
 		body: payload
 	};
 
@@ -42,6 +46,7 @@ export default ({params}: {params: any}) => {
 	return <Box flexDirection='column'>
 		<Request request={request} response={resp} />
 		{resp && resp.json ? <>
+      <Text>{JSON.stringify(resp.json, undefined, '  ')}</Text>
 		</> : null}
 	</Box>;
 };

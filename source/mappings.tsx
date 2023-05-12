@@ -1,7 +1,6 @@
 import React from 'react';
 import Help from './commands/Help.js';
 import WhoAmI from './commands/WhoAmI.js';
-import NotYetImplemented from './commands/NotYetImplemented.js';
 import EventsTrack from './commands/EventsTrack.js';
 import Send from './commands/Send.js';
 
@@ -75,30 +74,18 @@ mappings.set('send', {
 		return <Send params={params} />;
 	},
 });
-mappings.set('events:track', {
+mappings.set('track', {
 	params: '<event> <user>',
-	instructions: 'Send an event to test your Courier Automations',
+	instructions: 'Send a track event to trigger a Courier Automations',
 	options: [
 		{
 			option: '--<key> <value>',
 			value: ''
 		}
 	],
-	example: `courier events:track EXAMPLE_EVENT user123 --name "Pip the Pigeon"`,
+	example: `courier track EXAMPLE_EVENT user123 --name "Pip the Pigeon"`,
 	component: params => {
 		return <EventsTrack params={params} />;
-	},
-});
-mappings.set('translations:push', {
-	instructions: 'Push translation files to your Courier workspace',
-	component: () => {
-		return <NotYetImplemented />;
-	},
-});
-mappings.set('translations:pull', {
-	instructions: 'Pull translation files from your Courier workspace',
-	component: () => {
-		return <NotYetImplemented />;
 	},
 });
 
