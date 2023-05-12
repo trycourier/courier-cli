@@ -1,0 +1,10 @@
+msgid "PerformanceReview"
+msgstr "It is time for your performance review %1$s"
+
+msgctxt "Home Page Menu Navigation"
+msgid "Home"
+msgstr "Homepage"
+
+msgctxt "Home Address Label"
+msgid "Home"
+msgstr "140 2nd St"

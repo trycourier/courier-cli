@@ -38,9 +38,13 @@ export default (props: Props) => {
 					https://api.courier.com{props.request.url}
 				</Text>
 			</Box>
-			{props.request.body && (
-				<Text>{JSON.stringify(props.request.body, undefined, '  ')}</Text>
-			)}
+			{props.request.body ? (
+				typeof props.request.body === 'string' ? (
+					<Text>{props.request.body}</Text>
+				) : (
+					<Text>{JSON.stringify(props.request.body, undefined, '  ')}</Text>
+				)
+			) : null}
 			{!props.request.body ? <Text color="gray">No request body</Text> : null}
 			{!props.response ? (
 				<Spinner text={props.spinnerText || defaultSpinnerText} />

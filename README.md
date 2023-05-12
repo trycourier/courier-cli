@@ -35,6 +35,8 @@ You can find your Courier API key in your [Courier Settings](https://app.courier
 - `courier whoami` – Display the currently authenticated workspace
 - `courier send` - Send a notification to a user, list, or audience
 - `courier track` - Send an event to test your Courier Automations
+- `courier digests:flush` - Send an event to test your Courier Automations
+- `courier translations:upload` - Upload .PO files to your Courier workspace
 
 For more details, run `courier` to see a list of commands and their arguments & options.
 

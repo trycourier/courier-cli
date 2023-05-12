@@ -4,6 +4,7 @@ import WhoAmI from './commands/WhoAmI.js';
 import Track from './commands/Track.js';
 import Send from './commands/Send.js';
 import DigestFlush from './commands/DigestFlush.js';
+import TranslationsUpload from './commands/TranslationsUpload.js';
 
 interface IMapping {
 	params?: string;
@@ -101,12 +102,20 @@ mappings.set('track', {
 		return <Track params={params} />;
 	},
 });
-mappings.set('digest:flush', {
+mappings.set('digests:flush', {
 	params: '<user> <digest>',
 	instructions: 'Flush any currently queued events for a given user + digest',
-	example: `courier digest:flush user123 MY_DIGEST_TOPIC`,
+	example: `courier digests:flush user123 MY_DIGEST_TOPIC`,
 	component: params => {
 		return <DigestFlush params={params} />;
+	},
+});
+mappings.set('translations:upload', {
+	params: '<locale> <filepath>',
+	instructions: 'Upload a .PO file to Courier for a given locale',
+	example: `courier translations:upload en-US ./translations/en-US.po`,
+	component: params => {
+		return <TranslationsUpload params={params} />;
 	},
 });
 
