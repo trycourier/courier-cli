@@ -4,6 +4,7 @@ import WhoAmI from './commands/WhoAmI.js';
 import Track from './commands/Track.js';
 import Send from './commands/Send.js';
 import DigestFlush from './commands/DigestFlush.js';
+import TranslationsDownload from './commands/TranslationsDownload.js';
 import TranslationsUpload from './commands/TranslationsUpload.js';
 
 interface IMapping {
@@ -108,6 +109,14 @@ mappings.set('digests:flush', {
 	example: `courier digests:flush user123 MY_DIGEST_TOPIC`,
 	component: params => {
 		return <DigestFlush params={params} />;
+	},
+});
+mappings.set('translations:download', {
+	params: '<locale>',
+	instructions: 'Download a .PO file to Courier for a given locale',
+	example: `courier translations:download en-US`,
+	component: params => {
+		return <TranslationsDownload params={params} />;
 	},
 });
 mappings.set('translations:upload', {

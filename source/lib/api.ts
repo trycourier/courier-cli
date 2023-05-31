@@ -4,6 +4,9 @@ interface IRequest {
 	url: string;
 	method: string;
 	body?: object | string;
+	headers?: {
+		[key: string]: string;
+	};
 	options?: RequestInit;
 }
 
@@ -19,19 +22,21 @@ const isString = (s: any): boolean => {
 
 export default async (request: IRequest): Promise<IResponse> => {
 	const baseUrl = process.env['COURIER_DOMAIN'] || 'https://api.courier.com';
-	return fetch(`${baseUrl}${request.url}`, {
+	const req = {
 		method: request.method,
 		headers: {
 			Authorization: `Bearer ${process.env['COURIER_API_KEY']}`,
 			'Content-Type': 'application/json',
 			'User-Agent': `courier-cli/${VERSION}`,
+			...request.headers,
 		},
 		body:
 			request.body && !isString(request.body)
 				? JSON.stringify(request.body)
-				: undefined,
+				: request.body?.toString(),
 		...request.options,
-	}).then(res => {
+	};
+	return fetch(`${baseUrl}${request.url}`, req).then(res => {
 		if (res.status > 400) {
 			return {
 				res,

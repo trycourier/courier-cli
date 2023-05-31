@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import fs from 'fs';
 import UhOh from '../components/UhOh.js';
 import Request from '../components/Request.js';
 import api from '../lib/api.js';
@@ -18,25 +17,16 @@ export default ({params}: {params: any}) => {
 		return <UhOh text="You must specify a locale, e.g. en-US." />;
 	}
 
-	const filepath = params?._?.[1];
-	if (!filepath) {
-		return <UhOh text="You must specify a path to the .PO file." />;
-	} else if (!fs.existsSync(filepath)) {
-		return <UhOh text="No .PO file found at given path." />;
-	}
-
-	const po = fs.readFileSync(filepath, 'utf8');
 	const request = {
-		method: 'PUT',
+		method: 'GET',
 		url: `/translations/default/${locale}`,
-		headers: {
-			'Content-Type': 'text/plain',
-		},
-		body: po,
 	};
 
 	useEffect(() => {
-		api(request).then(res => setResp(res));
+		api(request).then(res => {
+			res.res.headers.get('content-type');
+			setResp(res);
+		});
 	}, []);
 
 	return <Request request={request} response={resp} />;

@@ -19,6 +19,7 @@ interface IResponse {
 interface IHttpResponse {
 	status: number;
 	statusText: string;
+	headers?: Headers;
 }
 
 type Props = {
@@ -27,6 +28,10 @@ type Props = {
 	hideResponse?: boolean;
 	spinnerText?: string;
 };
+
+function getContentType(res: IResponse): string {
+	return res.res.headers?.get('content-type') || 'none';
+}
 
 export default (props: Props) => {
 	return (
@@ -51,6 +56,7 @@ export default (props: Props) => {
 			) : null}
 			{props.response ? (
 				<Box
+					flexDirection="column"
 					borderStyle="bold"
 					borderColor={props.response?.err ? 'red' : 'green'}
 				>
@@ -68,6 +74,12 @@ export default (props: Props) => {
 							</>
 						) : null}
 					</Text>
+					{!props.response.err &&
+					getContentType(props.response) !== 'application/json' ? (
+						<Box>
+							<Text> Content-Type: {getContentType(props.response)}</Text>
+						</Box>
+					) : null}
 				</Box>
 			) : null}
 			{props.response && !props.hideResponse ? (
