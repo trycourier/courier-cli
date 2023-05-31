@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import fs from 'fs';
 import UhOh from '../components/UhOh.js';
 import Request from '../components/Request.js';
+import Response from '../components/Response.js';
 import api from '../lib/api.js';
 
 interface IResponse {
@@ -10,7 +11,12 @@ interface IResponse {
 	err?: Error;
 }
 
-export default ({params}: {params: any}) => {
+type Params = {
+	_?: string[];
+	domain?: string;
+};
+
+export default ({params}: {params: Params}) => {
 	const [resp, setResp] = useState<IResponse | undefined>();
 
 	const locale = params?._?.[0];
@@ -28,7 +34,7 @@ export default ({params}: {params: any}) => {
 	const po = fs.readFileSync(filepath, 'utf8');
 	const request = {
 		method: 'PUT',
-		url: `/translations/default/${locale}`,
+		url: `/translations/${params.domain || 'default'}/${locale}`,
 		headers: {
 			'Content-Type': 'text/plain',
 		},
@@ -39,5 +45,10 @@ export default ({params}: {params: any}) => {
 		api(request).then(res => setResp(res));
 	}, []);
 
-	return <Request request={request} response={resp} />;
+	return (
+		<>
+			<Request request={request} response={resp} />
+			<Response response={resp} />
+		</>
+	);
 };

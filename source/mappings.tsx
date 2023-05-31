@@ -111,20 +111,36 @@ mappings.set('digests:flush', {
 		return <DigestFlush params={params} />;
 	},
 });
-mappings.set('translations:download', {
-	params: '<locale>',
-	instructions: 'Download a .PO file to Courier for a given locale',
-	example: `courier translations:download en-US`,
-	component: params => {
-		return <TranslationsDownload params={params} />;
-	},
-});
 mappings.set('translations:upload', {
 	params: '<locale> <filepath>',
 	instructions: 'Upload a .PO file to Courier for a given locale',
+	options: [
+		{
+			option: '--domain <domain>',
+			value: 'a custom language domain (default is "default")',
+		},
+	],
 	example: `courier translations:upload en-US ./translations/en-US.po`,
 	component: params => {
 		return <TranslationsUpload params={params} />;
+	},
+});
+mappings.set('translations:download', {
+	params: '<locale>',
+	instructions: 'Download a .PO file to Courier for a given locale',
+	options: [
+		{
+			option: '--domain <domain>',
+			value: 'a custom language domain (default is "default")',
+		},
+		{
+			option: '--text',
+			value: 'only return plain text (e.g. for piping into a file)',
+		},
+	],
+	example: `courier translations:download en-US --text > example.en-US.po`,
+	component: params => {
+		return <TranslationsDownload params={params} />;
 	},
 });
 

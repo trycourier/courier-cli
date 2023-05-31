@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import UhOh from '../components/UhOh.js';
 import Request from '../components/Request.js';
+import Response from '../components/Response.js';
 import api from '../lib/api.js';
 
 interface IResponse {
@@ -35,5 +36,10 @@ export default ({params}: {params: any}) => {
 		api(request).then(res => setResp(res));
 	}, []);
 
-	return <Request request={request} response={resp} />;
+	return (
+		<>
+			<Request request={request} response={resp} />
+			<Response response={resp} />
+		</>
+	);
 };

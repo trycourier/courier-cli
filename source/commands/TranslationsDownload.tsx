@@ -1,15 +1,24 @@
 import React, {useEffect, useState} from 'react';
+import {Box, Text} from 'ink';
 import UhOh from '../components/UhOh.js';
 import Request from '../components/Request.js';
+import Response from '../components/Response.js';
 import api from '../lib/api.js';
 
 interface IResponse {
 	res: Response;
 	json?: any;
+	text?: string;
 	err?: Error;
 }
 
-export default ({params}: {params: any}) => {
+type Params = {
+	_?: string[];
+	text?: boolean;
+	domain?: string;
+};
+
+export default ({params}: {params: Params}) => {
 	const [resp, setResp] = useState<IResponse | undefined>();
 
 	const locale = params?._?.[0];
@@ -17,9 +26,11 @@ export default ({params}: {params: any}) => {
 		return <UhOh text="You must specify a locale, e.g. en-US." />;
 	}
 
+	const isText = params.text || false;
+
 	const request = {
 		method: 'GET',
-		url: `/translations/default/${locale}`,
+		url: `/translations/${params.domain || 'default'}/${locale}`,
 	};
 
 	useEffect(() => {
@@ -29,5 +40,14 @@ export default ({params}: {params: any}) => {
 		});
 	}, []);
 
-	return <Request request={request} response={resp} />;
+	return isText ? (
+		<Box>
+			<Text>{resp?.text}</Text>
+		</Box>
+	) : (
+		<>
+			<Request request={request} response={resp} />
+			<Response response={resp} />
+		</>
+	);
 };

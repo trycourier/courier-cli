@@ -25,13 +25,8 @@ interface IHttpResponse {
 type Props = {
 	request: IRequest;
 	response?: IResponse;
-	hideResponse?: boolean;
 	spinnerText?: string;
 };
-
-function getContentType(res: IResponse): string {
-	return res.res.headers?.get('content-type') || 'none';
-}
 
 export default (props: Props) => {
 	return (
@@ -53,41 +48,6 @@ export default (props: Props) => {
 			{!props.request.body ? <Text color="gray">No request body</Text> : null}
 			{!props.response ? (
 				<Spinner text={props.spinnerText || defaultSpinnerText} />
-			) : null}
-			{props.response ? (
-				<Box
-					flexDirection="column"
-					borderStyle="bold"
-					borderColor={props.response?.err ? 'red' : 'green'}
-				>
-					<Text>
-						{' '}
-						HTTP{' '}
-						<Text bold={true}>
-							{props.response.err
-								? props.response.err.message
-								: props.response?.res?.status}
-						</Text>{' '}
-						{!props.response.err ? (
-							<>
-								<Text>• {props.response.res.statusText}</Text>
-							</>
-						) : null}
-					</Text>
-					{!props.response.err &&
-					getContentType(props.response) !== 'application/json' ? (
-						<Box>
-							<Text> Content-Type: {getContentType(props.response)}</Text>
-						</Box>
-					) : null}
-				</Box>
-			) : null}
-			{props.response && !props.hideResponse ? (
-				props.response.json ? (
-					<Text>{JSON.stringify(props.response.json, undefined, '  ')}</Text>
-				) : (
-					<Text color="gray">No response body</Text>
-				)
 			) : null}
 		</Box>
 	);

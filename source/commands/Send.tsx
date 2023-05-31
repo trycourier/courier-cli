@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import fs from 'fs';
 import UhOh from '../components/UhOh.js';
 import Request from '../components/Request.js';
+import Response from '../components/Response.js';
 import Elemental from '../components/Elemental.js';
 import api from '../lib/api.js';
 import {Box, Text} from 'ink';
@@ -210,7 +211,10 @@ export default ({params}: {params: any}) => {
 					</Box>
 				</>
 			) : null}
-			<Request request={request} response={resp} />
+			<>
+				<Request request={request} response={resp} />
+				<Response response={resp} />
+			</>
 		</Box>
 	);
 };

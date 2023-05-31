@@ -32,7 +32,7 @@ export default () => {
 
 	return (
 		<Box flexDirection="column">
-			<Request request={request} response={resp} hideResponse={true} />
+			<Request request={request} response={resp} />
 			{resp && resp.json ? (
 				<>
 					<KVP width={20} label="Workspace Name" value={resp.json.tenantName} />

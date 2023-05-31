@@ -13,6 +13,7 @@ interface IRequest {
 interface IResponse {
 	res: Response;
 	json?: any;
+	text?: string;
 	err?: Error;
 }
 
@@ -45,7 +46,11 @@ export default async (request: IRequest): Promise<IResponse> => {
 		} else if (res.status === 204) {
 			return {res};
 		} else {
-			return res.json().then(json => ({res, json}));
+			if (res.headers.get('Content-Type')?.includes('application/json')) {
+				return res.json().then(json => ({res, json}));
+			} else {
+				return res.text().then(text => ({res, text}));
+			}
 		}
 	});
 };
