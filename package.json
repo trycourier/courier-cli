@@ -1,6 +1,6 @@
 {
 	"name": "@trycourier/cli",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"license": "MIT",
 	"bin": {
 		"courier": "dist/cli.js"
