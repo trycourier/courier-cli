@@ -29,13 +29,14 @@ type Props = {
 };
 
 export default (props: Props) => {
+  const url = `${process.env['COURIER_DOMAIN'] || 'https://api.courier.com'}/${props.request.url}`;
 	return (
 		<Box flexDirection="column">
 			<Box borderStyle="bold" borderColor="blue">
 				<Text>
 					{' '}
 					<Text bold={true}>{props.request.method}</Text>{' '}
-					https://api.courier.com{props.request.url}
+          {url}
 				</Text>
 			</Box>
 			{props.request.body ? (
