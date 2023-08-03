@@ -10,7 +10,7 @@ import TranslationsUpload from './commands/TranslationsUpload.js';
 interface IMapping {
 	params?: string;
 	instructions?: string;
-	example?: string;
+	example?: string | string[];
 	options?: {
 		option: string;
 		value?: string;
@@ -33,7 +33,8 @@ mappings.set('whoami', {
 	},
 });
 mappings.set('send', {
-	instructions: 'Send a notification to a user, list, or audience',
+	instructions:
+		'Send a notification to a user, list, or audience. Unrecognized parameters will be sent as message data.',
 	options: [
 		{
 			option: '--email <email address>',
@@ -76,6 +77,10 @@ mappings.set('send', {
 			value: 'path to Courier Elemental JSON file',
 		},
 		{
+			option: '--template <template ID or alias>',
+			value: 'ID or alias of a template stored in Courier',
+		},
+		{
 			option: '--channels <channel>',
 			value: 'comma-delimted list of channels to send to',
 		},
@@ -84,7 +89,10 @@ mappings.set('send', {
 			value: 'send to all channels for each recipient (default is "single")',
 		},
 	],
-	example: `courier send --tel 555-867-5309 --body "Hey Jenny\\!"`,
+	example: [
+		`courier send --tel 555-867-5309 --body "Hey Jenny\\!"`,
+		`courier send --user user123 --template my-template-id --foo bar`,
+	],
 	component: params => {
 		return <Send params={params} />;
 	},

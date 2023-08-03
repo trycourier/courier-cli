@@ -5,7 +5,7 @@ import constants from '../constants.js';
 interface IMapping {
 	params?: string;
 	instructions?: string;
-	example?: string;
+	example?: string | string[];
 	options?: {
 		option: string;
 		value?: string;
@@ -60,7 +60,14 @@ export default ({mappings}: {mappings: Map<string, IMapping>}) => {
 									</React.Fragment>
 							  ))
 							: null}
-						{v.example ? (
+						{v.example && Array.isArray(v.example) ? (
+							v.example.map((e, i) => (
+								<Text color="cyan" key={i}>
+									{'     '}
+									{e}
+								</Text>
+							))
+						) : v.example ? (
 							<Text color="cyan">
 								{'     '}
 								{v.example}

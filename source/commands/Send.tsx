@@ -34,7 +34,8 @@ type TRecipient =
 
 type TElemental = any;
 
-interface IPayload {
+interface IPayloadElemental {
+	type: 'elemental';
 	message: {
 		to?: TRecipient | TRecipient[];
 		content:
@@ -43,6 +44,19 @@ interface IPayload {
 					body?: string;
 			  }
 			| TElemental;
+		routing?: {
+			method: string;
+			channels: string[];
+		};
+		data?: any;
+	};
+}
+
+interface IPayloadTemplate {
+	type: 'template';
+	message: {
+		to?: TRecipient | TRecipient[];
+		template: string;
 		routing?: {
 			method: string;
 			channels: string[];
@@ -63,6 +77,7 @@ type Params = {
 	title?: string;
 	body?: string;
 	message?: string;
+	template?: string;
 	channel?: string;
 	channels?: string;
 	all?: boolean;
@@ -70,7 +85,9 @@ type Params = {
 	mock?: boolean;
 };
 
-const constructPayload = (params: Params): IPayload => {
+const constructPayload = (
+	params: Params,
+): IPayloadElemental | IPayloadTemplate => {
 	const to: TRecipient[] = [];
 	if (params.user) {
 		to.push({user_id: params.user});
@@ -94,17 +111,17 @@ const constructPayload = (params: Params): IPayload => {
 		to.push({firebaseToken: params.fcm});
 	}
 
-	let content: {title?: string; body?: string} = {
+	let contentElemental: {title?: string; body?: string} = {
 		title: undefined,
 		body: undefined,
 	};
 	if (params.title) {
-		content.title = params.title;
+		contentElemental.title = params.title;
 	}
 	if (params.body) {
-		content.body = params.body;
+		contentElemental.body = params.body;
 	} else if (params.message) {
-		content.body = params.message;
+		contentElemental.body = params.message;
 	}
 
 	let routing: {channels: string[]; method: string} = {
@@ -137,19 +154,37 @@ const constructPayload = (params: Params): IPayload => {
 		fcm,
 		title,
 		body,
+		message,
+		template,
+		channel,
+		channels,
+		all,
 		elemental,
 		mock,
 		...data
 	} = params;
 
-	return {
-		message: {
-			to: to.length === 1 ? to[0] : to,
-			content,
-			routing: routing.channels.length ? routing : undefined,
-			data: data ? data : undefined,
-		},
-	};
+	if (params.template) {
+		return {
+			type: 'template',
+			message: {
+				to: to.length === 1 ? to[0] : to,
+				template: params.template,
+				routing: routing.channels.length ? routing : undefined,
+				data: data ? data : undefined,
+			},
+		};
+	} else {
+		return {
+			type: 'elemental',
+			message: {
+				to: to.length === 1 ? to[0] : to,
+				content: contentElemental,
+				routing: routing.channels.length ? routing : undefined,
+				data: data ? data : undefined,
+			},
+		};
+	}
 };
 
 interface IResponse {
@@ -166,19 +201,27 @@ interface IHttpResponse {
 export default ({params}: {params: any}) => {
 	const [resp, setResp] = useState<IResponse | undefined>();
 
-	const payload = constructPayload(params);
+	if (!params.body && !params.template && !params.elemental) {
+		return (
+			<UhOh text="You must specify a message body, template, or Elemental file path." />
+		);
+	}
+
+	let payload: IPayloadElemental | IPayloadTemplate = constructPayload(params);
 	if (!payload.message.to) {
 		return <UhOh text="You must specify a recipient." />;
 	}
 	if (
+		payload.type === 'elemental' &&
 		!params.elemental &&
 		(!payload.message.content.body || !payload.message.content.body?.length)
 	) {
-		return <UhOh text="You must specify a body for the message." />;
+		throw new Error('You must specify a body for the message.');
 	}
-	if (params.elemental) {
+
+	if (params.elemental && payload.type === 'elemental') {
 		if (!fs.existsSync(params.elemental)) {
-			return <UhOh text="Invalid file path to Elemental document." />;
+			throw new Error('Invalid file path to Elemental document.');
 		}
 		payload.message.content = JSON.parse(
 			fs.readFileSync(params.elemental, 'utf8'),
@@ -188,7 +231,9 @@ export default ({params}: {params: any}) => {
 	const request = {
 		method: 'POST',
 		url: '/send',
-		body: payload,
+		body: {
+			message: payload.message,
+		},
 	};
 
 	useEffect(() => {
@@ -207,7 +252,9 @@ export default ({params}: {params: any}) => {
 						<Text> Elemental</Text>
 					</Box>
 					<Box>
-						<Elemental elemental={payload.message.content} />
+						{payload.type === 'elemental' ? (
+							<Elemental elemental={payload.message.content} />
+						) : null}
 					</Box>
 				</>
 			) : null}
