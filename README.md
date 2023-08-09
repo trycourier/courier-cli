@@ -8,12 +8,13 @@ The Courier CLI is a developer tool to help you build, test, and manage your int
 - Track events to trigger your Courier Automations
 - Push & pull industry-standard translation files for internationalizing your content
 
-## Install the Courier CLI
+## Installing the Courier CLI
 
-From the command-line, use the following command to install the Courier CLI:
+From the command-line, use the following command to install the Courier CLI and set your API key:
 
 ```bash
 $ npm install -g @trycourier/cli
+$ courier config --apikey <your-api-key>
 ```
 
 ### Requirements
@@ -21,6 +22,12 @@ $ npm install -g @trycourier/cli
 - Courier CLI has only been tested on node.js v16+
 
 ## Authenticate the CLI
+
+The fastest way to get started is to run:
+
+```
+$ courier config --apikey <your-api-key>
+```
 
 Courier CLI looks for an environment variable named `COURIER_API_KEY`. It will load that key from the first location it finds in the following list:
 
@@ -32,6 +39,7 @@ You can find your Courier API key in your [Courier Settings](https://app.courier
 
 ## Commands
 
+- `courier config` – Set your Courier API key in `~/.courier`
 - `courier whoami` – Display the currently authenticated workspace
 - `courier send` - Send a notification to a user, list, or audience
 - `courier track` - Send an event to test your Courier Automations

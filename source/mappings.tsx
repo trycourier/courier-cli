@@ -1,5 +1,6 @@
 import React from 'react';
 import Help from './commands/Help.js';
+import Config from './commands/Config.js';
 import WhoAmI from './commands/WhoAmI.js';
 import Track from './commands/Track.js';
 import Send from './commands/Send.js';
@@ -8,6 +9,7 @@ import TranslationsDownload from './commands/TranslationsDownload.js';
 import TranslationsUpload from './commands/TranslationsUpload.js';
 
 interface IMapping {
+	noApiKeyRequired?: boolean;
 	params?: string;
 	instructions?: string;
 	example?: string | string[];
@@ -25,6 +27,25 @@ mappings.set('help', {
 	component: () => {
 		return <Help mappings={mappings} />;
 	},
+	noApiKeyRequired: true
+});
+mappings.set('config', {
+	instructions: 'Persist your Courier API key into a .courier file in your current working directory',
+	component: params => {
+		return <Config params={params} />;
+	},
+	options: [
+		{
+			option: '--apikey <Courier API Key>',
+			value: '',
+		},
+		{
+			option: '--overwrite',
+			value: 'overwrite an existing .courier file',
+		},
+	],
+	example: `courier config --apikey MY_API_KEY`,
+	noApiKeyRequired: true
 });
 mappings.set('whoami', {
 	instructions: 'Display the currently authenticated workspace',

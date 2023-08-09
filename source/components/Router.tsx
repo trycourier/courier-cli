@@ -1,10 +1,11 @@
 import React from 'react';
-import Help from '../commands/Help.js';
 import yargs from 'yargs-parser';
+import {Text} from 'ink';
+import Help from '../commands/Help.js';
 
 interface IMapping {
-	instructions?: string;
 	component: (params?: any) => React.ReactElement;
+	noApiKeyRequired?: boolean;
 }
 
 type Props = {
@@ -22,7 +23,28 @@ export default ({args, mappings}: Props) => {
 	const parsedParams = params.length ? yargs(params) : undefined;
 
 	if (mapping) {
-		return mapping.component(parsedParams);
+		const apiKey = process.env['COURIER_API_KEY'];
+		if ((apiKey && apiKey.length) || mapping.noApiKeyRequired) {
+			return mapping.component(parsedParams);
+		} else {
+			return <>
+				<Text bold={true} color="red">
+					No COURIER_API_KEY specified, please set via one of these options:
+				</Text>
+				<Text bold={true} color="red">
+					• running "courier config --apikey &lt;your-api-key&gt;"
+				</Text>
+				<Text bold={true} color="red">
+					• setting COURIER_API_KEY in your shell via "export COURIER_API_KEY=&lt;your-api-key&gt;"
+				</Text>
+				<Text bold={true} color="red">
+					• setting COURIER_API_KEY in a ".courier" file in your current working directory
+				</Text>
+				<Text bold={true} color="red">
+					• setting COURIER_API_KEY in a ".courier" file in your user's home directory
+				</Text>
+			</>
+		}
 	} else {
 		return <Help mappings={mappings} />;
 	}
