@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Box} from 'ink';
 import KVP from '../components/KVP.js';
 import Request from '../components/Request.js';
+import Response from '../components/Response.js';
 import api from '../lib/api.js';
 // import constants from '../constants.js';
 
@@ -33,7 +34,9 @@ export default () => {
 	return (
 		<Box flexDirection="column">
 			<Request request={request} response={resp} />
-			{resp && resp.json ? (
+			{resp && resp.err ? (
+				<Response response={resp} />
+			) : resp && resp.json ? (
 				<>
 					<KVP width={20} label="Workspace Name" value={resp.json.tenantName} />
 					<KVP width={20} label="Workspace ID" value={resp.json.tenantId} />
