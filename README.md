@@ -19,7 +19,7 @@ $ courier config --apikey <your-api-key>
 
 ### Requirements
 
-- Courier CLI has only been tested on node.js v16+
+- Courier CLI has only been tested on node.js v18+
 
 ## Authenticate the CLI
 
