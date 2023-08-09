@@ -208,7 +208,7 @@ export default ({params}: {params: any}) => {
 	}
 
 	let payload: IPayloadElemental | IPayloadTemplate = constructPayload(params);
-	if (!payload.message.to) {
+	if (Array.isArray(payload.message.to) && !payload.message.to.length) {
 		return <UhOh text="You must specify a recipient." />;
 	}
 	if (
