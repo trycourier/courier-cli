@@ -3,6 +3,8 @@ import Help from './commands/Help.js';
 import Config from './commands/Config.js';
 import WhoAmI from './commands/WhoAmI.js';
 import Track from './commands/Track.js';
+import UsersGet from './commands/UsersGet.js';
+import UsersSet from './commands/UsersSet.js';
 import Send from './commands/Send.js';
 import DigestFlush from './commands/DigestFlush.js';
 import TranslationsDownload from './commands/TranslationsDownload.js';
@@ -27,10 +29,11 @@ mappings.set('help', {
 	component: () => {
 		return <Help mappings={mappings} />;
 	},
-	noApiKeyRequired: true
+	noApiKeyRequired: true,
 });
 mappings.set('config', {
-	instructions: 'Persist your Courier API key into a .courier file in your current working directory',
+	instructions:
+		'Persist your Courier API key into a .courier file in your current working directory',
 	component: params => {
 		return <Config params={params} />;
 	},
@@ -45,7 +48,7 @@ mappings.set('config', {
 		},
 	],
 	example: `courier config --apikey MY_API_KEY`,
-	noApiKeyRequired: true
+	noApiKeyRequired: true,
 });
 mappings.set('whoami', {
 	instructions: 'Display the currently authenticated workspace',
@@ -130,6 +133,36 @@ mappings.set('track', {
 	example: `courier track EXAMPLE_EVENT user123 --name "Pip the Pigeon"`,
 	component: params => {
 		return <Track params={params} />;
+	},
+});
+mappings.set('users:get', {
+	params: '<user>',
+	instructions: 'Fetch the data for a given user ID',
+	example: `courier users:get user123`,
+	component: params => {
+		return <UsersGet params={params} />;
+	},
+});
+mappings.set('users:set', {
+	params: '<user>',
+	instructions: "Overwrite a user's profile with the provided data",
+	options: [
+		{
+			option: '--email <email address>',
+			value: '',
+		},
+		{
+			option: '--tel <phone number>',
+			value: '',
+		},
+		{
+			option: '--<key> <value>',
+			value: 'arbitrary key/value properties for your user',
+		},
+	],
+	example: `courier users:set user123 --email user@example.com`,
+	component: params => {
+		return <UsersSet params={params} />;
 	},
 });
 mappings.set('digests:flush', {

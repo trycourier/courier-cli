@@ -43,6 +43,8 @@ You can find your Courier API key in your [Courier Settings](https://app.courier
 - `courier whoami` – Display the currently authenticated workspace
 - `courier send` - Send a notification to a user, list, or audience
 - `courier track` - Send a track event to trigger a Courier Automations
+- `courier users:get` - Fetch the data for a given user ID
+- `courier users:set` - Overwrite a user's profile with the provided data
 - `courier digests:flush` – Flush any currently queued events for a given user + digest
 - `courier translations:upload` - Upload .PO files to your Courier workspace
 - `courier translations:download` - Download .PO files from your Courier workspace
@@ -59,6 +61,9 @@ $ courier send --user user123 --title "Important\\!" --body "Lorem Ipsum" --chan
 $ courier send --user user123 --elemental my-template.json --foo bar
 
 $ courier track my-event user123 --foo bar
+
+$ courier users:get user123
+$ courier users:set user123 --email user@example.com --tel 555-867-5309
 
 $ courier digests:flush user123 my-digest-id
 
