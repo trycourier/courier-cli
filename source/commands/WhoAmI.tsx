@@ -4,6 +4,7 @@ import KVP from '../components/KVP.js';
 import Request from '../components/Request.js';
 import Response from '../components/Response.js';
 import api from '../lib/api.js';
+import {useCliContext} from '../components/Context.js';
 // import constants from '../constants.js';
 
 interface IDebug {
@@ -11,6 +12,7 @@ interface IDebug {
 	scope: string;
 	tenantId: string;
 	tenantName: string;
+	mock: boolean;
 }
 
 interface IResponse {
@@ -20,6 +22,7 @@ interface IResponse {
 }
 
 export default () => {
+	const {apikey, url} = useCliContext();
 	const [resp, setResp] = useState<IResponse | undefined>();
 
 	const request = {
@@ -28,7 +31,7 @@ export default () => {
 	};
 
 	useEffect(() => {
-		api(request).then(res => setResp(res));
+		api(request, url, apikey!).then(res => setResp(res));
 	}, []);
 
 	return (
@@ -46,6 +49,13 @@ export default () => {
 						value={resp.json.environment}
 					/>
 					<KVP width={20} label="API Key Scope" value={resp.json.scope} />
+					{resp.json.mock && (
+						<KVP
+							width={20}
+							label="API Key Simulated (Mock)"
+							value={resp.json.scope}
+						/>
+					)}
 				</>
 			) : null}
 		</Box>

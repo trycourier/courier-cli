@@ -1,4 +1,4 @@
-const VERSION = '1.0.0';
+import VERSION from "../version.js";
 
 interface IRequest {
 	url: string;
@@ -21,14 +21,14 @@ const isString = (s: any): boolean => {
 	return typeof s === 'string' || s instanceof String;
 };
 
-export default async (request: IRequest): Promise<IResponse> => {
-	const baseUrl = process.env['COURIER_DOMAIN'] || 'https://api.courier.com';
+export default async (request: IRequest, baseUrl: string, apikey: string): Promise<IResponse> => {
 	const req = {
 		method: request.method,
 		headers: {
-			Authorization: `Bearer ${process.env['COURIER_API_KEY']}`,
+			Authorization: `Bearer ${apikey}`,
 			'Content-Type': 'application/json',
 			'User-Agent': `courier-cli/${VERSION}`,
+			'X-Courier-CLI-Version': VERSION,
 			...request.headers,
 		},
 		body:

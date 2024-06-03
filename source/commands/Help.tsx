@@ -1,6 +1,8 @@
 import React from 'react';
 import {Box, Text, Newline} from 'ink';
 import constants from '../constants.js';
+import Table from '../components/Table.js';
+import {COMMON_OPTIONS} from '../mappings.js';
 
 interface IMapping {
 	params?: string;
@@ -14,17 +16,24 @@ interface IMapping {
 	component: (params?: any) => React.ReactElement;
 }
 
+const Space = () => <>{'  '}</>;
+
 export default ({mappings}: {mappings: Map<string, IMapping>}) => {
 	const keys = [...mappings.keys()]; // convert to array
 	return (
-		<Box flexDirection="column">
+		<Box flexDirection="column" paddingY={2}>
 			<Text bold={true}>Usage</Text>
 			<Text>
 				$ <Text color={constants.colors.primary}>courier</Text>{' '}
 				<Text color="gray">&lt;command&gt;</Text>
 				<Newline />
 			</Text>
-
+			<Text bold={true}>Common Flags</Text>
+			<Table
+				data={COMMON_OPTIONS}
+				headerLabels={{option: 'Flags', value: 'Description'}}
+			/>
+			<Newline />
 			<Text bold={true}>Commands</Text>
 			{keys.map(k => {
 				const v = mappings.get(k);
@@ -34,42 +43,34 @@ export default ({mappings}: {mappings: Map<string, IMapping>}) => {
 
 				return (
 					<React.Fragment key={k}>
-						<Box>
+						<Box paddingTop={2}>
 							<Text>
-								{'   • '}
 								<Text color={constants.colors.primary}>{k}</Text>
 								{v.params ? <Text color="gray"> {v.params}</Text> : null}
 							</Text>
 						</Box>
 						<Box>
 							<Text>
-								{'     '}
+								<Space />
 								{v.instructions}
 							</Text>
 						</Box>
-						{v.options
-							? v.options.map(o => (
-									<React.Fragment key={o.option}>
-										<Box>
-											<Text color="gray">
-												{'     '}
-												{o.option}
-											</Text>
-											<Text> {o.value}</Text>
-										</Box>
-									</React.Fragment>
-							  ))
-							: null}
+						{v.options?.length && (
+							<Table
+								data={v.options}
+								headerLabels={{option: 'Flags', value: 'Description'}}
+							/>
+						)}
 						{v.example && Array.isArray(v.example) ? (
 							v.example.map((e, i) => (
 								<Text color="cyan" key={i}>
-									{'     '}
+									<Space />
 									{e}
 								</Text>
 							))
 						) : v.example ? (
 							<Text color="cyan">
-								{'     '}
+								<Space />
 								{v.example}
 							</Text>
 						) : null}

@@ -1,6 +1,6 @@
 {
 	"name": "@trycourier/cli",
-	"version": "1.5.1",
+	"version": "2.0.0",
 	"license": "MIT",
 	"bin": {
 		"courier": "dist/cli.js"
@@ -19,14 +19,22 @@
 		"dist"
 	],
 	"dependencies": {
-		"cli-spinners": "^2.9.0",
+		"@inkjs/ui": "^2.0.0",
+		"@trycourier/courier": "^6.1.2",
+		"cli-spinners": "^3.0.0",
 		"dotenv": "^16.0.3",
-		"ink": "^4.1.0",
+		"duckdb": "^0.10.2",
+		"execa": "^9.1.0",
+		"ink": "^5.0.1",
+		"lodash": "^4.17.21",
 		"react": "^18.2.0",
+		"usehooks-ts": "^3.1.0",
 		"yargs-parser": "^21.1.1"
 	},
 	"devDependencies": {
-		"@sindresorhus/tsconfig": "^3.0.1",
+		"@sindresorhus/tsconfig": "^5.0.0",
+		"@types/lodash": "^4.17.4",
+		"@types/node": "^20.13.0",
 		"@types/react": "^18.0.32",
 		"@types/yargs-parser": "^21.0.0",
 		"@vdemedes/prettier-config": "^2.0.1",
@@ -38,7 +46,7 @@
 		"ink-testing-library": "^3.0.0",
 		"prettier": "^2.8.7",
 		"ts-node": "^10.9.1",
-		"typescript": "^5.0.3",
+		"typescript": "^5.4.5",
 		"xo": "^0.53.1"
 	},
 	"ava": {
@@ -57,5 +65,14 @@
 			"react/prop-types": "off"
 		}
 	},
-	"prettier": "@vdemedes/prettier-config"
+	"prettier": "@vdemedes/prettier-config",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/trycourier/courier-cli.git"
+	},
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/"
+	},
+	"homepage": "https://github.com/trycourier/courier-cli#readme"
 }

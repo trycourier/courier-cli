@@ -1,0 +1,28 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+jobs:
+  test: 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          registry-url: "https://registry.npmjs.org"
+          node-version: "14.x"
+          scope: "@trycourier"
+          always-auth: true
+      - uses: MathieuSoysal/replace-string-in-file@v1.1.0
+        with:
+          file: source/version.ts
+          old-string: local
+          new-string: ${GITHUB_REF_NAME#v}
+      - run: yarn
+      - run: yarn build
+      - run: yarn publish --new-version ${GITHUB_REF_NAME#v}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

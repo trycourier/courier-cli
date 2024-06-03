@@ -1,0 +1,3 @@
+{"user_id": 2, "name": "Jane Doe", "email": "bar@example.com"}
+{"user_id": 1, "name": "John Doe", "email": "foo@example.com", "nested": {"key": "value"}}
+{"name": "Alice", "email": "err@example.com"}
