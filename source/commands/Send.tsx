@@ -6,6 +6,8 @@ import Response from '../components/Response.js';
 import Elemental from '../components/Elemental.js';
 import api from '../lib/api.js';
 import {Box, Text} from 'ink';
+import {useCliContext} from '../components/Context.js';
+import lodash from 'lodash';
 
 type TRecipient =
 	| {
@@ -16,6 +18,17 @@ type TRecipient =
 	  }
 	| {
 			audience_id: string;
+	  }
+	| {
+			tenant_id: string;
+	  }
+	| {
+			include_children: boolean;
+	  }
+	| {
+			context: {
+				tenant_id: string;
+			};
 	  }
 	| {
 			email: string;
@@ -70,6 +83,7 @@ type Params = {
 	user?: string;
 	list?: string;
 	audience?: string;
+	tenant?: string;
 	email?: string;
 	tel?: string;
 	apn?: string;
@@ -83,66 +97,16 @@ type Params = {
 	all?: boolean;
 	elemental?: string;
 	mock?: boolean;
+	'include-children'?: boolean;
+	includeChildren?: boolean;
+	'tenant-context'?: string;
+	tenantContext?: string;
 };
 
 const constructPayload = (
 	params: Params,
 ): IPayloadElemental | IPayloadTemplate => {
 	const to: TRecipient[] = [];
-	if (params.user) {
-		to.push({user_id: params.user});
-	}
-	if (params.list) {
-		to.push({list_id: params.list});
-	}
-	if (params.audience) {
-		to.push({audience_id: params.audience});
-	}
-	if (params.email) {
-		to.push({email: params.email});
-	}
-	if (params.tel) {
-		to.push({phone_number: params.tel});
-	}
-	if (params.apn) {
-		to.push({apn: {token: params.apn}});
-	}
-	if (params.fcm) {
-		to.push({firebaseToken: params.fcm});
-	}
-
-	let contentElemental: {title?: string; body?: string} = {
-		title: undefined,
-		body: undefined,
-	};
-	if (params.title) {
-		contentElemental.title = params.title;
-	}
-	if (params.body) {
-		contentElemental.body = params.body;
-	} else if (params.message) {
-		contentElemental.body = params.message;
-	}
-
-	let routing: {channels: string[]; method: string} = {
-		channels: [],
-		method: params.all ? 'all' : 'single',
-	};
-	if (params.channel) {
-		routing.channels = params.channel.split(',');
-	} else if (params.channels) {
-		routing.channels = params.channels.split(',');
-	}
-	if (params.email && params.email.length) {
-		routing.channels.push('email');
-	}
-	if (params.tel && params.tel.length) {
-		routing.channels.push('sms');
-	}
-	if ((params.apn && params.apn.length) || (params.fcm && params.fcm.length)) {
-		routing.channels.push('push');
-	}
-
 	const {
 		_,
 		user,
@@ -161,15 +125,84 @@ const constructPayload = (
 		all,
 		elemental,
 		mock,
+		tenant,
+		'include-children': includeChildren,
+		'tenant-context': tenantContext,
+		includeChildren: _includeChildren,
+		tenantContext: _tenantContext,
 		...data
 	} = params;
+	if (user) {
+		to.push({user_id: String(user)});
+	}
+	if (list) {
+		to.push({list_id: list});
+	}
+	if (audience) {
+		to.push({audience_id: audience});
+	}
+	if (tenant) {
+		to.push({tenant_id: tenant});
+		if (includeChildren) {
+			to.push({include_children: true});
+		}
+	}
+	if (email) {
+		to.push({email: email});
+	}
+	if (tel) {
+		to.push({phone_number: tel});
+	}
+	if (apn) {
+		to.push({apn: {token: apn}});
+	}
+	if (fcm) {
+		to.push({firebaseToken: fcm});
+	}
+	if (to.length && tenantContext) {
+		to.forEach((_t, i) => {
+			lodash.set(to, [i, 'context', 'tenant_id'], tenantContext);
+		});
+	}
 
-	if (params.template) {
+	let contentElemental: {title?: string; body?: string} = {
+		title: undefined,
+		body: undefined,
+	};
+	if (title) {
+		contentElemental.title = title;
+	}
+	if (body) {
+		contentElemental.body = body;
+	} else if (message) {
+		contentElemental.body = message;
+	}
+
+	let routing: {channels: string[]; method: string} = {
+		channels: [],
+		method: params.all ? 'all' : 'single',
+	};
+	if (channel) {
+		routing.channels = channel.split(',');
+	} else if (channels) {
+		routing.channels = channels.split(',');
+	}
+	if (email && email.length) {
+		routing.channels.push('email');
+	}
+	if (tel && tel.length) {
+		routing.channels.push('sms');
+	}
+	if ((apn && apn.length) || (fcm && fcm.length)) {
+		routing.channels.push('push');
+	}
+
+	if (template) {
 		return {
 			type: 'template',
 			message: {
 				to: to.length === 1 ? to[0] : to,
-				template: params.template,
+				template,
 				routing: routing.channels.length ? routing : undefined,
 				data: data ? data : undefined,
 			},
@@ -199,6 +232,7 @@ interface IHttpResponse {
 }
 
 export default ({params}: {params: any}) => {
+	const {apikey, url} = useCliContext();
 	const [resp, setResp] = useState<IResponse | undefined>();
 
 	if (!params.body && !params.template && !params.elemental) {
@@ -241,7 +275,7 @@ export default ({params}: {params: any}) => {
 			setResp({res: {status: 999, statusText: 'MOCKED'}});
 			return;
 		}
-		api(request).then(res => setResp(res));
+		api(request, url, apikey!).then(res => setResp(res));
 	}, []);
 
 	return (

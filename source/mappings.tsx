@@ -6,24 +6,44 @@ import Track from './commands/Track.js';
 import UsersGet from './commands/UsersGet.js';
 import UsersSet from './commands/UsersSet.js';
 import Send from './commands/Send.js';
-import DigestFlush from './commands/DigestFlush.js';
 import TranslationsDownload from './commands/TranslationsDownload.js';
 import TranslationsUpload from './commands/TranslationsUpload.js';
-
-interface IMapping {
-	noApiKeyRequired?: boolean;
-	params?: string;
-	instructions?: string;
-	example?: string | string[];
-	options?: {
-		option: string;
-		value?: string;
-		instructions?: string;
-	}[];
-	component: (params?: any) => React.ReactElement;
-}
+import UsersBulk from './commands/UsersBulk.js';
+import UsersPreferences from './commands/UsersPreferences.js';
+import Upgrade from './commands/Upgrade.js';
 
 const mappings: Map<string, IMapping> = new Map();
+
+export const COMMON_OPTIONS = [
+	{
+		option: '-M --mock',
+		value:
+			'Use the API key that simulates sending using the simulating routing',
+	},
+	{
+		option: '-P --production',
+		value: 'Use the production environment API key',
+	},
+	{
+		option: '-D --draft',
+		value:
+			'Use the draft document scope API key. Use draft or submitted, will default to published key if neither are provided',
+	},
+	{
+		option: '-S --submitted',
+		value: 'Use the submitted document scope API key',
+	},
+	{
+		option: '--apikey <Courier API Key>',
+		value:
+			'Use the provided Courier API key, otherwise use the approprate environment variable',
+	},
+	{
+		option: '--apiurl <Courier API URL>',
+		value:
+			'Use the provided Courier API URL, otherwise use COURIER_API_URL environment variable. Default is https://api.courier.com',
+	},
+];
 
 mappings.set('help', {
 	component: () => {
@@ -34,20 +54,20 @@ mappings.set('help', {
 mappings.set('config', {
 	instructions:
 		'Persist your Courier API key into a .courier file in your current working directory',
-	component: params => {
-		return <Config params={params} />;
+	component: () => {
+		return <Config />;
 	},
 	options: [
 		{
-			option: '--apikey <Courier API Key>',
-			value: '',
-		},
-		{
 			option: '--overwrite',
-			value: 'overwrite an existing .courier file',
+			value: 'Overwrite this apikey in the existing .courier file',
 		},
 	],
-	example: `courier config --apikey MY_API_KEY`,
+	example: [
+		`courier config --apikey MY_API_KEY -P --override`,
+		`courier config --apikey MY_API_KEY --mock`,
+		`courier config --apikey MY_API_KEY --draft`,
+	],
 	noApiKeyRequired: true,
 });
 mappings.set('whoami', {
@@ -89,6 +109,19 @@ mappings.set('send', {
 			value: 'ID of a Courier Audience in your workspace',
 		},
 		{
+			option: '--tenant <tenant ID>',
+			value: 'ID of a Courier Tenant in your workspace. Will be used to send',
+		},
+		{
+			option: '--include-children',
+			value: 'When sending to a tenant, include all the children of the tenant',
+		},
+		{
+			option: '--tenant-context <tenant ID>',
+			value:
+				'ID of a Courier Tenant in your workspace. Applies the tenant context to the message',
+		},
+		{
 			option: '--body <message body>',
 			value: '',
 		},
@@ -116,6 +149,9 @@ mappings.set('send', {
 	example: [
 		`courier send --tel 555-867-5309 --body "Hey Jenny\\!"`,
 		`courier send --user user123 --template my-template-id --foo bar`,
+		`courier send -P --user=test123 --body "hello world" --title="hello" --channels=inbox`,
+		`courier send --tenant=kewl --title=hello --body="hello world" --channel=inbox`,
+		`courier send --user="1" --tenant-context=kewl --title=hello --body="hello world" --channel=inbox`,
 	],
 	component: params => {
 		return <Send params={params} />;
@@ -165,14 +201,68 @@ mappings.set('users:set', {
 		return <UsersSet params={params} />;
 	},
 });
-mappings.set('digests:flush', {
-	params: '<user> <digest>',
-	instructions: 'Flush any currently queued events for a given user + digest',
-	example: `courier digests:flush user123 MY_DIGEST_TOPIC`,
-	component: params => {
-		return <DigestFlush params={params} />;
+mappings.set('users:bulk', {
+	params: '<filename>',
+	instructions:
+		'Bulk import users from a file (csv, json, jsonl, xls, xlsx, .parquet)." For CSVs, we will unpack nested objects based on the header. E.g., "address.city" becomes {"address": {"city": "value"}}. Lodash path syntax is used for created the nested object. Supports wildcard syntax for multiple files, must surround with quotes (see examples)',
+	options: [
+		{
+			option: '--replace',
+			value:
+				'Replace existing users with the same ID, if not set, will do a merge based on key',
+		},
+		{
+			option: '--keep-flat',
+			value:
+				'When using a CSV, do not unpack nested objects based on the header. E.g., "address.city" stays as {"address.city": "value"}',
+		},
+		{
+			option: '--remove-nulls',
+			value: 'Remove null values from the object before updating the profile',
+		},
+		{
+			option: '--list <List ID>',
+			value:
+				'Add all users to the specified list. Accepts comma-separated list',
+		},
+		{
+			option: '--tenant <Tenant ID>',
+			value:
+				'Add all users to the specified tenant. Accepts comma-separated list. Note this will not automatically create the tenant, but the tenant memberships will exist and sending to this tenant_id will still succeed. ',
+		},
+	],
+	example: [
+		`courier users:bulk examples/users.csv --replace`,
+		`courier users:bulk "examples/users/*.csv" --keep-flat`,
+		`courier users:bulk "examples/*.json" --remove-nulls`,
+		'courier users:bulk examples/users.parquet --list new-list-id',
+		'courier users:bulk examples/users.xlsx --tenant new-tenant-id',
+	],
+	component: () => <UsersBulk />,
+});
+mappings.set('users:preferences', {
+	params: '<user>',
+	instructions: 'Fetch the preferences for a given user ID',
+	example: `courier users:preferences user123`,
+	options: [
+		{
+			option: '--verbose',
+			value: 'Show the full preference object',
+		},
+	],
+	component: () => {
+		return <UsersPreferences />;
 	},
 });
+// NOT IMPLEMENTED YET
+// mappings.set('digests:flush', {
+// 	params: '<user> <digest>',
+// 	instructions: 'Flush any currently queued events for a given user + digest',
+// 	example: `courier digests:flush user123 MY_DIGEST_TOPIC`,
+// 	component: params => {
+// 		return <DigestFlush params={params} />;
+// 	},
+// });
 mappings.set('translations:upload', {
 	params: '<locale> <filepath>',
 	instructions: 'Upload a .PO file to Courier for a given locale',
@@ -205,5 +295,17 @@ mappings.set('translations:download', {
 		return <TranslationsDownload params={params} />;
 	},
 });
+mappings.set('upgrade', {
+	instructions: `Upgrade the Courier CLI to the latest versionw`,
+	component: () => <Upgrade />,
+});
+
+// console.log('REMOVE ME');
+// var test: any = [];
+// mappings.forEach(value => {
+// 	test = test.concat(value.example);
+// });
+// console.log(test.filter(Boolean).join('\n'));
+// console.log('REMOVE ME');
 
 export default mappings;

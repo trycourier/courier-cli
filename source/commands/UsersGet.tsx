@@ -3,6 +3,7 @@ import UhOh from '../components/UhOh.js';
 import Request from '../components/Request.js';
 import Response from '../components/Response.js';
 import api from '../lib/api.js';
+import {useCliContext} from '../components/Context.js';
 
 interface IResponse {
 	res: Response;
@@ -11,6 +12,7 @@ interface IResponse {
 }
 
 export default ({params}: {params: any}) => {
+	const {apikey, url} = useCliContext();
 	const [resp, setResp] = useState<IResponse | undefined>();
 
 	const userId = params?._?.[0];
@@ -24,7 +26,7 @@ export default ({params}: {params: any}) => {
 	};
 
 	useEffect(() => {
-		api(request).then(res => setResp(res));
+		api(request, url, apikey!).then(res => setResp(res));
 	}, []);
 
 	return (

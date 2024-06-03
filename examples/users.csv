@@ -1,0 +1,4 @@
+user_id,name,email,nested.key
+2,Jane Doe,bar@example.com,
+1,John Doe,foo@example.com,value
+,Alice,err@example.com,

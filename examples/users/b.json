@@ -1,0 +1,8 @@
+[
+	{
+		"user_id": 1,
+		"name": "John Doe",
+		"email": "foo@example.com",
+		"nested": {"key": "value"}
+	}
+]
