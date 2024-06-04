@@ -4,12 +4,12 @@ on:
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
-  workflow_dispatch:
 jobs:
   test: 
     runs-on: ubuntu-latest
     steps:
-      - run: export RELEASE=${GITHUB_REF_NAME#v}
+      - run: echo "github_tag_ref=${GITHUB_TAG_REF#v}" >> "$GITHUB_OUTPUT"
+        id: transform_tag
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
@@ -21,9 +21,9 @@ jobs:
         with:
           file: source/version.ts
           old-string: local
-          new-string: ${{ env.RELEASE }}
+          new-string: ${{ steps.transform_tag.outputs.github_tag_ref }}
       - run: yarn
       - run: yarn build
-      - run: yarn publish --new-version $RELEASE
+      - run: yarn publish --new-version ${{ steps.transform_tag.outputs.github_tag_ref }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
