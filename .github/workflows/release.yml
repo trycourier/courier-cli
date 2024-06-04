@@ -21,7 +21,7 @@ jobs:
         with:
           file: source/version.ts
           old-string: local
-          new-string: ${{ RELEASE }}
+          new-string: ${{ env.RELEASE }}
       - run: yarn
       - run: yarn build
       - run: yarn publish --new-version $RELEASE
