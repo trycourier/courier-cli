@@ -1,0 +1,53 @@
+[
+	{
+		"tenant_id": "parent_org1",
+		"name": "Parent Organization 1",
+		"parent_tenant_id": "",
+		"brand_id": "default",
+		"user_profile": {
+			"slack": {
+				"token": "xoxb-slack-token-1"
+			}
+		},
+		"default_preferences": {
+			"XY": {
+				"status": "OPTED_OUT"
+			}
+		},
+		"foo": "bar"
+	},
+	{
+		"tenant_id": "org1",
+		"name": "Organization 1",
+		"parent_tenant_id": "parent_org1",
+		"brand_id": "",
+		"user_profile": {
+			"slack": {
+				"token": "xoxb-slack-token-2"
+			}
+		},
+		"default_preferences": {
+			"XY": {
+				"status": "OPTED_IN"
+			}
+		},
+		"foo": "baz"
+	},
+	{
+		"tenant_id": "org2",
+		"name": "Organization 2",
+		"parent_tenant_id": "parent_org1",
+		"brand_id": "",
+		"user_profile": {
+			"slack": {
+				"token": "xoxb-slack-token-3"
+			}
+		},
+		"default_preferences": {
+			"XY": {
+				"status": "Wrong Status"
+			}
+		},
+		"foo": "qux"
+	}
+]

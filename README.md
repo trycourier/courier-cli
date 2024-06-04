@@ -102,7 +102,7 @@ There are a number flags you can use for any command
 
 ## Misc
 
-- If you need to change the Courier API URL, you can set COURIER_API_URL in .courier or make sure an environment variable is set with it.
+- If you need to change the Courier API URL, you can set COURIER_API_URL in .courier or other methods to set the environment variables.
 
 ## License
 
@@ -111,6 +111,3 @@ There are a number flags you can use for any command
 ## Author
 
 [Courier](https://github.com/trycourier) ([support@courier.com](mailto:support@courier.com))
-
-TODO - COURIER_DOMAIN
-TODO - Common Flags

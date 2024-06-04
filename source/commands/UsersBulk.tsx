@@ -1,52 +1,14 @@
+import {ProgressBar} from '@inkjs/ui';
 import duckdb from 'duckdb';
 import {Box, Text} from 'ink';
+import _ from 'lodash';
 import React, {useEffect, useState} from 'react';
 import {useBoolean, useCounter} from 'usehooks-ts';
+import getDb from '../bulk.js';
 import {useCliContext} from '../components/Context.js';
 import Spinner from '../components/Spinner.js';
 import UhOh from '../components/UhOh.js';
-import _ from 'lodash';
 import delay from '../lib/delay.js';
-import {ProgressBar} from '@inkjs/ui';
-
-type TFileType = 'csv' | 'json' | 'parquet';
-
-const installExtension = (db: duckdb.Database, type?: TFileType) => {
-	if (['json', 'parquet'].includes(type || '')) {
-		db.exec(`
-            INSTALL ${type};
-            LOAD ${type};`);
-	}
-};
-
-const getFrom = (filename: string, type: TFileType) => {
-	switch (type) {
-		case 'csv':
-			return `read_csv(['${filename}'], union_by_name = true)`;
-		case 'json':
-			return `read_json_auto(['${filename}'])`;
-		case 'parquet':
-			return `read_parquet(['${filename}'])`;
-	}
-};
-
-const getFileType: (filename: string) => TFileType | undefined = (
-	filename: string,
-) => {
-	if (filename.endsWith('.csv')) {
-		return 'csv';
-	} else if (filename.endsWith('.json') || filename.endsWith('.jsonl')) {
-		return 'json';
-	} else if (
-		filename.endsWith('.parquet') ||
-		filename.endsWith('.pq') ||
-		filename.endsWith('.parq')
-	) {
-		return 'parquet';
-	} else {
-		return undefined;
-	}
-};
 
 export default () => {
 	const {parsedParams, courier} = useCliContext();
@@ -55,11 +17,10 @@ export default () => {
 	const [data, setData] = useState<duckdb.TableData | undefined>();
 	const [data_errors, setDataErrors] = useState<string[]>([]);
 	const counter = useCounter(0);
-	// const [resp, setResp] = useState<IResponse | undefined>();
+
 	const filename = String(_.get(parsedParams, ['_', 0], ''));
-	const filetype = getFileType(filename);
-	const db = new duckdb.Database(':memory:'); // or a file name for a persistent DB
-	installExtension(db, filetype);
+	const {db, filetype, sql} = getDb(filename);
+
 	const keep_flat = Boolean(parsedParams['keep-flat']);
 	const remove_nulls = Boolean(parsedParams['remove-nulls']);
 	const replace = Boolean(parsedParams['replace']);
@@ -74,7 +35,7 @@ export default () => {
 
 	useEffect(() => {
 		if (filetype) {
-			getData(filetype);
+			getData();
 		} else {
 			setError('File type not supported.');
 		}
@@ -86,9 +47,8 @@ export default () => {
 		}
 	}, [data]);
 
-	const getData = (type: TFileType) => {
+	const getData = () => {
 		processing.setTrue();
-		const sql = `SELECT * FROM ${getFrom(filename, type)} ;`;
 
 		db.all(sql, (err, result) => {
 			if (err) {

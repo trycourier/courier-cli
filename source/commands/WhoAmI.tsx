@@ -7,23 +7,9 @@ import api from '../lib/api.js';
 import {useCliContext} from '../components/Context.js';
 // import constants from '../constants.js';
 
-interface IDebug {
-	environment: string;
-	scope: string;
-	tenantId: string;
-	tenantName: string;
-	mock: boolean;
-}
-
-interface IResponse {
-	res: Response;
-	json?: IDebug;
-	err?: Error;
-}
-
 export default () => {
 	const {apikey, url} = useCliContext();
-	const [resp, setResp] = useState<IResponse | undefined>();
+	const [resp, setResp] = useState<IResponseDebug | undefined>();
 
 	const request = {
 		url: '/debug',
@@ -35,7 +21,7 @@ export default () => {
 	}, []);
 
 	return (
-		<Box flexDirection="column">
+		<Box flexDirection="column" width="100%">
 			<Request request={request} response={resp} />
 			{resp && resp.err ? (
 				<Response response={resp} />

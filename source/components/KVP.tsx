@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, Text} from 'ink';
+import {Box, Spacer, Text} from 'ink';
 
 type Props = {
 	label?: string;
@@ -19,14 +19,15 @@ export default ({
 	indent,
 }: Props) => {
 	return (
-		<Box>
-			<Box width={width}>
+		<Box flexDirection="column">
+			<Box width={width} flexDirection="row">
 				<Text>{indent}</Text>
 				<Text bold={labelBold === false ? false : true} color={labelColor}>
 					{label}
 				</Text>
+				<Spacer />
+				<Text> {value}</Text>
 			</Box>
-			<Text> {value}</Text>
 		</Box>
 	);
 };
