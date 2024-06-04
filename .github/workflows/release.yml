@@ -9,6 +9,7 @@ jobs:
   test: 
     runs-on: ubuntu-latest
     steps:
+      - run: export RELEASE=${GITHUB_REF_NAME#v}
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
@@ -20,9 +21,9 @@ jobs:
         with:
           file: source/version.ts
           old-string: local
-          new-string: ${{ GITHUB_REF_NAME#v }}
+          new-string: ${{ RELEASE }}
       - run: yarn
       - run: yarn build
-      - run: yarn publish --new-version ${GITHUB_REF_NAME#v}
+      - run: yarn publish --new-version $RELEASE
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
