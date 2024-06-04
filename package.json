@@ -26,6 +26,8 @@
 		"duckdb": "^0.10.2",
 		"execa": "^9.1.0",
 		"ink": "^5.0.1",
+		"ink-link": "^4.0.0",
+		"ink-spinner": "^5.0.0",
 		"lodash": "^4.17.21",
 		"react": "^18.2.0",
 		"usehooks-ts": "^3.1.0",

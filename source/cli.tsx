@@ -7,6 +7,7 @@ import {CliContextProvider} from './components/Context.js';
 import {execa} from 'execa';
 import _ from 'lodash';
 import VERSION from './version.js';
+import constants from './constants.js';
 2;
 
 const CLI = async () => {
@@ -18,19 +19,22 @@ const CLI = async () => {
 	let current: string | undefined;
 	let latest: string | undefined;
 
-	if (VERSION !== 'local' && false) {
+	if (VERSION !== 'local') {
 		try {
-			const exc = await execa('npm', ['-g', 'outdated', 'npm', '--json'], {
-				shell: true,
-				reject: false,
-			});
+			const exc = await execa(
+				'npm',
+				['-g', 'outdated', constants.package_name, '--json'],
+				{
+					shell: true,
+					reject: false,
+				},
+			);
 			const stdout = JSON.parse(exc.stdout);
 			current = _.get(stdout, ['npm', 'current']);
 			latest = _.get(stdout, ['npm', 'latest']);
 		} catch (e) {
 			console.log(e);
 		}
-		console.log({current, latest});
 	}
 
 	const version_text = `Upgrade available (${current} > ${latest}), run courier upgrade`;

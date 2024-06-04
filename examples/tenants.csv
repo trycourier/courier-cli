@@ -1,0 +1,4 @@
+tenant_id,name,parent_tenant_id,brand_id,user_profile.slack.token,default_preferences.XY.status,foo
+parent_org1,Parent Organization 1,,default,xoxb-slack-token-1,OPTED_OUT,bar
+org1,Organization 1,parent_org1,,xoxb-slack-token-2,OPTED_IN,baz
+org2,Organization 2,parent_org1,,xoxb-slack-token-3,Wrong Status,qux

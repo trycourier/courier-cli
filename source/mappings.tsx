@@ -11,6 +11,7 @@ import TranslationsUpload from './commands/TranslationsUpload.js';
 import UsersBulk from './commands/UsersBulk.js';
 import UsersPreferences from './commands/UsersPreferences.js';
 import Upgrade from './commands/Upgrade.js';
+import TenantsBulk from './commands/TenantsBulk.js';
 
 const mappings: Map<string, IMapping> = new Map();
 
@@ -51,6 +52,12 @@ mappings.set('help', {
 	},
 	noApiKeyRequired: true,
 });
+
+mappings.set('upgrade', {
+	instructions: `Upgrade the Courier CLI to the latest versionw`,
+	component: () => <Upgrade />,
+});
+
 mappings.set('config', {
 	instructions:
 		'Persist your Courier API key into a .courier file in your current working directory',
@@ -249,6 +256,16 @@ mappings.set('users:preferences', {
 			option: '--verbose',
 			value: 'Show the full preference object',
 		},
+		{
+			option: '--url',
+			value: 'Generate the Courier Hosted Preference Page URL',
+		},
+		{
+			option: '--brand <brand ID>',
+			value:
+				'Only used with --url, optionally specify the brand_id. Generate the Courier Hosted Preference Page URL',
+		},
+		// TODO - add tenants when API is ready
 	],
 	component: () => {
 		return <UsersPreferences />;
@@ -295,9 +312,18 @@ mappings.set('translations:download', {
 		return <TranslationsDownload params={params} />;
 	},
 });
-mappings.set('upgrade', {
-	instructions: `Upgrade the Courier CLI to the latest versionw`,
-	component: () => <Upgrade />,
+mappings.set('tenants:bulk', {
+	params: '<filename>',
+	instructions:
+		'Bulk import tenants from a file (csv, json, jsonl, xls, xlsx, .parquet). Supports wildcard syntax for multiple files, must surround with quotes (see examples)',
+	component: () => <TenantsBulk />,
+	options: [
+		{
+			option: '--merge',
+			value:
+				'Create or merge existing tenants with the same ID. If the tenant exists, this will get the current values and merge the new values into the existing tenant',
+		},
+	],
 });
 
 // console.log('REMOVE ME');
