@@ -8,8 +8,7 @@ jobs:
   test: 
     runs-on: ubuntu-latest
     steps:
-      - run: echo "github_tag_ref=${GITHUB_TAG_REF#v}" >> "$GITHUB_OUTPUT"
-        id: transform_tag
+      - run: echo "RELEASE=${GITHUB_TAG_REF#v}" >> "$GITHUB_ENV"
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
@@ -21,10 +20,10 @@ jobs:
         with:
           file: source/version.ts
           old-string: local
-          new-string: ${{ steps.transform_tag.outputs.github_tag_ref }}
-      - run: echo ${{ steps.transform_tag.outputs.github_tag_ref }}
+          new-string: ${{ env.RELEASE }}
+      - run: echo ${{ env.RELEASE }}
       - run: yarn
       - run: yarn build
-      - run: yarn publish --new-version ${{ steps.transform_tag.outputs.github_tag_ref }}
+      - run: yarn publish --new-version ${{ env.RELEASE }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
