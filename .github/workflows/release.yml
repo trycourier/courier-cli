@@ -24,8 +24,7 @@ jobs:
       - run: echo ${{ env.RELEASE }}
       - run: yarn
       - run: yarn build
-      - run: yarn publish --new-version ${{ env.RELEASE }}
+      - run: yarn publish --new-version ${{ env.RELEASE }} --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-          GIT_AUTHOR_NAME: Courier
-          GIT_AUTHOR_EMAIL: support@courier.com
+          
