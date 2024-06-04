@@ -22,6 +22,7 @@ jobs:
           file: source/version.ts
           old-string: local
           new-string: ${{ steps.transform_tag.outputs.github_tag_ref }}
+      - run: echo ${{ steps.transform_tag.outputs.github_tag_ref }}
       - run: yarn
       - run: yarn build
       - run: yarn publish --new-version ${{ steps.transform_tag.outputs.github_tag_ref }}
