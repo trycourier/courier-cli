@@ -20,7 +20,7 @@ jobs:
         with:
           file: source/version.ts
           old-string: local
-          new-string: ${GITHUB_REF_NAME#v}
+          new-string: ${{ GITHUB_REF_NAME#v }}
       - run: yarn
       - run: yarn build
       - run: yarn publish --new-version ${GITHUB_REF_NAME#v}
