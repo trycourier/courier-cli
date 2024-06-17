@@ -1,18 +1,20 @@
 import {IGetInboxMessagesParams, Inbox} from '@trycourier/client-graphql';
+import {IInboxMessagePreview} from '@trycourier/core';
 import {Box, Text} from 'ink';
+import _ from 'lodash';
 import React, {useEffect, useState} from 'react';
 import {useBoolean, useCounter} from 'usehooks-ts';
 import {useCliContext} from '../../components/Context.js';
 import Spinner from '../../components/Spinner.js';
 import UhOh from '../../components/UhOh.js';
 import uuid from '../../lib/uuid.js';
-import {IInboxMessagePreview} from '@trycourier/core';
 // @ts-ignore
 import ms, {StringValue} from 'ms';
-import _ from 'lodash';
 
 interface IArchiveAll {
 	user_id_override?: string;
+	user_finished?: (messages: number) => void;
+	onError?: (text: string) => void;
 }
 
 interface IParam {
@@ -26,7 +28,11 @@ interface IParam {
 
 const LIMIT = 10;
 
-const ArchiveAll = ({user_id_override}: IArchiveAll) => {
+const ArchiveAll = ({
+	user_id_override,
+	user_finished,
+	onError,
+}: IArchiveAll) => {
 	const [error, setError] = useState<string | undefined>();
 	const [InboxClient, setInboxClient] = useState<ReturnType<typeof Inbox>>();
 	const [jwt, setJwt] = useState<string>('');
@@ -45,6 +51,7 @@ const ArchiveAll = ({user_id_override}: IArchiveAll) => {
 		includePinned,
 		_: [userId, ...args],
 	} = parsedParams as IParam;
+
 	const user_id = user_id_override || userId;
 	const tenant_id = tenant ? String(tenant) : undefined;
 
@@ -55,7 +62,11 @@ const ArchiveAll = ({user_id_override}: IArchiveAll) => {
 	const limit = Number(batchSize) || LIMIT;
 
 	const handleError = (text: string) => {
-		setError(text + '\n' + JSON.stringify({tenant, tag, user_id, args}));
+		const t = text + '\n' + JSON.stringify({tenant, tag, user_id, args});
+		setError(t);
+		if (onError) {
+			onError(t);
+		}
 	};
 
 	useEffect(() => {
@@ -130,6 +141,9 @@ const ArchiveAll = ({user_id_override}: IArchiveAll) => {
 			}
 		}
 		running.setFalse();
+		if (user_finished) {
+			user_finished(messages.length);
+		}
 	};
 
 	const getAllMessages = async () => {
@@ -193,7 +207,7 @@ const ArchiveAll = ({user_id_override}: IArchiveAll) => {
 	} else if (gathering_messages.value) {
 		return (
 			<Spinner
-				text={`Finding messages: Found ${messages.length} in ${pages.count} pages `}
+				text={`Finding messages: Found ${messages.length} in ${pages.count} pages for ${user_id}`}
 			/>
 		);
 	} else if (running.value) {
