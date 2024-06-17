@@ -20,7 +20,7 @@ export default ({
 }: Props) => {
 	return (
 		<Box flexDirection="column">
-			<Box width={width} flexDirection="row">
+			<Box width={width || '100%'} flexDirection="row">
 				<Text>{indent}</Text>
 				<Text bold={labelBold === false ? false : true} color={labelColor}>
 					{label}
