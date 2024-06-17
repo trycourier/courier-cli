@@ -84,21 +84,16 @@ courier config --apikey MY_API_KEY --draft
 ## Common Flags
 
 There are a number flags you can use for any command
-┌────────────────────────────┬──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│Flags │Description │
-├────────────────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│-M --mock │Use the API key that simulates sending using the simulating routing │
-├────────────────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│-P --production │Use the production environment API key │
-├────────────────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│-D --draft │Use the draft document scope API key. Use draft or submitted, will default to published key if neither are provided │
-├────────────────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│-S --submitted │Use the submitted document scope API key │
-├────────────────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│--apikey <Courier API Key> │Use the provided Courier API key, otherwise use the approprate environment variable │
-├────────────────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│--apiurl <Courier API URL> │Use the provided Courier API URL, otherwise use COURIER_API_URL environment variable. Default is https://api.courier.com │
-└────────────────────────────┴──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+| Flags | Description |
+| ---------------------------- | ---------------------------- |
+| -M --mock | Use the API key that simulates sending using the simulating routing |
+| -P --production | Use the production environment API key |
+| -D --draft | Use the draft document scope API key. Use draft or submitted, will default to published key if neither are provided |
+| -S --submitted | Use the submitted document scope API key |
+| --apikey <Courier API Key> | Use the provided Courier API key, otherwise use the approprate environment variable |
+| --apiurl <Courier API URL> | Use the provided Courier API URL, otherwise use COURIER_API_URL environment variable. Default is https://api.courier.com |
+
 
 ## Misc
 
