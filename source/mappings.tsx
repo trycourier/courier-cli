@@ -13,6 +13,7 @@ import UsersPreferences from './commands/UsersPreferences.js';
 import Upgrade from './commands/Upgrade.js';
 import TenantsBulk from './commands/TenantsBulk.js';
 import MarkAllRead from './commands/Inbox/MarkAllRead.js';
+import ArchiveAll from './commands/Inbox/ArchiveAll.js';
 
 const mappings: Map<string, IMapping> = new Map();
 
@@ -344,6 +345,42 @@ mappings.set('inbox:mark-all-read', {
 	],
 	component: () => {
 		return <MarkAllRead />;
+	},
+});
+
+mappings.set('inbox:archive-all', {
+	params: '<user_id>',
+	instructions: 'Archive all messages in the inbox for a given user',
+	example: [
+		`courier inbox:archive-all user123 --before="7 day"`,
+		`courier inbox:archive-all user123 --tenant=workspace123`,
+		`courier inbox:archive-all user123 --tag product --tag marketing"`,
+	],
+	options: [
+		{
+			option: '--tenant <tenant_id>',
+			value: 'The tenant_id to mark all messages as read',
+		},
+		{
+			option: '--tag <tag>',
+			value: 'The tag to mark all messages as read. Can provide multiple tags',
+		},
+		{
+			option: '--before',
+			value:
+				'Archive all messages before a given duration using ms: https://www.npmjs.com/package/ms',
+		},
+		{
+			option: '--batch-size',
+			value: 'Control the batch size of the archive operation',
+		},
+		{
+			option: '--include-pinned',
+			value: 'Include pinned messages in the archive operation',
+		},
+	],
+	component: () => {
+		return <ArchiveAll />;
 	},
 });
 
