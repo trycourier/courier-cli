@@ -1,6 +1,6 @@
 import {CourierClient} from '@trycourier/courier';
 import {IssueTokenResponse} from '@trycourier/courier/api/index.js';
-import React, {createContext, useContext} from 'react';
+import React, {createContext, useContext, useState} from 'react';
 import yargsParser from 'yargs-parser';
 
 const CliContext = createContext({});
@@ -41,8 +41,10 @@ interface ICliContext {
 	args: string[];
 	url: string;
 	courier: CourierClient;
-	current?: string;
-	latest?: string;
+	version: {current?: string; latest?: string};
+	setVersion: React.Dispatch<
+		React.SetStateAction<{current?: string; latest?: string}>
+	>;
 	getJWT: TGetJWT;
 }
 type IUseCliContext = () => ICliContext;
@@ -53,10 +55,11 @@ export const useCliContext: IUseCliContext = () =>
 export const CliContextProvider = ({
 	args,
 	mappings,
-	current,
-	latest,
 	children,
 }: ICliContextProvider) => {
+	const [version, setVersion] = useState<{current?: string; latest?: string}>(
+		{},
+	);
 	const [map, ...params] = args;
 	const mapping = mappings.get(map || '');
 	const parsedParams = yargsParser(params);
@@ -114,9 +117,9 @@ export const CliContextProvider = ({
 		courier,
 		url,
 		map,
-		current,
-		latest,
 		getJWT,
+		version,
+		setVersion,
 	};
 
 	return <CliContext.Provider value={context}>{children}</CliContext.Provider>;
