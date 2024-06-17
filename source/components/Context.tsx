@@ -1,4 +1,5 @@
 import {CourierClient} from '@trycourier/courier';
+import {IssueTokenResponse} from '@trycourier/courier/api/index.js';
 import React, {createContext, useContext} from 'react';
 import yargsParser from 'yargs-parser';
 
@@ -9,6 +10,15 @@ export type TAPIRouting = 'normal' | 'simulated';
 export type TDocumentScope = 'Published' | 'Draft' | 'Submitted';
 
 const PREFIX = 'COURIER_AUTH_TOKEN';
+
+type TGetJWT = (
+	user_id: string,
+	additional_scopes: TJWTScope[],
+	other?: {
+		write_brands: string[];
+		expires_in?: string;
+	},
+) => Promise<IssueTokenResponse>;
 
 interface ICliContextProvider {
 	args: string[];
@@ -33,6 +43,7 @@ interface ICliContext {
 	courier: CourierClient;
 	current?: string;
 	latest?: string;
+	getJWT: TGetJWT;
 }
 type IUseCliContext = () => ICliContext;
 
@@ -75,6 +86,21 @@ export const CliContextProvider = ({
 		environment: url,
 	});
 
+	const getJWT: TGetJWT = async (user_id, additional_scopes, options) => {
+		const {write_brands = [], expires_in = '5 min'} = options || {};
+		let scopes = [`user_id:${user_id}`, ...additional_scopes];
+		if (write_brands.length) {
+			write_brands.forEach(brand => {
+				scopes.push(`write:brands:${brand}`);
+			});
+		}
+		const token = await courier.authTokens.issueToken({
+			scope: scopes.join(' '),
+			expires_in,
+		});
+		return token;
+	};
+
 	const context: ICliContext = {
 		apikey,
 		mappings,
@@ -90,6 +116,7 @@ export const CliContextProvider = ({
 		map,
 		current,
 		latest,
+		getJWT,
 	};
 
 	return <CliContext.Provider value={context}>{children}</CliContext.Provider>;

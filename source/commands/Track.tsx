@@ -4,6 +4,7 @@ import Request from '../components/Request.js';
 import Response from '../components/Response.js';
 import api from '../lib/api.js';
 import {useCliContext} from '../components/Context.js';
+import uuid from '../lib/uuid.js';
 
 interface IResponse {
 	res: Response;
@@ -29,7 +30,7 @@ export default ({params}: {params: any}) => {
 	const payload = {
 		type: 'track',
 		event: eventId,
-		messageId: Math.random().toString(36).substring(2),
+		messageId: uuid(),
 		properties: {
 			userId,
 			...properties,
