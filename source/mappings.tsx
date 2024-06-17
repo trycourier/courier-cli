@@ -12,6 +12,7 @@ import UsersBulk from './commands/UsersBulk.js';
 import UsersPreferences from './commands/UsersPreferences.js';
 import Upgrade from './commands/Upgrade.js';
 import TenantsBulk from './commands/TenantsBulk.js';
+import MarkAllRead from './commands/Inbox/MarkAllRead.js';
 
 const mappings: Map<string, IMapping> = new Map();
 
@@ -326,12 +327,24 @@ mappings.set('tenants:bulk', {
 	],
 });
 
-// console.log('REMOVE ME');
-// var test: any = [];
-// mappings.forEach(value => {
-// 	test = test.concat(value.example);
-// });
-// console.log(test.filter(Boolean).join('\n'));
-// console.log('REMOVE ME');
+mappings.set('inbox:mark-all-read', {
+	params: '<user_id>',
+	instructions: 'Mark all messages in the inbox as read for a given user',
+	example: [`courier inbox:mark-all-read user123`],
+	options: [
+		// TODO - coming soon when mark all read with tags/tenants is ready
+		// {
+		// 	option: '--tenant <tenant_id>',
+		// 	value: 'The tenant_id to mark all messages as read',
+		// },
+		// {
+		// 	option: '--tag <tag>',
+		// 	value: 'The tag to mark all messages as read. Can provide multiple',
+		// },
+	],
+	component: () => {
+		return <MarkAllRead />;
+	},
+});
 
 export default mappings;

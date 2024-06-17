@@ -201,7 +201,7 @@ export default () => {
 		return (
 			<>
 				<ProgressBar
-					value={Math.floor((counter.count + 1 / data.length) * 100)}
+					value={Math.floor(((counter.count + 1) / data.length) * 100)}
 				/>
 				<Spinner text={`Completed Rows: ${counter.count} / ${data.length}`} />
 			</>
