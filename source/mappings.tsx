@@ -14,6 +14,7 @@ import Upgrade from './commands/Upgrade.js';
 import TenantsBulk from './commands/TenantsBulk.js';
 import MarkAllRead from './commands/Inbox/MarkAllRead.js';
 import ArchiveAll from './commands/Inbox/ArchiveAll.js';
+import ArchiveAllBulk from './commands/Inbox/ArchiveAllBulk.js';
 
 const mappings: Map<string, IMapping> = new Map();
 
@@ -381,6 +382,20 @@ mappings.set('inbox:archive-all', {
 	],
 	component: () => {
 		return <ArchiveAll />;
+	},
+});
+
+mappings.set('inbox:archive-all:bulk', {
+	params: '<filename>',
+	instructions: 'Archive all messages in the inbox for each user in the file',
+	example: [
+		`courier inbox:archive-all:bulk archive-inbox.csv --before="7 day"`,
+		`courier inbox:archive-all user123 --tenant=workspace123`,
+		`courier inbox:archive-all user123 --tag product --tag marketing"`,
+	],
+	options: mappings.get('inbox:archive-all')!.options,
+	component: () => {
+		return <ArchiveAllBulk />;
 	},
 });
 
