@@ -20,6 +20,7 @@
 		"dist"
 	],
 	"dependencies": {
+		"@babel/runtime": "^7.24.7",
 		"@inkjs/ui": "^2.0.0",
 		"@trycourier/client-graphql": "^6.0.0",
 		"@trycourier/core": "^6.0.0",
@@ -38,7 +39,6 @@
 		"yargs-parser": "^21.1.1"
 	},
 	"devDependencies": {
-		"@babel/runtime": "^7.24.7",
 		"@sindresorhus/tsconfig": "^5.0.0",
 		"@types/lodash": "^4.17.4",
 		"@types/node": "^20.13.0",
