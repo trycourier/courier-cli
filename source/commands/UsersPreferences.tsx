@@ -83,11 +83,12 @@ export default () => {
 						/>
 					</>
 				)}
+
 				{url && (
 					<Text>
 						{!urlResp ? <InkSpinner type="dots" /> : <Text> </Text>}
 						<Text> </Text>
-						<Link href={preference_url || ''}>
+						<Link url={preference_url || ''}>
 							<Text color="cyan">Open Preference Page</Text>
 						</Link>
 					</Text>
