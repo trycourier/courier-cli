@@ -26,23 +26,15 @@ export default () => {
 			{resp && resp.err ? (
 				<Response response={resp} />
 			) : resp && resp.json ? (
-				<>
-					<KVP width={20} label="Workspace Name" value={resp.json.tenantName} />
-					<KVP width={20} label="Workspace ID" value={resp.json.tenantId} />
-					<KVP
-						width={20}
-						label="API Key Environment"
-						value={resp.json.environment}
-					/>
-					<KVP width={20} label="API Key Scope" value={resp.json.scope} />
+				<Box flexDirection="column" width="100%">
+					<KVP label="Workspace Name" value={resp.json.tenantName} />
+					<KVP label="Workspace ID" value={resp.json.tenantId} />
+					<KVP label="API Key Environment" value={resp.json.environment} />
+					<KVP label="API Key Scope" value={resp.json.scope} />
 					{resp.json.mock && (
-						<KVP
-							width={20}
-							label="API Key Simulated (Mock)"
-							value={resp.json.scope}
-						/>
+						<KVP label="API Key Simulated (Mock)" value={resp.json.scope} />
 					)}
-				</>
+				</Box>
 			) : null}
 		</Box>
 	);

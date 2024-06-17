@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box, Text, render} from 'ink';
 import args from './lib/args.js';
 import loadEnv from './lib/load-env.js';
@@ -8,7 +8,6 @@ import {execa} from 'execa';
 import _ from 'lodash';
 import VERSION from './version.js';
 import constants from './constants.js';
-2;
 
 const CLI = async () => {
 	process.removeAllListeners('warning');
@@ -16,33 +15,45 @@ const CLI = async () => {
 	const params = args(process.argv);
 	const mappings = (await import('./mappings.js')).default;
 	const Router = (await import('./components/Router.js')).default;
-	let current: string | undefined;
-	let latest: string | undefined;
+	const [version, setVersion] = useState<{current?: string; latest?: string}>(
+		{},
+	);
 
-	if (VERSION !== 'local') {
-		try {
-			const exc = await execa(
-				'npm',
-				['-g', 'outdated', constants.package_name, '--json'],
-				{
-					shell: true,
-					reject: false,
-				},
-			);
-			const stdout = JSON.parse(exc.stdout);
-			current = _.get(stdout, ['npm', 'current']);
-			latest = _.get(stdout, ['npm', 'latest']);
-		} catch (e) {
-			console.log(e);
+	useEffect(() => {
+		getVersion();
+	}, []);
+
+	const getVersion = async () => {
+		if (VERSION !== 'local') {
+			try {
+				const exc = await execa(
+					'npm',
+					['-g', 'outdated', constants.package_name, '--json'],
+					{
+						shell: true,
+						reject: false,
+					},
+				);
+				const stdout = JSON.parse(exc.stdout);
+				setVersion({
+					current: _.get(stdout, [constants.package_name, 'current']),
+					latest: _.get(stdout, [constants.package_name, 'latest']),
+				});
+			} catch (e) {
+				console.log(e);
+			}
 		}
-	}
+	};
 
-	const version_text = `Upgrade available (${current} > ${latest}), run courier upgrade`;
+	const version_text =
+		version.current && version.latest && version.current !== version.latest
+			? `Upgrade available (${version.current} > ${version.latest}), run courier upgrade`
+			: undefined;
 
 	render(
-		<CliContextProvider args={params} {...{mappings, current, latest}}>
+		<CliContextProvider args={params} {...{mappings}} {...version}>
 			<Router />
-			{current && latest && current !== latest ? (
+			{version_text ? (
 				<Box
 					flexDirection="column"
 					marginY={1}
@@ -52,7 +63,7 @@ const CLI = async () => {
 					borderStyle={'single'}
 				>
 					<Text>
-						Upgrade available ({current} {'>'} {latest}), run{' '}
+						Upgrade available ({version.current} {'>'} {version.latest}), run{' '}
 						<Text color="green">courier upgrade</Text>
 					</Text>
 				</Box>

@@ -21,10 +21,13 @@ jobs:
           file: source/version.ts
           old-string: local
           new-string: ${{ env.RELEASE }}
-      - run: echo ${{ env.RELEASE }}
-      - run: yarn
+      - run: yarn install
       - run: yarn build
-      - run: yarn publish --new-version ${{ env.RELEASE }} --access public
+      - name: publish to npm
+        run: |
+          yarn config set //registry.npmjs.org/:_authToken ${NODE_AUTH_TOKEN}
+          yarn publish --new-version ${{ env.RELEASE }} --access public
+          
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           

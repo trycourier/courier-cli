@@ -1,13 +1,12 @@
+import {Alert, AlertProps} from '@inkjs/ui';
 import duckdb from 'duckdb';
 import _ from 'lodash';
 import React, {useEffect, useState} from 'react';
 import {useBoolean, useCounter} from 'usehooks-ts';
+import getDb from '../../bulk.js';
 import {useCliContext} from '../../components/Context.js';
 import Spinner from '../../components/Spinner.js';
 import UhOh from '../../components/UhOh.js';
-// @ts-ignore
-import {Alert} from '@inkjs/ui';
-import getDb from '../../bulk.js';
 import ArchiveAll from './ArchiveAll.js';
 
 interface IArchiveAllBulk {}
@@ -25,7 +24,7 @@ const ArchiveAllBulk = ({}: IArchiveAllBulk) => {
 	const current = useCounter(0);
 	const [finished, setFinished] = useState<
 		{
-			type: 'error' | 'success';
+			type: AlertProps['variant'];
 			message: string;
 		}[]
 	>([]);
@@ -100,13 +99,16 @@ const ArchiveAllBulk = ({}: IArchiveAllBulk) => {
 						key={current_user}
 						user_id_override={current_user}
 						onError={(error: string) => {
-							const text = `${current_user} - ${error}`;
+							const text = `user_id: ${current_user} | ${error}`;
 							setFinished(p => [...p, {type: 'error', message: text}]);
 							getNext();
 						}}
 						user_finished={(messages: number) => {
-							const text = `${current_user} - Archived ${messages} messages`;
-							setFinished(p => [...p, {type: 'success', message: text}]);
+							const text = `user_id: ${current_user} | Archived ${messages} messages`;
+							setFinished(p => [
+								...p,
+								{type: messages > 0 ? 'success' : 'info', message: text},
+							]);
 							getNext();
 						}}
 					/>
