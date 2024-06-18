@@ -15,6 +15,7 @@ import TenantsBulk from './commands/TenantsBulk.js';
 import MarkAllRead from './commands/Inbox/MarkAllRead.js';
 import ArchiveAll from './commands/Inbox/ArchiveAll.js';
 import ArchiveAllBulk from './commands/Inbox/ArchiveAllBulk.js';
+import TemplatesList from './commands/Templates/List.js';
 
 const mappings: Map<string, IMapping> = new Map();
 
@@ -396,6 +397,31 @@ mappings.set('inbox:archive-all:bulk', {
 	options: mappings.get('inbox:archive-all')!.options,
 	component: () => {
 		return <ArchiveAllBulk />;
+	},
+});
+
+mappings.set('templates:list', {
+	instructions: 'List all templates in your workspace and export it',
+	options: [
+		{
+			option: '--csv',
+			value: 'Output the templates in CSV format',
+		},
+		{
+			option: '--json',
+			value: 'Output the templates in JSON format',
+		},
+		{
+			option: '--webhook <webhook_url>',
+			value: 'Where to send the JSON output',
+		},
+		{
+			option: '--filename <filename>',
+			value: 'Name of the file to save the output',
+		},
+	],
+	component: () => {
+		return <TemplatesList />;
 	},
 });
 
