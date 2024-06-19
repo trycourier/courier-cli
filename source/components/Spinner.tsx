@@ -46,7 +46,7 @@ export default ({text}: Props) => {
 			<Text bold={true} color={spinnerColor}>
 				{spinner.frames[index]}
 			</Text>
-			{text && <Text color={textColor}> {text}</Text>}
+			{text?.length ? <Text color={textColor}> {text}</Text> : <></>}
 		</Box>
 	);
 };

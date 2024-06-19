@@ -24,7 +24,7 @@
 		"@inkjs/ui": "^2.0.0",
 		"@trycourier/client-graphql": "^6.0.0",
 		"@trycourier/core": "^6.0.0",
-		"@trycourier/courier": "^6.1.2",
+		"@trycourier/courier": "^6.2.1",
 		"cli-spinners": "^3.0.0",
 		"csv-stringify": "^6.5.0",
 		"dotenv": "^16.0.3",

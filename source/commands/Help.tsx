@@ -16,7 +16,7 @@ interface IMapping {
 	component: (params?: any) => React.ReactElement;
 }
 
-const Space = () => <>{'  '}</>;
+// const Space = () => <>{'  '}</>;
 
 export default ({mappings}: {mappings: Map<string, IMapping>}) => {
 	const keys = [...mappings.keys()]; // convert to array
@@ -30,8 +30,11 @@ export default ({mappings}: {mappings: Map<string, IMapping>}) => {
 			</Text>
 			<Text bold={true}>Common Flags</Text>
 			<Table
+				disableRowSeparators={true}
+				disableBorders={true}
 				data={COMMON_OPTIONS}
 				headerLabels={{option: 'Flags', value: 'Description'}}
+				rowStyles={{wrap: 'wrap'}}
 			/>
 			<Newline />
 			<Text bold={true}>Commands</Text>
@@ -50,29 +53,27 @@ export default ({mappings}: {mappings: Map<string, IMapping>}) => {
 							</Text>
 						</Box>
 						<Box>
-							<Text>
-								<Space />
-								{v.instructions}
-							</Text>
+							<Text>{v.instructions}</Text>
 						</Box>
-						{v.options?.length && (
+						{v.options?.length ? (
 							<Table
+								disableRowSeparators={true}
+								disableBorders={true}
 								data={v.options}
 								headerLabels={{option: 'Flags', value: 'Description'}}
+								rowStyles={{wrap: 'wrap'}}
 							/>
+						) : (
+							<></>
 						)}
 						{v.example && Array.isArray(v.example) ? (
 							v.example.map((e, i) => (
 								<Text color="cyan" key={i}>
-									<Space />
 									{e}
 								</Text>
 							))
 						) : v.example ? (
-							<Text color="cyan">
-								<Space />
-								{v.example}
-							</Text>
+							<Text color="cyan">{v.example}</Text>
 						) : null}
 					</React.Fragment>
 				);
