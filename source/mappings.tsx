@@ -16,6 +16,8 @@ import MarkAllRead from './commands/Inbox/MarkAllRead.js';
 import ArchiveAll from './commands/Inbox/ArchiveAll.js';
 import ArchiveAllBulk from './commands/Inbox/ArchiveAllBulk.js';
 import TemplatesList from './commands/Templates/List.js';
+import TrackBulk from './commands/TrackBulk.js';
+import AutomationInvokeBulk from './commands/AutomationInvokeBulk.js';
 
 const mappings: Map<string, IMapping> = new Map();
 
@@ -182,6 +184,26 @@ mappings.set('track', {
 		return <Track params={params} />;
 	},
 });
+mappings.set('track:bulk', {
+	params: '<event> <filename>',
+	instructions:
+		'Bulk import track events from a file (csv, json, etc). user_id and recipient are mapped to recipient, all other additional fields are placed in properties',
+	example: 'courier track "example event" examples/events.csv',
+	component: () => {
+		return <TrackBulk />;
+	},
+});
+mappings.set('automation:invoke:bulk', {
+	params: '<automation_template_id> <filename>',
+	instructions:
+		'Bulk invoke automations from a file (csv, json, etc). user_id and recipient are mapped to recipient, fields starting with profile. are routed to profile key. The rest is placed in data key',
+	example:
+		'courier automation:invoke:bulk "7ee13494-478e-4140-83bd-79143ebce02f" examples/events.csv',
+	component: () => {
+		return <AutomationInvokeBulk />;
+	},
+});
+
 mappings.set('users:get', {
 	params: '<user>',
 	instructions: 'Fetch the data for a given user ID',

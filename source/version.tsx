@@ -24,10 +24,10 @@ const Version = async () => {
 					},
 				);
 				const stdout = JSON.parse(exc.stdout);
-				setVersion({
-					current: _.get(stdout, [constants.package_name, 'current']),
+				setVersion(v => ({
+					...v,
 					latest: _.get(stdout, [constants.package_name, 'latest']),
-				});
+				}));
 			} catch (e) {
 				console.log(e);
 			}
@@ -35,7 +35,7 @@ const Version = async () => {
 	};
 
 	const version_text =
-		version.current && version.latest && version.current !== version.latest
+		version.latest && version.current !== version.latest
 			? `Upgrade available (${version.current} > ${version.latest}), run courier upgrade`
 			: undefined;
 

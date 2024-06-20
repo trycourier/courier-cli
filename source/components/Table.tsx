@@ -1,6 +1,6 @@
 // Table.tsx
 import React from 'react';
-import {Box, Text} from 'ink';
+import {Box, Text, TextProps} from 'ink';
 
 type Scalar = string | number | boolean | null | undefined;
 
@@ -18,30 +18,27 @@ type TableProps = {
 	data: ScalarDict[];
 	showHeaders?: boolean;
 	headerLabels?: {[key: string]: string};
-	headerStyles?: {
-		color?: string;
-		backgroundColor?: string;
-		bold?: boolean;
-		italic?: boolean;
-		underline?: boolean;
-		inverse?: boolean;
-		strikethrough?: boolean;
-		dimColor?: boolean;
-	};
+	disableRowSeparators?: boolean;
+	disableBorders?: boolean;
+	headerStyles?: TextProps;
+	rowStyles?: TextProps;
 };
 
 const Table = ({
 	data,
-	showHeaders = true,
+	disableBorders,
+	disableRowSeparators,
 	headerStyles,
 	headerLabels,
+	rowStyles,
+	showHeaders = true,
 }: TableProps) => {
 	// Determine columns and their widths
 	const columns: Column[] = getColumns(data, headerLabels);
 
 	return (
 		<Box flexDirection="column" width="100%">
-			{renderHeaderSeparators(columns)}
+			{!disableBorders && renderHeaderSeparators(columns)}
 
 			{showHeaders && (
 				<>
@@ -51,23 +48,24 @@ const Table = ({
 							return p;
 						}, {} as ScalarDict),
 						columns,
+						disableBorders,
 						{
 							color: 'blue',
 							bold: true,
 							...headerStyles,
 						},
 					)}
-					{renderRowSeparators(columns)}
+					{!disableRowSeparators ? renderRowSeparators(columns) : null}
 				</>
 			)}
 
 			{data.map((row, index) => (
 				<React.Fragment key={`row-${index}`}>
-					{index !== 0 && renderRowSeparators(columns)}
-					{renderRow(row, columns, {wrap: 'wrap'})}
+					{index !== 0 && !disableRowSeparators && renderRowSeparators(columns)}
+					{renderRow(row, columns, disableBorders, rowStyles)}
 				</React.Fragment>
 			))}
-			{renderFooterSeparators(columns)}
+			{!disableBorders && renderFooterSeparators(columns)}
 		</Box>
 	);
 };
@@ -97,20 +95,25 @@ function getColumns(
 }
 
 // Helper function to render a row with separators
-function renderRow(row: ScalarDict, columns: Column[], textStyles?: any) {
+function renderRow(
+	row: ScalarDict,
+	columns: Column[],
+	disableBorders?: boolean,
+	textStyles?: TextProps & {disableBorders?: boolean},
+) {
 	return (
 		<Box flexDirection="row">
-			<Text>│</Text>
+			{!disableBorders && <Text>│</Text>}
 			{columns.map((column, index) => (
 				<React.Fragment key={column.key}>
-					{index !== 0 && <Text>│</Text>}
+					{index !== 0 && !disableBorders && <Text>│</Text>}
 					{/* Add separator before each cell except the first one */}
 					<Box width={column.width} justifyContent="flex-start">
 						<Text {...textStyles}>{row[column.key]?.toString() || ''}</Text>
 					</Box>
 				</React.Fragment>
 			))}
-			<Text>│</Text>
+			{!disableBorders && <Text>│</Text>}
 		</Box>
 	);
 }
