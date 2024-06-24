@@ -18,6 +18,7 @@ import ArchiveAllBulk from './commands/Inbox/ArchiveAllBulk.js';
 import TemplatesList from './commands/Templates/List.js';
 import TrackBulk from './commands/TrackBulk.js';
 import AutomationInvokeBulk from './commands/AutomationInvokeBulk.js';
+import MessagesSearch from './commands/MessagesSearch.js';
 
 const mappings: Map<string, IMapping> = new Map();
 
@@ -49,6 +50,25 @@ export const COMMON_OPTIONS = [
 		option: '--apiurl <Courier API URL>',
 		value:
 			'Use the provided Courier API URL, otherwise use COURIER_API_URL environment variable. Default is https://api.courier.com',
+	},
+];
+
+const OUTPUT_OPTIONS = [
+	{
+		option: '--csv',
+		value: 'Output the templates in CSV format',
+	},
+	{
+		option: '--json',
+		value: 'Output the templates in JSON format',
+	},
+	{
+		option: '--webhook <webhook_url>',
+		value: 'Where to send the JSON output',
+	},
+	{
+		option: '--filename <filename>',
+		value: 'Name of the file to save the output',
 	},
 ];
 
@@ -424,26 +444,38 @@ mappings.set('inbox:archive-all:bulk', {
 
 mappings.set('templates:list', {
 	instructions: 'List all templates in your workspace and export it',
-	options: [
-		{
-			option: '--csv',
-			value: 'Output the templates in CSV format',
-		},
-		{
-			option: '--json',
-			value: 'Output the templates in JSON format',
-		},
-		{
-			option: '--webhook <webhook_url>',
-			value: 'Where to send the JSON output',
-		},
-		{
-			option: '--filename <filename>',
-			value: 'Name of the file to save the output',
-		},
-	],
+	options: OUTPUT_OPTIONS,
 	component: () => {
 		return <TemplatesList />;
+	},
+});
+mappings.set('messages:search', {
+	instructions: 'Search for messages in your workspace',
+	options: [
+		{
+			option: '--user <user_id>',
+			value: 'Filter by user_id',
+		},
+		{
+			option: '--tag <tag>',
+			value: 'Filter by tag. Allows multiple tags',
+		},
+		{
+			option: '--status <status>',
+			value: 'Filter by tag. Allows multiple tags',
+		},
+		{
+			option: '--from <date>, --enqueued_after <date>',
+			value: 'Filter by date after',
+		},
+		{
+			option: '--max-pages <number>',
+			value: 'Cut off the search after this many pages',
+		},
+		...OUTPUT_OPTIONS,
+	],
+	component: () => {
+		return <MessagesSearch />;
 	},
 });
 
