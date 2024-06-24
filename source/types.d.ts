@@ -32,3 +32,10 @@ interface IResponseDebug extends IResponse {
 }
 
 type TJWTScope = 'read:messages' | 'read:user-tokens' | 'write:user-tokens' | 'read:brands' | 'inbox:read:messages' | 'inbox:write:events' | 'read:preferences' | 'write:preferences';
+
+interface IParamsOutputOptions {
+	json?: string;
+	csv?: string;
+	webhook?: string;
+	filename?: string;
+}
