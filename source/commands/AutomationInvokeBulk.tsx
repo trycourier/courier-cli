@@ -1,17 +1,29 @@
 import {Alert} from '@inkjs/ui';
 import {AutomationInvokeParams} from '@trycourier/courier/api/index.js';
+import {stringify} from 'csv-stringify/sync';
 import duckdb from 'duckdb';
+import fs from 'fs/promises';
+import {Newline, Text} from 'ink';
 import _ from 'lodash';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useBoolean, useCounter} from 'usehooks-ts';
 import getDb from '../bulk.js';
 import {useCliContext} from '../components/Context.js';
 import Spinner from '../components/Spinner.js';
 import UhOh from '../components/UhOh.js';
-import {Text} from 'ink';
+
+const FILENAME = 'invokes';
 
 interface IParams {
 	_: string[];
+	csv?: boolean;
+	json?: boolean;
+	webhook?: string;
+	filename?: string;
+}
+
+interface AutomationInvokeParamsWithRunId extends AutomationInvokeParams {
+	runId: string;
 }
 
 const AutomationInvokeBulk = () => {
@@ -21,11 +33,20 @@ const AutomationInvokeBulk = () => {
 	const [data, setData] = useState<duckdb.TableData | undefined>();
 	const [data_errors, setDataError] = useState<string[]>([]);
 	const counter = useCounter(0);
+	const invokes = useRef<AutomationInvokeParamsWithRunId[]>([]);
+	const addInvoke = (invoke: AutomationInvokeParamsWithRunId) =>
+		invokes.current.push(invoke);
 
 	const {
-		_: [template_id, filename],
+		_: [template_id, infile],
+		csv,
+		filename: outfile,
+		json,
+		webhook,
 	} = parsedParams as IParams;
-	const {db, filetype, sql} = getDb(filename || '');
+	const {db, filetype, sql} = getDb(infile || '');
+
+	const out_file = outfile || FILENAME + (csv ? '.csv' : '.json');
 
 	useEffect(() => {
 		if (filetype) {
@@ -59,6 +80,30 @@ const AutomationInvokeBulk = () => {
 		processing.setFalse();
 	};
 
+	const runExport = async () => {
+		if (csv) {
+			await fs.writeFile(out_file, stringify(invokes.current, {header: true}));
+		} else if (json) {
+			await fs.writeFile(out_file, JSON.stringify(invokes.current, null, 2), {
+				encoding: 'utf-8',
+			});
+		}
+		if (webhook?.length) {
+			try {
+				await fetch(webhook, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(invokes),
+				});
+			} catch (e) {
+				setDataError(p => [...p, e instanceof Error ? e.message : String(e)]);
+			}
+		}
+		running.setFalse();
+	};
+
 	const processData = async () => {
 		if (data?.length) {
 			for (let i = 0; i < data.length; i++) {
@@ -80,13 +125,19 @@ const AutomationInvokeBulk = () => {
 					template_id || '',
 					body,
 				);
+				addInvoke({...body, runId: res.runId});
+
 				if (res instanceof Error) {
 					setDataError([res.message]);
 				}
 				counter.increment();
 			}
 		}
-		running.setFalse();
+		if (csv || json) {
+			runExport();
+		} else {
+			running.setFalse();
+		}
 	};
 
 	if (data_errors?.length) {
@@ -106,6 +157,19 @@ const AutomationInvokeBulk = () => {
 				<Text>
 					Sent {counter.count} automation invokes to {template_id}
 				</Text>
+				{csv ||
+					(json && (
+						<Text>
+							<Newline />
+							Saved to {out_file}
+						</Text>
+					))}
+				{webhook?.length && (
+					<Text>
+						<Newline />
+						Sent to {webhook}
+					</Text>
+				)}
 			</Alert>
 		);
 	}

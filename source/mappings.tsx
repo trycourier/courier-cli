@@ -215,10 +215,13 @@ mappings.set('track:bulk', {
 });
 mappings.set('automation:invoke:bulk', {
 	params: '<automation_template_id> <filename>',
+	options: [...OUTPUT_OPTIONS],
 	instructions:
 		'Bulk invoke automations from a file (csv, json, etc). user_id and recipient are mapped to recipient, fields starting with profile. are routed to profile key. The rest is placed in data key',
-	example:
-		'courier automation:invoke:bulk "7ee13494-478e-4140-83bd-79143ebce02f" examples/events.csv',
+	example: [
+		'courier automation:invoke:bulk 7ee13494-478e-4140-83bd-79143ebce02f examples/events.csv',
+		'courier automation:invoke:bulk aliasABC examples/events.csv --json --filename output.json',
+	],
 	component: () => {
 		return <AutomationInvokeBulk />;
 	},
