@@ -4,7 +4,7 @@ import React from 'react';
 import {CliContextProvider} from './components/Context.js';
 import args from './lib/args.js';
 import loadEnv from './lib/load-env.js';
-import Version from './version.js';
+import Version from './components/Version.js';
 
 const CLI = async () => {
 	process.removeAllListeners('warning');

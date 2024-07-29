@@ -80,7 +80,7 @@ mappings.set('help', {
 });
 
 mappings.set('upgrade', {
-	instructions: `Upgrade the Courier CLI to the latest versionw`,
+	instructions: `Upgrade the Courier CLI to the latest version`,
 	component: () => <Upgrade />,
 });
 
@@ -472,9 +472,14 @@ mappings.set('messages:search', {
 			value: 'Filter by date after',
 		},
 		{
+			option: '--template <template>',
+			value: 'Filter by Template Id',
+		},
+		{
 			option: '--max-pages <number>',
 			value: 'Cut off the search after this many pages',
 		},
+
 		...OUTPUT_OPTIONS,
 	],
 	component: () => {
