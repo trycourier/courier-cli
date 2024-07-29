@@ -19,20 +19,19 @@ export default () => {
 	}, [version.latest]);
 
 	const upgrade = async () => {
-		if (version)
-			try {
-				await execa(
-					'npm',
-					['upgrade', '-g', `${constants.package_name}@${version.latest}`],
-					{
-						shell: true,
-					},
-				);
-			} catch (e) {
-				setError((e as ExecaError).message);
-			} finally {
-				running.setFalse();
-			}
+		try {
+			await execa(
+				'npm',
+				['install', '-g', `${constants.package_name}`, '--', 'latest'],
+				{
+					shell: true,
+				},
+			);
+		} catch (e) {
+			setError((e as ExecaError).message);
+		} finally {
+			running.setFalse();
+		}
 	};
 
 	if (running.value) {
