@@ -170,9 +170,8 @@ export default () => {
 								}
 							}
 						}
-						const add = modifiedToTenant(next as TTenantSubscriptionModified);
-						console.log(JSON.stringify(add, null, 2));
-						await delay(20000);
+
+						await delay(2000);
 						await courier.tenants.createOrReplace(
 							tenant_id,
 							modifiedToTenant(next as TTenantSubscriptionModified),

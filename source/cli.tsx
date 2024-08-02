@@ -6,6 +6,11 @@ import args from './lib/args.js';
 import loadEnv from './lib/load-env.js';
 import Version from './components/Version.js';
 
+// @ts-ignore
+BigInt.prototype.toJSON = function () {
+	return this.toString();
+};
+
 const CLI = async () => {
 	process.removeAllListeners('warning');
 	await loadEnv();
