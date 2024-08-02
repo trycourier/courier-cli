@@ -286,6 +286,10 @@ mappings.set('users:bulk', {
 			value:
 				'Add all users to the specified tenant. Accepts comma-separated list. Note this will not automatically create the tenant, but the tenant memberships will exist and sending to this tenant_id will still succeed. ',
 		},
+		{
+			option: '--errors',
+			value: 'Output errors',
+		},
 	],
 	example: [
 		`courier users:bulk examples/users.csv --replace`,

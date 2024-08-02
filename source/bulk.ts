@@ -50,4 +50,12 @@ const getDb = (filename: string) => {
     }
 }
 
+export const getChunk = (data: duckdb.TableData, chunk_size: number = 1) => {
+	let rows = data.splice(0, chunk_size)
+	return {
+		rows,
+		data
+	}
+}
+
 export default getDb;

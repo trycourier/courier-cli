@@ -12,7 +12,6 @@ const Version = () => {
 	}, []);
 
 	const getVersion = async () => {
-		console.log('getVersion');
 		try {
 			const exc = await execa(
 				'npm',

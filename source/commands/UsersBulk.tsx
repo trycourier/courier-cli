@@ -1,26 +1,52 @@
 import {ProgressBar} from '@inkjs/ui';
+import {
+	MergeProfileResponse,
+	ReplaceProfileResponse,
+	SubscribeToListsResponse,
+} from '@trycourier/courier/api/index.js';
 import duckdb from 'duckdb';
 import {Box, Text} from 'ink';
 import _ from 'lodash';
+import fs from 'fs/promises';
 import React, {useEffect, useState} from 'react';
 import {useBoolean, useCounter} from 'usehooks-ts';
-import getDb from '../bulk.js';
+import getDb, {getChunk} from '../bulk.js';
 import {useCliContext} from '../components/Context.js';
 import Spinner from '../components/Spinner.js';
 import UhOh from '../components/UhOh.js';
 import delay from '../lib/delay.js';
 
+const DEFAULT_DELAY = 5000;
+const DEFAULT_CHUNK_SIZE = 500;
+const DEFAULT_TIMEOUT = 10;
+const DEFAULT_ERROR_FILENAME = 'errors.json';
+
+interface RowResponse {
+	userId: string;
+	success: Boolean;
+	error?: string;
+	index: number;
+}
+
 export default () => {
 	const {parsedParams, courier} = useCliContext();
 	const [error, setError] = useState<string | undefined>();
-	const processing = useBoolean(false);
+	const processing = useBoolean(true);
+	const running = useBoolean(true);
 	const [data, setData] = useState<duckdb.TableData | undefined>();
 	const [data_errors, setDataErrors] = useState<string[]>([]);
 	const counter = useCounter(0);
+	const [row_errors, setRowErrors] = useState<duckdb.RowData[]>([]);
 
 	const filename = String(_.get(parsedParams, ['_', 0], ''));
 	const {db, filetype, sql} = getDb(filename);
 
+	const delay_between_chunks = Number(parsedParams['delay']) ?? DEFAULT_DELAY;
+	const chunk_size = parsedParams['chunk_size']
+		? Number(parsedParams['chunk_size'])
+		: DEFAULT_CHUNK_SIZE;
+
+	const log_errors = Boolean(parsedParams['errors']);
 	const keep_flat = Boolean(parsedParams['keep-flat']);
 	const remove_nulls = Boolean(parsedParams['remove-nulls']);
 	const replace = Boolean(parsedParams['replace']);
@@ -47,9 +73,13 @@ export default () => {
 		}
 	}, [data]);
 
-	const getData = () => {
-		processing.setTrue();
+	useEffect(() => {
+		if (!processing.value) {
+			handleErrors();
+		}
+	}, [processing.value]);
 
+	const getData = () => {
 		db.all(sql, (err, result) => {
 			if (err) {
 				setError(err.message);
@@ -59,66 +89,166 @@ export default () => {
 		});
 	};
 
+	const processChunkRows = (data: duckdb.RowData[], start_index: number) => {
+		return data.map((row, i) => {
+			const curr_index = start_index + i;
+			let {user_id, ...profile} = row || {};
+			if (!user_id) {
+				return Promise.resolve({
+					success: false,
+					userId: '__unknown__',
+					error: `user_id not found in index ${curr_index}`,
+					index: curr_index,
+				} as RowResponse);
+			} else {
+				Object.entries(profile).forEach(([key, value]) => {
+					if (filetype === 'csv' && !keep_flat) {
+						_.unset(profile, key);
+						_.set(profile, key, value);
+					}
+					if (value === null && remove_nulls) {
+						_.unset(profile, key);
+					}
+				});
+				return processRow(user_id, profile, curr_index);
+			}
+		});
+	};
+
+	const processRow: (
+		userId: string,
+		profile: any,
+		index: number,
+	) => Promise<RowResponse> = async (userId, profile, index) => {
+		return new Promise(async resolve => {
+			let promises: Promise<
+				| SubscribeToListsResponse
+				| MergeProfileResponse
+				| ReplaceProfileResponse
+				| void
+			>[] = [];
+
+			try {
+				if (replace) {
+					promises.push(
+						courier.profiles.replace(
+							userId,
+							{profile},
+							{maxRetries: 5, timeoutInSeconds: DEFAULT_TIMEOUT},
+						),
+					);
+				} else {
+					promises.push(
+						courier.profiles.create(
+							userId,
+							{profile},
+							{maxRetries: 5, timeoutInSeconds: DEFAULT_TIMEOUT},
+						),
+					);
+				}
+
+				if (lists.length) {
+					promises.push(
+						courier.profiles.subscribeToLists(
+							userId,
+							{
+								lists: lists.map(l => ({listId: l})),
+							},
+							{maxRetries: 5, timeoutInSeconds: DEFAULT_TIMEOUT},
+						),
+					);
+				}
+
+				if (tenants.length) {
+					promises.push(
+						courier.users.tenants.addMultple(
+							userId,
+							{
+								tenants: tenants.map(t => ({tenant_id: t})),
+							},
+							{maxRetries: 5, timeoutInSeconds: DEFAULT_TIMEOUT},
+						),
+					);
+				}
+				await Promise.all(promises);
+				counter.increment();
+				return resolve({userId, success: true, index});
+			} catch (error: any) {
+				counter.increment();
+				return resolve({
+					userId,
+					success: false,
+					index,
+					error:
+						(String(error) ??
+							error?.message ??
+							error.message ??
+							'Unknown Error') + `+ ${userId}`,
+				});
+			}
+		});
+	};
+
 	const processData = async () => {
 		if (data?.length) {
-			for (let i = 0; i < data.length; i++) {
-				let {user_id, ...profile} = data[i] || {};
-				let userId = user_id ? String(user_id) : undefined;
-				if (!userId) {
-					setDataErrors(p => [...p, `user_id not found in index ${i}`]);
+			let data_copy = [...data];
+			let counter = 0;
+			let {rows, data: rest} = getChunk(data_copy, chunk_size);
+			while (rows?.length) {
+				const chunk = processChunkRows(rows, counter);
+				const processed_chunks = await Promise.all(chunk);
+				const errors = processed_chunks.filter(r => !r.success);
+				if (errors.length) {
+					setDataErrors(p => [
+						...p,
+						...errors.map(r => {
+							return `user_id (${r.userId}) failed to update in index ${
+								r.index
+							}: ${String(r.error)}`;
+						}),
+					]);
+					setRowErrors(r => [
+						...r,
+						...errors.map(e => data[e.index]! as duckdb.RowData),
+					]);
+				}
+				if (rest.length > 0) {
+					await delay(delay_between_chunks);
+					counter += rows.length;
+					const next = getChunk(rest, chunk_size);
+					rows = next.rows;
+					rest = next.data;
 				} else {
-					try {
-						Object.entries(profile).forEach(([key, value]) => {
-							if (filetype === 'csv' && !keep_flat) {
-								_.unset(profile, key);
-								_.set(profile, key, value);
-							}
-							if (value === null && remove_nulls) {
-								_.unset(profile, key);
-							}
-						});
-						if (replace) {
-							await courier.profiles.replace(userId, {profile});
-						} else {
-							await courier.profiles.create(userId, {profile});
-						}
-
-						if (lists.length) {
-							await courier.profiles.subscribeToLists(userId, {
-								lists: lists.map(l => ({listId: l})),
-							});
-						}
-						if (tenants.length) {
-							await courier.users.tenants.addMultple(userId, {
-								tenants: tenants.map(t => ({tenant_id: t})),
-							});
-						}
-						counter.increment();
-						delay(10000);
-					} catch (err) {
-						setDataErrors(p => [
-							...p,
-							`user_id (${user_id}) failed to update in index ${i}: ${String(
-								err,
-							)}`,
-						]);
-					}
+					processing.setFalse();
+					break;
 				}
 			}
 		}
-		processing.setFalse();
+	};
+
+	const handleErrors = async () => {
+		if (row_errors.length && log_errors) {
+			await fs.writeFile(
+				DEFAULT_ERROR_FILENAME,
+				JSON.stringify(row_errors, null, 2),
+				{
+					encoding: 'utf-8',
+				},
+			);
+			running.setFalse();
+		} else {
+			running.setFalse();
+		}
 	};
 
 	if (!filename?.length) {
 		return <UhOh text="You must specify a filename." />;
 	} else if (error?.length) {
 		return <UhOh text={error} />;
-	} else if (data && processing.value) {
+	} else if (data && running.value) {
 		return (
 			<>
-				<ProgressBar
-					value={Math.floor((counter.count + 1 / data.length) * 100)}
-				/>
+				<ProgressBar value={Math.floor((counter.count / data.length) * 100)} />
 				<Spinner text={`Completed Rows: ${counter.count} / ${data.length}`} />
 			</>
 		);
@@ -131,6 +261,11 @@ export default () => {
 				{data_errors.map((err, i) => {
 					return <UhOh key={i} text={err} />;
 				})}
+				{log_errors && data_errors.length ? (
+					<Text>Errors output to {DEFAULT_ERROR_FILENAME}</Text>
+				) : (
+					<></>
+				)}
 			</Box>
 		);
 	}
