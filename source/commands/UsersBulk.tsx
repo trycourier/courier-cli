@@ -92,7 +92,7 @@ export default () => {
 	const processChunkRows = (data: duckdb.RowData[], start_index: number) => {
 		return data.map((row, i) => {
 			const curr_index = start_index + i;
-			let {user_id, ...profile} = row || {};
+			let {user_id, tenant_id, ...profile} = row || {};
 			if (!user_id) {
 				return Promise.resolve({
 					success: false,
@@ -110,7 +110,12 @@ export default () => {
 						_.unset(profile, key);
 					}
 				});
-				return processRow(user_id, profile, curr_index);
+				return processRow(
+					String(user_id),
+					profile,
+					curr_index,
+					tenant_id?.length ? String(tenant_id) : undefined,
+				);
 			}
 		});
 	};
@@ -119,7 +124,8 @@ export default () => {
 		userId: string,
 		profile: any,
 		index: number,
-	) => Promise<RowResponse> = async (userId, profile, index) => {
+		tenant_id?: string,
+	) => Promise<RowResponse> = async (userId, profile, index, tenant_id) => {
 		return new Promise(async resolve => {
 			let promises: Promise<
 				| SubscribeToListsResponse
@@ -166,6 +172,16 @@ export default () => {
 							{
 								tenants: tenants.map(t => ({tenant_id: t})),
 							},
+							{maxRetries: 5, timeoutInSeconds: DEFAULT_TIMEOUT},
+						),
+					);
+				}
+				if (tenant_id) {
+					promises.push(
+						courier.users.tenants.add(
+							userId,
+							tenant_id,
+							{},
 							{maxRetries: 5, timeoutInSeconds: DEFAULT_TIMEOUT},
 						),
 					);
