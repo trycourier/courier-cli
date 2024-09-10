@@ -23,6 +23,7 @@ interface IParams extends IParamsOutputOptions {
 	status?: string | string[];
 	maxPages?: string | number;
   template?: string;
+  tenant?: string;
 }
 
 const MessagesSearch = () => {
