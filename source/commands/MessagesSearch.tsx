@@ -22,6 +22,8 @@ interface IParams extends IParamsOutputOptions {
 	tag?: string | string[];
 	status?: string | string[];
 	maxPages?: string | number;
+  template?: string;
+  tenant?: string;
 }
 
 const MessagesSearch = () => {
@@ -43,6 +45,8 @@ const MessagesSearch = () => {
 		csv,
 		webhook,
 		filename,
+    template,
+    tenant,
 	} = parsedParams as IParams;
 
 	let searchParams: ListMessagesRequest = {};
@@ -51,6 +55,8 @@ const MessagesSearch = () => {
 		searchParams['enqueued_after'] = enqueued_after ?? from;
 	if (tag) searchParams['tag'] = tag;
 	if (status) searchParams['status'] = status;
+  if (template) searchParams['notification'] = template
+  if (tenant) searchParams['tenant_id'] = template
 
 	const out_file =
 		(filename?.length
