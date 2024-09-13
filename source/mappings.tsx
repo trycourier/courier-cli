@@ -19,6 +19,8 @@ import TemplatesList from './commands/Templates/List.js';
 import TrackBulk from './commands/TrackBulk.js';
 import AutomationInvokeBulk from './commands/AutomationInvokeBulk.js';
 import MessagesSearch from './commands/MessagesSearch.js';
+import TenantsMembershipBulk from './commands/TenantsMembershipBulk.js';
+import AudienceSearch from './commands/AudienceSearch.js';
 
 const mappings: Map<string, IMapping> = new Map();
 
@@ -288,7 +290,7 @@ mappings.set('users:bulk', {
 		},
 		{
 			option: '--errors',
-			value: 'Output errors',
+			value: 'Output errors to a json file',
 		},
 	],
 	example: [
@@ -375,6 +377,27 @@ mappings.set('tenants:bulk', {
 			option: '--merge',
 			value:
 				'Create or merge existing tenants with the same ID. If the tenant exists, this will get the current values and merge the new values into the existing tenant',
+		},
+	],
+});
+mappings.set('tenants:membership:bulk', {
+	params: '<filename>',
+	instructions:
+		'Bulk add or remove tenant memberships from file(s). Requires at a minumum a user_id column. You can provide the tenant as a column (tenant_id) or via, other columns are merged into the users tenant specific profile.  Supports csv, json, jsonl, xls, xlsx, .parquet. Supports wildcard syntax for multiple files, must surround with quotes (see examples)',
+	component: () => <TenantsMembershipBulk />,
+	options: [
+		{
+			option: '--remove-membership',
+			value:
+				'Create or merge existing tenants with the same ID. If the tenant exists, this will get the current values and merge the new values into the existing tenant',
+		},
+		{
+			option: '--tenant <tenant_id>',
+			value: 'Optionally provider the tenant_id for all rows',
+		},
+		{
+			option: '--remove-nulls',
+			value: 'Remove null values from the object before updating the profile',
 		},
 	],
 });
@@ -489,6 +512,32 @@ mappings.set('messages:search', {
 	component: () => {
 		return <MessagesSearch />;
 	},
+});
+
+mappings.set('audiences:search', {
+	instructions: 'Search for audiences in your workspace',
+	options: [
+		{
+			option: '--name <name>',
+			value: 'Filter by audience name, does a fuzzy match *<name>*',
+		},
+		{
+			option: '--id <id>',
+			value: 'Filter by audience id, does a fuzzy match *<id>*',
+		},
+		{
+			option: '--max-pages <number>',
+			value: 'Cut off the search after this many pages',
+		},
+		...OUTPUT_OPTIONS,
+	],
+	component: () => {
+		return <AudienceSearch />;
+	},
+	example: [
+		"courier audiences:search --name 'my audience'",
+		'courier audiences:search --id 1234 --json --filename=audience1234.json',
+	],
 });
 
 export default mappings;
