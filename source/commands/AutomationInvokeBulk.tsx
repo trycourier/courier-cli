@@ -95,7 +95,7 @@ const AutomationInvokeBulk = () => {
 					headers: {
 						'Content-Type': 'application/json',
 					},
-					body: JSON.stringify(invokes),
+					body: JSON.stringify(invokes.current),
 				});
 			} catch (e) {
 				setDataError(p => [...p, e instanceof Error ? e.message : String(e)]);
