@@ -21,6 +21,7 @@ import AutomationInvokeBulk from './commands/AutomationInvokeBulk.js';
 import MessagesSearch from './commands/MessagesSearch.js';
 import TenantsMembershipBulk from './commands/TenantsMembershipBulk.js';
 import AudienceSearch from './commands/AudienceSearch.js';
+import UsersTokensBulk from './commands/UsersTokensBulk.js';
 
 const mappings: Map<string, IMapping> = new Map();
 
@@ -302,6 +303,21 @@ mappings.set('users:bulk', {
 	],
 	component: () => <UsersBulk />,
 });
+mappings.set('users:tokens:bulk', {
+	params: '<filename>',
+	instructions:
+		'Bulk import user tokens from a file (csv, json, jsonl, xls, xlsx, .parquet)." For CSVs, we will unpack nested objects into  based on the header. E.g., "address.city" becomes {"address": {"city": "value"}}. Lodash path syntax is used for created the nested object. Supports wildcard syntax for multiple files, must surround with quotes (see examples).',
+	options: [
+		{
+			option: '--replace',
+			value:
+				'Replace existing users with the same ID, if not set, will do a merge based on key',
+		},
+	],
+	example: ['courier users:tokens:bulk examples/users-tokens.csv'],
+	component: () => <UsersTokensBulk />,
+});
+
 mappings.set('users:preferences', {
 	params: '<user>',
 	instructions: 'Fetch the preferences for a given user ID',
