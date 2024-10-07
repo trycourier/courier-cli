@@ -1,0 +1,3 @@
+user_id,token,provider_key,device.app_id,properties.foo,bar,tracking.os_version,expiry_date
+abc,123,firebase-fcm,myapp,baz,baz,17,2024-12-12
+def,456,apn,myapp,baz,baz,17,2024-12-12
