@@ -55,6 +55,7 @@ For more details, run `courier` to see a list of commands and their arguments & 
 
 ```
 courier --help
+courier --version
 courier upgrade
 
 courier send --tel 555-867-5309 --body "Hey Jenny\!"
@@ -66,10 +67,7 @@ courier send --user="1" --tenant-context=kewl --title=hello --body="hello world"
 courier users:get user123
 courier users:set user123 --email user@example.com
 courier users:bulk examples/users.csv --replace
-courier users:bulk "examples/users/*.csv" --keep-flat
-courier users:bulk "examples/*.json" --remove-nulls
-courier users:bulk examples/users.parquet --list new-list-id
-courier users:bulk examples/users.xlsx --tenant new-tenant-id
+courier users:bulk examples/users.parquet --list new-list-id --tenant new-tenant-id
 
 courier track EXAMPLE_EVENT user123 --name "Pip the Pigeon"
 
@@ -85,15 +83,14 @@ courier config --apikey MY_API_KEY --draft
 
 There are a number flags you can use for any command
 
-| Flags | Description |
-| ---------------------------- | ---------------------------- |
-| -M --mock | Use the API key that simulates sending using the simulating routing |
-| -P --production | Use the production environment API key |
-| -D --draft | Use the draft document scope API key. Use draft or submitted, will default to published key if neither are provided |
-| -S --submitted | Use the submitted document scope API key |
-| --apikey <Courier API Key> | Use the provided Courier API key, otherwise use the approprate environment variable |
+| Flags                      | Description                                                                                                              |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| -M --mock                  | Use the API key that simulates sending using the simulating routing                                                      |
+| -P --production            | Use the production environment API key                                                                                   |
+| -D --draft                 | Use the draft document scope API key. Use draft or submitted, will default to published key if neither are provided      |
+| -S --submitted             | Use the submitted document scope API key                                                                                 |
+| --apikey <Courier API Key> | Use the provided Courier API key, otherwise use the approprate environment variable                                      |
 | --apiurl <Courier API URL> | Use the provided Courier API URL, otherwise use COURIER_API_URL environment variable. Default is https://api.courier.com |
-
 
 ## Misc
 
