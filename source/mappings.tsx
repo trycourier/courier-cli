@@ -22,6 +22,7 @@ import MessagesSearch from './commands/MessagesSearch.js';
 import TenantsMembershipBulk from './commands/TenantsMembershipBulk.js';
 import AudienceSearch from './commands/AudienceSearch.js';
 import UsersTokensBulk from './commands/UsersTokensBulk.js';
+import TenantsGetMembership from './commands/TenantsGetMembership.js';
 
 const mappings: Map<string, IMapping> = new Map();
 
@@ -394,6 +395,15 @@ mappings.set('tenants:bulk', {
 			value:
 				'Create or merge existing tenants with the same ID. If the tenant exists, this will get the current values and merge the new values into the existing tenant',
 		},
+	],
+});
+mappings.set('tenants:get:membership', {
+	params: '<tenant_id>',
+	instructions: 'Retrieve the users in the tenant',
+	component: () => <TenantsGetMembership />,
+	options: [...OUTPUT_OPTIONS],
+	example: [
+		'courier tenants:membership tenant123 --json --filename=tenant123.json',
 	],
 });
 mappings.set('tenants:membership:bulk', {
