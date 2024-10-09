@@ -67,10 +67,18 @@ const TenantsGetMembership = () => {
 			processing.setFalse();
 		} else {
 			counter.increment();
-			const r = await courier.tenants.getUsersByTenant(tenant_id, {
-				cursor,
-				limit: 100,
-			});
+			const r = await courier.tenants.getUsersByTenant(
+				tenant_id,
+				{
+					cursor,
+					limit: 100,
+				},
+				{
+					maxRetries: 3,
+					timeoutInSeconds: 10,
+				},
+			);
+
 			let items = r.items;
 			if (items?.length) {
 				setMembers(previous => {
@@ -84,6 +92,8 @@ const TenantsGetMembership = () => {
 				} else {
 					processing.setFalse();
 				}
+			} else {
+				processing.setFalse();
 			}
 		}
 	};
