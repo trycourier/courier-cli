@@ -6,7 +6,7 @@ import {useCliContext} from './Context.js';
 import constants from '../constants.js';
 
 const Version = () => {
-	const {version, setVersion, map} = useCliContext();
+	const {version, setVersion, map, parsedParams} = useCliContext();
 	useEffect(() => {
 		getVersion();
 	}, []);
@@ -37,7 +37,7 @@ const Version = () => {
 			: undefined;
 
 	if (version_text?.length) {
-		if (map === 'upgrade') {
+		if (map === 'upgrade' || _.get(parsedParams, ['quiet'], false)) {
 			return <></>;
 		} else {
 			return (
