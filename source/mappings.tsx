@@ -574,7 +574,11 @@ mappings.set('users:jwt', {
 		{
 			option: '--scopes',
 			value:
-				'Required. The scopes to attach to the JWT. We will provide the user_id scope automatically, all others will be comma seperated (https://www.courier.com/docs/reference/auth/issue-token/#available-scopes).',
+				'Required if not using all. The scopes to attach to the JWT. We will provide the user_id scope automatically, all others will be comma seperated (https://www.courier.com/docs/reference/auth/issue-token/#available-scopes).',
+		},
+		{
+			option: '--all',
+			value: 'Include all scopes besides brand scopes.',
 		},
 		{
 			option: '--expiration',
