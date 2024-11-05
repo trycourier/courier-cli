@@ -23,6 +23,7 @@ import TenantsMembershipBulk from './commands/TenantsMembershipBulk.js';
 import AudienceSearch from './commands/AudienceSearch.js';
 import UsersTokensBulk from './commands/UsersTokensBulk.js';
 import TenantsGetMembership from './commands/TenantsGetMembership.js';
+import UserToken from './commands/UserToken.js';
 
 const mappings: Map<string, IMapping> = new Map();
 
@@ -564,6 +565,30 @@ mappings.set('audiences:search', {
 		"courier audiences:search --name 'my audience'",
 		'courier audiences:search --id 1234 --json --filename=audience1234.json',
 	],
+});
+
+mappings.set('users:jwt', {
+	params: '<user_id>',
+	instructions: 'Create a JWT for a user',
+	options: [
+		{
+			option: '--scopes',
+			value:
+				'Required. The scopes to attach to the JWT. We will provide the user_id scope automatically, all others will be comma seperated (https://www.courier.com/docs/reference/auth/issue-token/#available-scopes).',
+		},
+		{
+			option: '--expiration',
+			value: 'How long in minutes this JWT is valid for? Default is 5 minutes',
+		},
+	],
+	example: [
+		'courier test-user123 --scopes=inbox:read:messages,inbox:write:events',
+		'courier test-user123 --scopes=read:user-tokens,write:user-tokens --expiration=5',
+		'courier test-user123 --scopes=inbox:read:messages,inbox:write:events,read:preferences,write:preferences,read:user-tokens,write:user-tokens',
+	],
+	component: () => {
+		return <UserToken />;
+	},
 });
 
 export default mappings;
