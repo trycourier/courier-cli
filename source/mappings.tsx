@@ -587,8 +587,9 @@ mappings.set('users:jwt', {
 	],
 	example: [
 		'courier test-user123 --scopes=inbox:read:messages,inbox:write:events',
-		'courier test-user123 --scopes=read:user-tokens,write:user-tokens --expiration=5',
+		'courier test-user123 --scopes=read:user-tokens,write:user-tokens --expiration=60',
 		'courier test-user123 --scopes=inbox:read:messages,inbox:write:events,read:preferences,write:preferences,read:user-tokens,write:user-tokens',
+		'courier test-user123 --all',
 	],
 	component: () => {
 		return <UserToken />;
