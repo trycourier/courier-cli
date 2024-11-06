@@ -77,6 +77,9 @@ courier translations:download en-US --text > example.en-US.po
 courier config --apikey MY_API_KEY -P --override
 courier config --apikey MY_API_KEY --mock
 courier config --apikey MY_API_KEY --draft
+
+courier test-user123 --scopes=read:user-tokens,write:user-tokens --expiration=60
+courier test-user123 --all --quiet | pbcopy
 ```
 
 ## Common Flags
