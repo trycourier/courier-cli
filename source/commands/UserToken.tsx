@@ -1,6 +1,6 @@
 import {Box, Text} from 'ink';
 import _ from 'lodash';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useBoolean} from 'usehooks-ts';
 import {useCliContext} from '../components/Context.js';
 import Spinner from '../components/Spinner.js';
@@ -9,7 +9,8 @@ import UhOh from '../components/UhOh.js';
 interface IParams {
 	_: string[];
 	scopes?: string;
-	expiration?: string | number;
+	expires?: string | number;
+	quiet?: boolean;
 	all?: boolean;
 }
 
@@ -29,24 +30,40 @@ const ALL = VALID_SCOPE_PREFIXES.filter(s => !s.endsWith('brand'));
 
 const UserToken = () => {
 	const {parsedParams, getJWT} = useCliContext();
+
 	const running = useBoolean(true);
 	const [jwt, setJWT] = useState<string>();
 	const [final_scopes, setFinalScopes] = useState<string[]>([]);
 	const [error, setError] = useState<string | undefined>();
+	let timeoutRef = useRef<NodeJS.Timeout>(null);
 
 	const {
-		expiration,
+		expires,
 		scopes,
 		all,
+		quiet,
 		_: [user_id],
 	} = parsedParams as IParams;
 
 	useEffect(() => {
 		getUserJWT();
+		// @ts-ignore
+		timeoutRef.current = setTimeout(() => {}, 5000);
 	}, []);
 
+	useEffect(() => {
+		if (jwt && timeoutRef.current) {
+			clearTimeout(timeoutRef.current);
+		}
+		return () => {
+			if (timeoutRef.current) {
+				clearTimeout(timeoutRef.current);
+			}
+		};
+	}, [jwt]);
+
 	const getUserJWT = async () => {
-		const exp = Number(expiration);
+		const exp = Number(expires);
 
 		const scope_input = scopes?.split(',') || [];
 		const sc = [...new Set([...scope_input, ...(all ? ALL : [])])];
@@ -77,36 +94,40 @@ const UserToken = () => {
 		running.setFalse();
 	};
 
-	if (error?.length) {
-		return <UhOh text={error} />;
-	} else if (running.value) {
-		return <Spinner text={`Fetching JWT`} />;
+	if (quiet) {
+		return <Text>{jwt}</Text>;
 	} else {
-		return (
-			<>
-				<Text>Token has the following scopes:</Text>
-				<Text>{final_scopes.join(' ')}</Text>
-				<Box
-					flexDirection="column"
-					marginY={1}
-					borderColor="gray"
-					borderStyle={'single'}
-					borderTop={false}
-					borderLeft={false}
-					borderRight={false}
-				></Box>
-				<Text>{jwt}</Text>
-				<Box
-					flexDirection="column"
-					marginY={1}
-					borderColor="gray"
-					borderStyle={'single'}
-					borderBottom={false}
-					borderLeft={false}
-					borderRight={false}
-				></Box>
-			</>
-		);
+		if (error?.length) {
+			return <UhOh text={error} />;
+		} else if (running.value) {
+			return <Spinner text={`Fetching JWT`} />;
+		} else {
+			return (
+				<>
+					<Text>Token has the following scopes:</Text>
+					<Text>{final_scopes.join(' ')}</Text>
+					<Box
+						flexDirection="column"
+						marginY={1}
+						borderColor="gray"
+						borderStyle={'single'}
+						borderTop={false}
+						borderLeft={false}
+						borderRight={false}
+					></Box>
+					<Text>{jwt}</Text>
+					<Box
+						flexDirection="column"
+						marginY={1}
+						borderColor="gray"
+						borderStyle={'single'}
+						borderBottom={false}
+						borderLeft={false}
+						borderRight={false}
+					></Box>
+				</>
+			);
+		}
 	}
 };
 

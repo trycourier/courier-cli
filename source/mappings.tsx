@@ -577,12 +577,16 @@ mappings.set('users:jwt', {
 				'Required if not using all. The scopes to attach to the JWT. We will provide the user_id scope automatically, all others will be comma seperated (https://www.courier.com/docs/reference/auth/issue-token/#available-scopes).',
 		},
 		{
+			option: '--expires',
+			value: 'How long in minutes this JWT is valid for? Default is 5 minutes',
+		},
+		{
 			option: '--all',
 			value: 'Include all scopes besides brand scopes.',
 		},
 		{
-			option: '--expiration',
-			value: 'How long in minutes this JWT is valid for? Default is 5 minutes',
+			option: '--quiet',
+			value: 'Clear standard out and removing',
 		},
 	],
 	example: [
@@ -590,6 +594,7 @@ mappings.set('users:jwt', {
 		'courier test-user123 --scopes=read:user-tokens,write:user-tokens --expiration=60',
 		'courier test-user123 --scopes=inbox:read:messages,inbox:write:events,read:preferences,write:preferences,read:user-tokens,write:user-tokens',
 		'courier test-user123 --all',
+		'courier test-user123 --all --quiet | pbcopy',
 	],
 	component: () => {
 		return <UserToken />;
