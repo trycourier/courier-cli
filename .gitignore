@@ -1,6 +1,4 @@
-.DS_Store
-node_modules
-dist
-.courier
-*.po
-playground
+.prism.log
+dist/
+/courier
+*.exe

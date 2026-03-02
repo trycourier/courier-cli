@@ -1,108 +1,114 @@
 # Courier CLI
 
-### Build, test, and manage your [Courier](https://www.courier.com) integration directly from the command line.
+The official CLI for the [Courier REST API](https://www.courier.com/docs).
 
-The Courier CLI is a developer tool to help you build, test, and manage your integration with Courier directly from the command line. It’s simple to install, works on macOS, Windows, and Linux, and offers a range of functionality to enhance your developer experience with Courier. You can use the Courier CLI to:
+It is generated with [Stainless](https://www.stainless.com/).
 
-- Send messages from the command line to users, lists, or audiences
-- Track events to trigger your Courier Automations
-- Push & pull industry-standard translation files for internationalizing your content
+<!-- x-release-please-start-version -->
 
-## Installing the Courier CLI
+## Installation
 
-From the command-line, use the following command to install the Courier CLI and set your API key:
+### Installing with Go
+
+To test or install the CLI locally, you need [Go](https://go.dev/doc/install) version 1.22 or later installed.
+
+```sh
+go install 'github.com/trycourier/courier-cli/cmd/courier@latest'
+```
+
+Once you have run `go install`, the binary is placed in your Go bin directory:
+
+- **Default location**: `$HOME/go/bin` (or `$GOPATH/bin` if GOPATH is set)
+- **Check your path**: Run `go env GOPATH` to see the base directory
+
+If commands aren't found after installation, add the Go bin directory to your PATH:
+
+```sh
+# Add to your shell profile (.zshrc, .bashrc, etc.)
+export PATH="$PATH:$(go env GOPATH)/bin"
+```
+
+<!-- x-release-please-end -->
+
+### Running Locally
+
+After cloning the git repository for this project, you can use the
+`scripts/run` script to run the tool locally:
+
+```sh
+./scripts/run args...
+```
+
+## Usage
+
+The CLI follows a resource-based command structure:
+
+```sh
+courier [resource] <command> [flags...]
+```
+
+```sh
+courier send message \
+  --api-key 'My API Key' \
+  --message '{}'
+```
+
+For details about specific commands, use the `--help` flag.
+
+### Environment variables
+
+| Environment variable | Required |
+| -------------------- | -------- |
+| `COURIER_API_KEY`    | yes      |
+
+### Global flags
+
+- `--api-key` (can also be set with `COURIER_API_KEY` env var)
+- `--help` - Show command line usage
+- `--debug` - Enable debug logging (includes HTTP request/response details)
+- `--version`, `-v` - Show the CLI version
+- `--base-url` - Use a custom API backend URL
+- `--format` - Change the output format (`auto`, `explore`, `json`, `jsonl`, `pretty`, `raw`, `yaml`)
+- `--format-error` - Change the output format for errors (`auto`, `explore`, `json`, `jsonl`, `pretty`, `raw`, `yaml`)
+- `--transform` - Transform the data output using [GJSON syntax](https://github.com/tidwall/gjson/blob/master/SYNTAX.md)
+- `--transform-error` - Transform the error output using [GJSON syntax](https://github.com/tidwall/gjson/blob/master/SYNTAX.md)
+
+### Passing files as arguments
+
+To pass files to your API, you can use the `@myfile.ext` syntax:
 
 ```bash
-$ yarn install -g @trycourier/cli
-$ courier config --apikey <your-api-key>
+courier <command> --arg @abe.jpg
 ```
 
-### Requirements
+Files can also be passed inside JSON or YAML blobs:
 
-- Courier CLI has only been tested on node.js v18+
-
-## Authenticate the CLI
-
-The fastest way to get started is to run:
-
-```
-$ courier config --apikey <your-api-key>
-```
-
-Courier CLI looks for environment variables prefixed with `COURIER_AUTH_TOKEN`. It will load keys from the first location it finds in the following list:
-
-- A `.courier` file in the current working directory
-- `~/.courier` (in your home directory)
-- A `COURIER_AUTH_TOKEN` or `COURIER_AUTH_TOKEN_*` value otherwise set in your environment (such as via `~/.profile` or `~/.zshrc`)
-
-You can find your Courier API key in your [Courier Settings](https://app.courier.com/settings/api-keys).
-
-## Commands
-
-- `courier config` – Set your Courier API key
-- `courier whoami` – Display the currently authenticated workspace
-- `courier send` - Send a notification to a user, list, tenant, or audience
-- `courier track` - Send a track event to trigger a Courier Automations
-- `courier users:get` - Fetch the data for a given user ID
-- `courier users:set` - Overwrite a user's profile with the provided data
-- `courier users:bulk` - Bulk upload users via csv, json, or parquet
-- `courier translations:upload` - Upload .PO files to your Courier workspace
-- `courier translations:download` - Download .PO files from your Courier workspace
-
-For more details, run `courier` to see a list of commands and their arguments & options.
-
-## Examples
-
-```
-courier --help
-courier --version
-courier upgrade
-
-courier send --tel 555-867-5309 --body "Hey Jenny\!"
-courier send --user user123 --template my-template-id --foo bar
-courier send -P --user=test123 --body "hello world" --title="hello" --channels=inbox
-courier send --tenant=kewl --title=hello --body="hello world" --channel=inbox
-courier send --user="1" --tenant-context=kewl --title=hello --body="hello world" --channel=inbox
-
-courier users:get user123
-courier users:set user123 --email user@example.com
-courier users:bulk examples/users.csv --replace
-courier users:bulk examples/users.parquet --list new-list-id --tenant new-tenant-id
-
-courier track EXAMPLE_EVENT user123 --name "Pip the Pigeon"
-
-courier translations:upload en-US ./translations/en-US.po
-courier translations:download en-US --text > example.en-US.po
-
-courier config --apikey MY_API_KEY -P --override
-courier config --apikey MY_API_KEY --mock
-courier config --apikey MY_API_KEY --draft
-
-courier test-user123 --scopes=read:user-tokens,write:user-tokens --expiration=60
-courier test-user123 --all --quiet | pbcopy
+```bash
+courier <command> --arg '{image: "@abe.jpg"}'
+# Equivalent:
+courier <command> <<YAML
+arg:
+  image: "@abe.jpg"
+YAML
 ```
 
-## Common Flags
+If you need to pass a string literal that begins with an `@` sign, you can
+escape the `@` sign to avoid accidentally passing a file.
 
-There are a number flags you can use for any command
+```bash
+courier <command> --username '\@abe'
+```
 
-| Flags                      | Description                                                                                                              |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| -M --mock                  | Use the API key that simulates sending using the simulating routing                                                      |
-| -P --production            | Use the production environment API key                                                                                   |
-| -D --draft                 | Use the draft document scope API key. Use draft or submitted, will default to published key if neither are provided      |
-| -S --submitted             | Use the submitted document scope API key                                                                                 |
-| --apikey <Courier API Key> | Use the provided Courier API key, otherwise use the approprate environment variable                                      |
-| --apiurl <Courier API URL> | Use the provided Courier API URL, otherwise use COURIER_API_URL environment variable. Default is https://api.courier.com |
+#### Explicit encoding
 
-## Misc
+For JSON endpoints, the CLI tool does filetype sniffing to determine whether the
+file contents should be sent as a string literal (for plain text files) or as a
+base64-encoded string literal (for binary files). If you need to explicitly send
+the file as either plain text or base64-encoded data, you can use
+`@file://myfile.txt` (for string encoding) or `@data://myfile.dat` (for
+base64-encoding). Note that absolute paths will begin with `@file://` or
+`@data://`, followed by a third `/` (for example, `@file:///tmp/file.txt`).
 
-- If you need to change the Courier API URL, you can set COURIER_API_URL in .courier or other methods to set the environment variables.
-
-## License
-
-[MIT License](http://www.opensource.org/licenses/mit-license.php)
-
-## Author
-
-[Courier](https://github.com/trycourier) ([support@courier.com](mailto:support@courier.com))
+```bash
+courier <command> --arg @data://file.txt
+```
