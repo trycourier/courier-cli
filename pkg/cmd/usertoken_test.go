@@ -5,8 +5,8 @@ package cmd
 import (
 	"testing"
 
-	"github.com/trycourier/courier-cli/internal/mocktest"
-	"github.com/trycourier/courier-cli/internal/requestflag"
+	"github.com/trycourier/courier-cli/v3/internal/mocktest"
+	"github.com/trycourier/courier-cli/v3/internal/requestflag"
 )
 
 func TestUsersTokensRetrieve(t *testing.T) {

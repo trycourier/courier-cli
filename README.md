@@ -13,7 +13,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 To test or install the CLI locally, you need [Go](https://go.dev/doc/install) version 1.22 or later installed.
 
 ```sh
-go install 'github.com/trycourier/courier-cli/cmd/courier@latest'
+go install 'github.com/trycourier/courier-cli/v3/cmd/courier@latest'
 ```
 
 Once you have run `go install`, the binary is placed in your Go bin directory:
