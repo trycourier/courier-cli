@@ -78,3 +78,19 @@ nfpms:
     contents:
       - src: man/man1/*.1.gz
         dst: /usr/share/man/man1/
+homebrew_casks:
+  - name: courier
+    repository:
+      owner: trycourier
+      name: homebrew-courier
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    homepage: https://courier.com
+    description: The official Courier CLI for managing notifications from the command line.
+    license: Apache-2.0
+    binary: "courier"
+    completions:
+      bash: "completions/courier.bash"
+      zsh: "completions/courier.zsh"
+      fish: "completions/courier.fish"
+    manpages:
+    - man/man1/courier.1.gz
