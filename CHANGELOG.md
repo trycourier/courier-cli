@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.1.3 (2026-03-03)
+
+Full Changelog: [v3.1.2...v3.1.3](https://github.com/trycourier/courier-cli/compare/v3.1.2...v3.1.3)
+
+### Bug Fixes
+
+* **api:** remove duplicate token parameter from users tokens add-single ([be432e1](https://github.com/trycourier/courier-cli/commit/be432e12162da46bdab567473b988bddcb39adca))
+* switch npm publish to OIDC trusted publishing ([a01b06f](https://github.com/trycourier/courier-cli/commit/a01b06fca86221c7c9a883ee98ff459913b2d2f1))
+
 ## 3.1.2 (2026-03-03)
 
 Full Changelog: [v3.1.1...v3.1.2](https://github.com/trycourier/courier-cli/compare/v3.1.1...v3.1.2)

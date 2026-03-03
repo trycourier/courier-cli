@@ -134,12 +134,6 @@ var usersTokensAddSingle = requestflag.WithInnerFlags(cli.Command{
 			Required: true,
 		},
 		&requestflag.Flag[string]{
-			Name:     "token",
-			Usage:    "Full body of the token. Must match token in URL path parameter.",
-			Required: true,
-			BodyPath: "token",
-		},
-		&requestflag.Flag[string]{
 			Name:     "provider-key",
 			Required: true,
 			BodyPath: "provider_key",
