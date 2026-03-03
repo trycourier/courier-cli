@@ -33,6 +33,7 @@ jobs:
 
   publish-npm:
     needs: goreleaser
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
