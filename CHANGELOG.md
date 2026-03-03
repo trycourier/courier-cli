@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.1.1 (2026-03-03)
+
+Full Changelog: [v3.1.0...v3.1.1](https://github.com/trycourier/courier-cli/compare/v3.1.0...v3.1.1)
+
+### Bug Fixes
+
+* decouple npm publish from goreleaser success ([b8b4e71](https://github.com/trycourier/courier-cli/commit/b8b4e7156836daa210bed3116bea170f119a091b))
+
 ## 3.1.0 (2026-03-03)
 
 Full Changelog: [v3.0.0...v3.1.0](https://github.com/trycourier/courier-cli/compare/v3.0.0...v3.1.0)
