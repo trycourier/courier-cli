@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.1.4 (2026-03-03)
+
+Full Changelog: [v3.1.3...v3.1.4](https://github.com/trycourier/courier-cli/compare/v3.1.3...v3.1.4)
+
+### Bug Fixes
+
+* update npm for OIDC trusted publishing support ([71f7928](https://github.com/trycourier/courier-cli/commit/71f792878fb739fcc9d328ac217ac88fe3b1d04d))
+
 ## 3.1.3 (2026-03-03)
 
 Full Changelog: [v3.1.2...v3.1.3](https://github.com/trycourier/courier-cli/compare/v3.1.2...v3.1.3)
