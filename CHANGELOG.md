@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.1.2 (2026-03-03)
+
+Full Changelog: [v3.1.1...v3.1.2](https://github.com/trycourier/courier-cli/compare/v3.1.1...v3.1.2)
+
+### Bug Fixes
+
+* use correct NPM_AUTH_TOKEN secret name for npm publish ([a291c22](https://github.com/trycourier/courier-cli/commit/a291c22c1f7e5d6d4596c6cfa0c443e52f020863))
+
 ## 3.1.1 (2026-03-03)
 
 Full Changelog: [v3.1.0...v3.1.1](https://github.com/trycourier/courier-cli/compare/v3.1.0...v3.1.1)
