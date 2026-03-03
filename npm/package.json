@@ -1,0 +1,24 @@
+{
+  "name": "@trycourier/cli",
+  "version": "3.0.0",
+  "description": "Courier CLI – manage notifications from the command line",
+  "bin": {
+    "courier": "./bin/courier"
+  },
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "files": [
+    "bin/",
+    "install.js"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trycourier/courier-cli.git"
+  },
+  "homepage": "https://github.com/trycourier/courier-cli",
+  "engines": {
+    "node": ">=14"
+  }
+}

@@ -2,3 +2,5 @@
 dist/
 /courier
 *.exe
+npm/bin/courier
+npm/bin/courier.exe

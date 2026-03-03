@@ -29,3 +29,23 @@ jobs:
         args: release --clean
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-npm:
+    needs: goreleaser
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+    - name: Set up Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
+        registry-url: "https://registry.npmjs.org"
+    - name: Set package version from tag
+      working-directory: npm
+      run: npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version --allow-same-version
+    - name: Publish to npm
+      working-directory: npm
+      run: npm publish --access public
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
