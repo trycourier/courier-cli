@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.1.5 (2026-03-04)
+
+Full Changelog: [v3.1.4...v3.1.5](https://github.com/trycourier/courier-cli/compare/v3.1.4...v3.1.5)
+
+### Documentation
+
+* add README for npm package page ([823c5eb](https://github.com/trycourier/courier-cli/commit/823c5eb0591f55a0255f5943bebbe7b4c5075d85))
+
 ## 3.1.4 (2026-03-03)
 
 Full Changelog: [v3.1.3...v3.1.4](https://github.com/trycourier/courier-cli/compare/v3.1.3...v3.1.4)
