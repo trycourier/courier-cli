@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.1.6 (2026-03-04)
+
+Full Changelog: [v3.1.5...v3.1.6](https://github.com/trycourier/courier-cli/compare/v3.1.5...v3.1.6)
+
+### Bug Fixes
+
+* add Node shim so npm creates bin symlink on install ([b1d475e](https://github.com/trycourier/courier-cli/commit/b1d475efd1672a48b5e6fdde1af4c516475b7bec))
+
 ## 3.1.5 (2026-03-04)
 
 Full Changelog: [v3.1.4...v3.1.5](https://github.com/trycourier/courier-cli/compare/v3.1.4...v3.1.5)
