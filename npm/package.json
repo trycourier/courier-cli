@@ -3,7 +3,7 @@
   "version": "3.0.0",
   "description": "Courier CLI – manage notifications from the command line",
   "bin": {
-    "courier": "./bin/courier"
+    "courier": "./bin/courier.js"
   },
   "scripts": {
     "postinstall": "node install.js"
