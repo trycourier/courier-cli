@@ -118,3 +118,24 @@ base64-encoding). Note that absolute paths will begin with `@file://` or
 ```bash
 courier <command> --arg @data://file.txt
 ```
+
+## Use with AI agents
+
+The CLI works as a tool backend for AI coding agents. Because every API endpoint maps to a single shell command with structured JSON output, agents can call Courier without an SDK or custom integration.
+
+```sh
+export COURIER_API_KEY=your_api_key
+
+# Send a message
+courier send message \
+  --message.to.user_id "user-123" \
+  --message.template "order-confirmation" \
+  --message.data '{"orderId": "ORD-456"}'
+
+# Check delivery status
+courier messages list --recipient "user-123" --format json
+```
+
+For richer agent integration, Courier also provides an [MCP server](https://github.com/trycourier/courier-mcp) that exposes the full API as structured tools for Cursor, Claude Code, Windsurf, and other MCP-compatible clients.
+
+See [Build with AI](https://www.courier.com/docs/tools/ai-onboarding) for setup instructions.
