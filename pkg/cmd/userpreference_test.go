@@ -51,6 +51,7 @@ func TestUsersPreferencesUpdateOrCreateTopic(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"users:preferences", "update-or-create-topic",
+		"--api-key", "string",
 		"--user-id", "user_id",
 		"--topic-id", "topic_id",
 		"--topic.status", "OPTED_IN",

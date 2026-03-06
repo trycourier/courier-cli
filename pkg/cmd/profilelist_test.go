@@ -47,6 +47,7 @@ func TestProfilesListsSubscribe(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"profiles:lists", "subscribe",
+		"--api-key", "string",
 		"--user-id", "user_id",
 		"--list.list-id", "listId",
 		"--list.preferences", "{categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}",

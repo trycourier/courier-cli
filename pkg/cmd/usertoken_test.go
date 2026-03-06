@@ -38,6 +38,7 @@ func TestUsersTokensUpdate(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"users:tokens", "update",
+		"--api-key", "string",
 		"--user-id", "user_id",
 		"--token", "token",
 		"--patch.op", "op",
@@ -99,6 +100,7 @@ func TestUsersTokensAddSingle(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"users:tokens", "add-single",
+		"--api-key", "string",
 		"--user-id", "user_id",
 		"--token", "token",
 		"--provider-key", "firebase-fcm",

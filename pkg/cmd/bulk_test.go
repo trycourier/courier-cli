@@ -26,6 +26,7 @@ func TestBulkAddUsers(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"bulk", "add-users",
+		"--api-key", "string",
 		"--job-id", "job_id",
 		"--user.data", "{}",
 		"--user.preferences", "{categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}",
@@ -51,6 +52,7 @@ func TestBulkCreateJob(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"bulk", "create-job",
+		"--api-key", "string",
 		"--message.event", "event",
 		"--message.brand", "brand",
 		"--message.content", "{body: body, title: title}",

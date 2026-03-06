@@ -27,6 +27,7 @@ func TestNotificationsChecksUpdate(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"notifications:checks", "update",
+		"--api-key", "string",
 		"--id", "id",
 		"--submission-id", "submissionId",
 		"--check.id", "id",

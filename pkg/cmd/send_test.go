@@ -25,6 +25,7 @@ func TestSendMessage(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"send", "message",
+		"--api-key", "string",
 		"--message.brand-id", "brand_id",
 		"--message.channels", "{foo: {brand_id: brand_id, if: if, metadata: {utm: {campaign: campaign, content: content, medium: medium, source: source, term: term}}, override: {foo: bar}, providers: [string], routing_method: all, timeouts: {channel: 0, provider: 0}}}",
 		"--message.content", "{body: body, title: title}",

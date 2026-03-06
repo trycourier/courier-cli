@@ -47,6 +47,7 @@ func TestProfilesUpdate(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"profiles", "update",
+		"--api-key", "string",
 		"--user-id", "user_id",
 		"--patch.op", "op",
 		"--patch.path", "path",
