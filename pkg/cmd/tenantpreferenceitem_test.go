@@ -10,25 +10,42 @@ import (
 
 func TestTenantsPreferencesItemsUpdate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"tenants:preferences:items", "update",
-		"--api-key", "string",
-		"--tenant-id", "tenant_id",
-		"--topic-id", "topic_id",
-		"--status", "OPTED_IN",
-		"--custom-routing", "[inbox]",
-		"--has-custom-routing=true",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "tenants:preferences:items", "update",
+			"--api-key", "string",
+			"--tenant-id", "tenant_id",
+			"--topic-id", "topic_id",
+			"--status", "OPTED_IN",
+			"--custom-routing", "[inbox]",
+			"--has-custom-routing=true",
+		)
+	})
+
+	t.Run("piping data", func(t *testing.T) {
+		// Test piping YAML data over stdin
+		pipeData := []byte("" +
+			"status: OPTED_IN\n" +
+			"custom_routing:\n" +
+			"  - inbox\n" +
+			"has_custom_routing: true\n")
+		mocktest.TestRunMockTestWithPipeAndFlags(
+			t, pipeData, "tenants:preferences:items", "update",
+			"--api-key", "string",
+			"--tenant-id", "tenant_id",
+			"--topic-id", "topic_id",
+		)
+	})
 }
 
 func TestTenantsPreferencesItemsDelete(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"tenants:preferences:items", "delete",
-		"--api-key", "string",
-		"--tenant-id", "tenant_id",
-		"--topic-id", "topic_id",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "tenants:preferences:items", "delete",
+			"--api-key", "string",
+			"--tenant-id", "tenant_id",
+			"--topic-id", "topic_id",
+		)
+	})
 }

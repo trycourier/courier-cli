@@ -11,47 +11,97 @@ import (
 
 func TestAutomationsInvokeInvokeAdHoc(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"automations:invoke", "invoke-ad-hoc",
-		"--api-key", "string",
-		"--automation", "{steps: [{action: delay, duration: duration, until: 20240408T080910.123}, {action: send, brand: brand, data: {foo: bar}, profile: {foo: bar}, recipient: recipient, template: 64TP5HKPFTM8VTK1Y75SJDQX9JK0}], cancelation_token: delay-send--user-yes--abc-123}",
-		"--brand", "brand",
-		"--data", "{name: bar}",
-		"--profile", "{tenant_id: bar}",
-		"--recipient", "user-yes",
-		"--template", "template",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "automations:invoke", "invoke-ad-hoc",
+			"--api-key", "string",
+			"--automation", "{steps: [{action: delay, duration: duration, until: 20240408T080910.123}, {action: send, brand: brand, data: {foo: bar}, profile: {foo: bar}, recipient: recipient, template: 64TP5HKPFTM8VTK1Y75SJDQX9JK0}], cancelation_token: delay-send--user-yes--abc-123}",
+			"--brand", "brand",
+			"--data", "{name: bar}",
+			"--profile", "{tenant_id: bar}",
+			"--recipient", "user-yes",
+			"--template", "template",
+		)
+	})
 
-	// Check that inner flags have been set up correctly
-	requestflag.CheckInnerFlags(automationsInvokeInvokeAdHoc)
+	t.Run("inner flags", func(t *testing.T) {
+		// Check that inner flags have been set up correctly
+		requestflag.CheckInnerFlags(automationsInvokeInvokeAdHoc)
 
-	// Alternative argument passing style using inner flags
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"automations:invoke", "invoke-ad-hoc",
-		"--api-key", "string",
-		"--automation.steps", "[{action: delay, duration: duration, until: 20240408T080910.123}, {action: send, brand: brand, data: {foo: bar}, profile: {foo: bar}, recipient: recipient, template: 64TP5HKPFTM8VTK1Y75SJDQX9JK0}]",
-		"--automation.cancelation-token", "delay-send--user-yes--abc-123",
-		"--brand", "brand",
-		"--data", "{name: bar}",
-		"--profile", "{tenant_id: bar}",
-		"--recipient", "user-yes",
-		"--template", "template",
-	)
+		// Alternative argument passing style using inner flags
+		mocktest.TestRunMockTestWithFlags(
+			t, "automations:invoke", "invoke-ad-hoc",
+			"--api-key", "string",
+			"--automation.steps", "[{action: delay, duration: duration, until: 20240408T080910.123}, {action: send, brand: brand, data: {foo: bar}, profile: {foo: bar}, recipient: recipient, template: 64TP5HKPFTM8VTK1Y75SJDQX9JK0}]",
+			"--automation.cancelation-token", "delay-send--user-yes--abc-123",
+			"--brand", "brand",
+			"--data", "{name: bar}",
+			"--profile", "{tenant_id: bar}",
+			"--recipient", "user-yes",
+			"--template", "template",
+		)
+	})
+
+	t.Run("piping data", func(t *testing.T) {
+		// Test piping YAML data over stdin
+		pipeData := []byte("" +
+			"automation:\n" +
+			"  steps:\n" +
+			"    - action: delay\n" +
+			"      duration: duration\n" +
+			"      until: 20240408T080910.123\n" +
+			"    - action: send\n" +
+			"      brand: brand\n" +
+			"      data:\n" +
+			"        foo: bar\n" +
+			"      profile:\n" +
+			"        foo: bar\n" +
+			"      recipient: recipient\n" +
+			"      template: 64TP5HKPFTM8VTK1Y75SJDQX9JK0\n" +
+			"  cancelation_token: delay-send--user-yes--abc-123\n" +
+			"brand: brand\n" +
+			"data:\n" +
+			"  name: bar\n" +
+			"profile:\n" +
+			"  tenant_id: bar\n" +
+			"recipient: user-yes\n" +
+			"template: template\n")
+		mocktest.TestRunMockTestWithPipeAndFlags(
+			t, pipeData, "automations:invoke", "invoke-ad-hoc",
+			"--api-key", "string",
+		)
+	})
 }
 
 func TestAutomationsInvokeInvokeByTemplate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"automations:invoke", "invoke-by-template",
-		"--api-key", "string",
-		"--template-id", "templateId",
-		"--recipient", "recipient",
-		"--brand", "brand",
-		"--data", "{foo: bar}",
-		"--profile", "{foo: bar}",
-		"--template", "template",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "automations:invoke", "invoke-by-template",
+			"--api-key", "string",
+			"--template-id", "templateId",
+			"--recipient", "recipient",
+			"--brand", "brand",
+			"--data", "{foo: bar}",
+			"--profile", "{foo: bar}",
+			"--template", "template",
+		)
+	})
+
+	t.Run("piping data", func(t *testing.T) {
+		// Test piping YAML data over stdin
+		pipeData := []byte("" +
+			"recipient: recipient\n" +
+			"brand: brand\n" +
+			"data:\n" +
+			"  foo: bar\n" +
+			"profile:\n" +
+			"  foo: bar\n" +
+			"template: template\n")
+		mocktest.TestRunMockTestWithPipeAndFlags(
+			t, pipeData, "automations:invoke", "invoke-by-template",
+			"--api-key", "string",
+			"--template-id", "templateId",
+		)
+	})
 }
