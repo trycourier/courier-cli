@@ -11,45 +11,78 @@ import (
 
 func TestProfilesListsRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"profiles:lists", "retrieve",
-		"--api-key", "string",
-		"--user-id", "user_id",
-		"--cursor", "cursor",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "profiles:lists", "retrieve",
+			"--api-key", "string",
+			"--user-id", "user_id",
+			"--cursor", "cursor",
+		)
+	})
 }
 
 func TestProfilesListsDelete(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"profiles:lists", "delete",
-		"--api-key", "string",
-		"--user-id", "user_id",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "profiles:lists", "delete",
+			"--api-key", "string",
+			"--user-id", "user_id",
+		)
+	})
 }
 
 func TestProfilesListsSubscribe(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"profiles:lists", "subscribe",
-		"--api-key", "string",
-		"--user-id", "user_id",
-		"--list", "{listId: listId, preferences: {categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}}",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "profiles:lists", "subscribe",
+			"--api-key", "string",
+			"--user-id", "user_id",
+			"--list", "{listId: listId, preferences: {categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}}",
+		)
+	})
 
-	// Check that inner flags have been set up correctly
-	requestflag.CheckInnerFlags(profilesListsSubscribe)
+	t.Run("inner flags", func(t *testing.T) {
+		// Check that inner flags have been set up correctly
+		requestflag.CheckInnerFlags(profilesListsSubscribe)
 
-	// Alternative argument passing style using inner flags
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"profiles:lists", "subscribe",
-		"--api-key", "string",
-		"--user-id", "user_id",
-		"--list.list-id", "listId",
-		"--list.preferences", "{categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}",
-	)
+		// Alternative argument passing style using inner flags
+		mocktest.TestRunMockTestWithFlags(
+			t, "profiles:lists", "subscribe",
+			"--api-key", "string",
+			"--user-id", "user_id",
+			"--list.list-id", "listId",
+			"--list.preferences", "{categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}",
+		)
+	})
+
+	t.Run("piping data", func(t *testing.T) {
+		// Test piping YAML data over stdin
+		pipeData := []byte("" +
+			"lists:\n" +
+			"  - listId: listId\n" +
+			"    preferences:\n" +
+			"      categories:\n" +
+			"        foo:\n" +
+			"          status: OPTED_IN\n" +
+			"          channel_preferences:\n" +
+			"            - channel: direct_message\n" +
+			"          rules:\n" +
+			"            - until: until\n" +
+			"              start: start\n" +
+			"      notifications:\n" +
+			"        foo:\n" +
+			"          status: OPTED_IN\n" +
+			"          channel_preferences:\n" +
+			"            - channel: direct_message\n" +
+			"          rules:\n" +
+			"            - until: until\n" +
+			"              start: start\n")
+		mocktest.TestRunMockTestWithPipeAndFlags(
+			t, pipeData, "profiles:lists", "subscribe",
+			"--api-key", "string",
+			"--user-id", "user_id",
+		)
+	})
 }

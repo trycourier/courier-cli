@@ -10,20 +10,22 @@ import (
 
 func TestAuditEventsRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"audit-events", "retrieve",
-		"--api-key", "string",
-		"--audit-event-id", "audit-event-id",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "audit-events", "retrieve",
+			"--api-key", "string",
+			"--audit-event-id", "audit-event-id",
+		)
+	})
 }
 
 func TestAuditEventsList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"audit-events", "list",
-		"--api-key", "string",
-		"--cursor", "cursor",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "audit-events", "list",
+			"--api-key", "string",
+			"--cursor", "cursor",
+		)
+	})
 }

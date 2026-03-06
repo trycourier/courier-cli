@@ -11,67 +11,101 @@ import (
 
 func TestListsRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"lists", "retrieve",
-		"--api-key", "string",
-		"--list-id", "list_id",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "lists", "retrieve",
+			"--api-key", "string",
+			"--list-id", "list_id",
+		)
+	})
 }
 
 func TestListsUpdate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"lists", "update",
-		"--api-key", "string",
-		"--list-id", "list_id",
-		"--name", "name",
-		"--preferences", "{categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "lists", "update",
+			"--api-key", "string",
+			"--list-id", "list_id",
+			"--name", "name",
+			"--preferences", "{categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}",
+		)
+	})
 
-	// Check that inner flags have been set up correctly
-	requestflag.CheckInnerFlags(listsUpdate)
+	t.Run("inner flags", func(t *testing.T) {
+		// Check that inner flags have been set up correctly
+		requestflag.CheckInnerFlags(listsUpdate)
 
-	// Alternative argument passing style using inner flags
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"lists", "update",
-		"--api-key", "string",
-		"--list-id", "list_id",
-		"--name", "name",
-		"--preferences.categories", "{foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}",
-		"--preferences.notifications", "{foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}",
-	)
+		// Alternative argument passing style using inner flags
+		mocktest.TestRunMockTestWithFlags(
+			t, "lists", "update",
+			"--api-key", "string",
+			"--list-id", "list_id",
+			"--name", "name",
+			"--preferences.categories", "{foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}",
+			"--preferences.notifications", "{foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}",
+		)
+	})
+
+	t.Run("piping data", func(t *testing.T) {
+		// Test piping YAML data over stdin
+		pipeData := []byte("" +
+			"name: name\n" +
+			"preferences:\n" +
+			"  categories:\n" +
+			"    foo:\n" +
+			"      status: OPTED_IN\n" +
+			"      channel_preferences:\n" +
+			"        - channel: direct_message\n" +
+			"      rules:\n" +
+			"        - until: until\n" +
+			"          start: start\n" +
+			"  notifications:\n" +
+			"    foo:\n" +
+			"      status: OPTED_IN\n" +
+			"      channel_preferences:\n" +
+			"        - channel: direct_message\n" +
+			"      rules:\n" +
+			"        - until: until\n" +
+			"          start: start\n")
+		mocktest.TestRunMockTestWithPipeAndFlags(
+			t, pipeData, "lists", "update",
+			"--api-key", "string",
+			"--list-id", "list_id",
+		)
+	})
 }
 
 func TestListsList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"lists", "list",
-		"--api-key", "string",
-		"--cursor", "cursor",
-		"--pattern", "pattern",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "lists", "list",
+			"--api-key", "string",
+			"--cursor", "cursor",
+			"--pattern", "pattern",
+		)
+	})
 }
 
 func TestListsDelete(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"lists", "delete",
-		"--api-key", "string",
-		"--list-id", "list_id",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "lists", "delete",
+			"--api-key", "string",
+			"--list-id", "list_id",
+		)
+	})
 }
 
 func TestListsRestore(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"lists", "restore",
-		"--api-key", "string",
-		"--list-id", "list_id",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "lists", "restore",
+			"--api-key", "string",
+			"--list-id", "list_id",
+		)
+	})
 }

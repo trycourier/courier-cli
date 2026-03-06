@@ -10,11 +10,25 @@ import (
 
 func TestAuthIssueToken(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"auth", "issue-token",
-		"--api-key", "string",
-		"--expires-in", "$YOUR_NUMBER days",
-		"--scope", "user_id:$YOUR_USER_ID write:user-tokens inbox:read:messages inbox:write:events read:preferences write:preferences read:brands",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "auth", "issue-token",
+			"--api-key", "string",
+			"--expires-in", "$YOUR_NUMBER days",
+			"--scope", "user_id:$YOUR_USER_ID write:user-tokens inbox:read:messages inbox:write:events read:preferences write:preferences read:brands",
+		)
+	})
+
+	t.Run("piping data", func(t *testing.T) {
+		// Test piping YAML data over stdin
+		pipeData := []byte("" +
+			"expires_in: $YOUR_NUMBER days\n" +
+			"scope: >-\n" +
+			"  user_id:$YOUR_USER_ID write:user-tokens inbox:read:messages inbox:write:events\n" +
+			"  read:preferences write:preferences read:brands\n")
+		mocktest.TestRunMockTestWithPipeAndFlags(
+			t, pipeData, "auth", "issue-token",
+			"--api-key", "string",
+		)
+	})
 }
