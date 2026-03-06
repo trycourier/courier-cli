@@ -38,6 +38,7 @@ func TestUsersTenantsAddMultiple(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"users:tenants", "add-multiple",
+		"--api-key", "string",
 		"--user-id", "user_id",
 		"--tenant.tenant-id", "tenant_id",
 		"--tenant.profile", "{foo: bar}",

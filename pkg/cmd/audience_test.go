@@ -39,6 +39,7 @@ func TestAudiencesUpdate(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"audiences", "update",
+		"--api-key", "string",
 		"--audience-id", "audience_id",
 		"--description", "description",
 		"--filter.filters", "[{operator: operator, filters: [], path: path, value: value}]",

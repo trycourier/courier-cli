@@ -28,6 +28,7 @@ func TestBrandsCreate(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"brands", "create",
+		"--api-key", "string",
 		"--name", "name",
 		"--id", "id",
 		"--settings.colors", "{primary: primary, secondary: secondary}",
@@ -66,6 +67,7 @@ func TestBrandsUpdate(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"brands", "update",
+		"--api-key", "string",
 		"--brand-id", "brand_id",
 		"--name", "name",
 		"--settings.colors", "{primary: primary, secondary: secondary}",

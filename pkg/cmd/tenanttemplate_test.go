@@ -63,6 +63,7 @@ func TestTenantsTemplatesReplace(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"tenants:templates", "replace",
+		"--api-key", "string",
 		"--tenant-id", "tenant_id",
 		"--template-id", "template_id",
 		"--template.content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, type: text}], version: version}",

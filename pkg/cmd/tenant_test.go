@@ -41,6 +41,7 @@ func TestTenantsUpdate(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"tenants", "update",
+		"--api-key", "string",
 		"--tenant-id", "tenant_id",
 		"--name", "name",
 		"--brand-id", "brand_id",

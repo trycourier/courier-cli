@@ -30,6 +30,7 @@ func TestAutomationsInvokeInvokeAdHoc(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"automations:invoke", "invoke-ad-hoc",
+		"--api-key", "string",
 		"--automation.steps", "[{action: delay, duration: duration, until: 20240408T080910.123}, {action: send, brand: brand, data: {foo: bar}, profile: {foo: bar}, recipient: recipient, template: 64TP5HKPFTM8VTK1Y75SJDQX9JK0}]",
 		"--automation.cancelation-token", "delay-send--user-yes--abc-123",
 		"--brand", "brand",

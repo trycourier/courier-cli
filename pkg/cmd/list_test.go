@@ -37,6 +37,7 @@ func TestListsUpdate(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"lists", "update",
+		"--api-key", "string",
 		"--list-id", "list_id",
 		"--name", "name",
 		"--preferences.categories", "{foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}",
