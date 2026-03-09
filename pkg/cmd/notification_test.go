@@ -9,7 +9,6 @@ import (
 )
 
 func TestNotificationsList(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"notifications", "list",
@@ -20,7 +19,6 @@ func TestNotificationsList(t *testing.T) {
 }
 
 func TestNotificationsRetrieveContent(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"notifications", "retrieve-content",

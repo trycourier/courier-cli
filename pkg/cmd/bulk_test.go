@@ -10,7 +10,6 @@ import (
 )
 
 func TestBulkAddUsers(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"bulk", "add-users",
@@ -36,7 +35,6 @@ func TestBulkAddUsers(t *testing.T) {
 }
 
 func TestBulkCreateJob(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"bulk", "create-job",
@@ -62,7 +60,6 @@ func TestBulkCreateJob(t *testing.T) {
 }
 
 func TestBulkListUsers(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"bulk", "list-users",
@@ -73,7 +70,6 @@ func TestBulkListUsers(t *testing.T) {
 }
 
 func TestBulkRetrieveJob(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"bulk", "retrieve-job",
@@ -83,7 +79,6 @@ func TestBulkRetrieveJob(t *testing.T) {
 }
 
 func TestBulkRunJob(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"bulk", "run-job",

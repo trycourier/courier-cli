@@ -10,7 +10,6 @@ import (
 )
 
 func TestListsSubscriptionsList(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"lists:subscriptions", "list",
@@ -21,7 +20,6 @@ func TestListsSubscriptionsList(t *testing.T) {
 }
 
 func TestListsSubscriptionsAdd(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"lists:subscriptions", "add",
@@ -44,7 +42,6 @@ func TestListsSubscriptionsAdd(t *testing.T) {
 }
 
 func TestListsSubscriptionsSubscribe(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"lists:subscriptions", "subscribe",
@@ -67,7 +64,6 @@ func TestListsSubscriptionsSubscribe(t *testing.T) {
 }
 
 func TestListsSubscriptionsSubscribeUser(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"lists:subscriptions", "subscribe-user",
@@ -92,7 +88,6 @@ func TestListsSubscriptionsSubscribeUser(t *testing.T) {
 }
 
 func TestListsSubscriptionsUnsubscribeUser(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"lists:subscriptions", "unsubscribe-user",

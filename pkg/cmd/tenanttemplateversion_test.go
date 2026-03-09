@@ -9,7 +9,6 @@ import (
 )
 
 func TestTenantsTemplatesVersionsRetrieve(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"tenants:templates:versions", "retrieve",

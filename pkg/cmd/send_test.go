@@ -10,7 +10,6 @@ import (
 )
 
 func TestSendMessage(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"send", "message",

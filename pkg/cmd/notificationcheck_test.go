@@ -10,7 +10,6 @@ import (
 )
 
 func TestNotificationsChecksUpdate(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"notifications:checks", "update",
@@ -36,7 +35,6 @@ func TestNotificationsChecksUpdate(t *testing.T) {
 }
 
 func TestNotificationsChecksList(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"notifications:checks", "list",
@@ -47,7 +45,6 @@ func TestNotificationsChecksList(t *testing.T) {
 }
 
 func TestNotificationsChecksDelete(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"notifications:checks", "delete",

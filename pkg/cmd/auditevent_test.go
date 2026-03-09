@@ -9,7 +9,6 @@ import (
 )
 
 func TestAuditEventsRetrieve(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"audit-events", "retrieve",
@@ -19,7 +18,6 @@ func TestAuditEventsRetrieve(t *testing.T) {
 }
 
 func TestAuditEventsList(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"audit-events", "list",

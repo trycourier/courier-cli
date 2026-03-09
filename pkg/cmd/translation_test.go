@@ -9,7 +9,6 @@ import (
 )
 
 func TestTranslationsRetrieve(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"translations", "retrieve",
@@ -20,7 +19,6 @@ func TestTranslationsRetrieve(t *testing.T) {
 }
 
 func TestTranslationsUpdate(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"translations", "update",

@@ -10,7 +10,6 @@ import (
 )
 
 func TestAudiencesRetrieve(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"audiences", "retrieve",
@@ -20,7 +19,6 @@ func TestAudiencesRetrieve(t *testing.T) {
 }
 
 func TestAudiencesUpdate(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"audiences", "update",
@@ -48,7 +46,6 @@ func TestAudiencesUpdate(t *testing.T) {
 }
 
 func TestAudiencesList(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"audiences", "list",
@@ -58,7 +55,6 @@ func TestAudiencesList(t *testing.T) {
 }
 
 func TestAudiencesDelete(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"audiences", "delete",
@@ -68,7 +64,6 @@ func TestAudiencesDelete(t *testing.T) {
 }
 
 func TestAudiencesListMembers(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"audiences", "list-members",

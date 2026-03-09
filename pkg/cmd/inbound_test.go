@@ -9,7 +9,6 @@ import (
 )
 
 func TestInboundTrackEvent(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"inbound", "track-event",
