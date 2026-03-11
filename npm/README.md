@@ -10,7 +10,6 @@ npm install -g @trycourier/cli
 
 ### Other install methods
 
-- **Homebrew**: `brew install trycourier/courier/courier`
 - **Go**: `go install github.com/trycourier/courier-cli/cmd/courier@latest`
 - **Binary**: [GitHub Releases](https://github.com/trycourier/courier-cli/releases)
 

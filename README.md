@@ -16,12 +16,6 @@ npm install -g @trycourier/cli
 
 This downloads a platform-specific native binary via a postinstall step. No Node.js runtime is needed after installation.
 
-### Installing with Homebrew
-
-```sh
-brew install trycourier/courier/courier
-```
-
 ### Installing with Go
 
 To test or install the CLI locally, you need [Go](https://go.dev/doc/install) version 1.22 or later installed.
