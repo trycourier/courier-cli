@@ -10,7 +10,6 @@ import (
 )
 
 func TestListsRetrieve(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"lists", "retrieve",
@@ -20,7 +19,6 @@ func TestListsRetrieve(t *testing.T) {
 }
 
 func TestListsUpdate(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"lists", "update",
@@ -45,7 +43,6 @@ func TestListsUpdate(t *testing.T) {
 }
 
 func TestListsList(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"lists", "list",
@@ -56,7 +53,6 @@ func TestListsList(t *testing.T) {
 }
 
 func TestListsDelete(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"lists", "delete",
@@ -66,7 +62,6 @@ func TestListsDelete(t *testing.T) {
 }
 
 func TestListsRestore(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"lists", "restore",

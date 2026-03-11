@@ -9,7 +9,6 @@ import (
 )
 
 func TestTenantsPreferencesItemsUpdate(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"tenants:preferences:items", "update",
@@ -23,7 +22,6 @@ func TestTenantsPreferencesItemsUpdate(t *testing.T) {
 }
 
 func TestTenantsPreferencesItemsDelete(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"tenants:preferences:items", "delete",

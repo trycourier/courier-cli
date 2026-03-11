@@ -9,7 +9,6 @@ import (
 )
 
 func TestRequestsArchive(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"requests", "archive",

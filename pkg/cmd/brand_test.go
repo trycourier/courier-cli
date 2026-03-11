@@ -10,7 +10,6 @@ import (
 )
 
 func TestBrandsCreate(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"brands", "create",
@@ -38,7 +37,6 @@ func TestBrandsCreate(t *testing.T) {
 }
 
 func TestBrandsRetrieve(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"brands", "retrieve",
@@ -48,7 +46,6 @@ func TestBrandsRetrieve(t *testing.T) {
 }
 
 func TestBrandsUpdate(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"brands", "update",
@@ -76,7 +73,6 @@ func TestBrandsUpdate(t *testing.T) {
 }
 
 func TestBrandsList(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"brands", "list",
@@ -86,7 +82,6 @@ func TestBrandsList(t *testing.T) {
 }
 
 func TestBrandsDelete(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"brands", "delete",

@@ -10,7 +10,6 @@ import (
 )
 
 func TestAutomationsInvokeInvokeAdHoc(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"automations:invoke", "invoke-ad-hoc",
@@ -41,7 +40,6 @@ func TestAutomationsInvokeInvokeAdHoc(t *testing.T) {
 }
 
 func TestAutomationsInvokeInvokeByTemplate(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"automations:invoke", "invoke-by-template",

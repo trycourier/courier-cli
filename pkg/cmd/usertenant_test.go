@@ -10,7 +10,6 @@ import (
 )
 
 func TestUsersTenantsList(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"users:tenants", "list",
@@ -22,7 +21,6 @@ func TestUsersTenantsList(t *testing.T) {
 }
 
 func TestUsersTenantsAddMultiple(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"users:tenants", "add-multiple",
@@ -47,7 +45,6 @@ func TestUsersTenantsAddMultiple(t *testing.T) {
 }
 
 func TestUsersTenantsAddSingle(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"users:tenants", "add-single",
@@ -59,7 +56,6 @@ func TestUsersTenantsAddSingle(t *testing.T) {
 }
 
 func TestUsersTenantsRemoveAll(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"users:tenants", "remove-all",
@@ -69,7 +65,6 @@ func TestUsersTenantsRemoveAll(t *testing.T) {
 }
 
 func TestUsersTenantsRemoveSingle(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"users:tenants", "remove-single",

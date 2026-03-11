@@ -9,7 +9,6 @@ import (
 )
 
 func TestNotificationsDraftRetrieveContent(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"notifications:draft", "retrieve-content",

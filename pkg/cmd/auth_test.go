@@ -9,7 +9,6 @@ import (
 )
 
 func TestAuthIssueToken(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"auth", "issue-token",

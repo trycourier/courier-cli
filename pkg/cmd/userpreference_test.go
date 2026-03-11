@@ -10,7 +10,6 @@ import (
 )
 
 func TestUsersPreferencesRetrieve(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"users:preferences", "retrieve",
@@ -21,7 +20,6 @@ func TestUsersPreferencesRetrieve(t *testing.T) {
 }
 
 func TestUsersPreferencesRetrieveTopic(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"users:preferences", "retrieve-topic",
@@ -33,7 +31,6 @@ func TestUsersPreferencesRetrieveTopic(t *testing.T) {
 }
 
 func TestUsersPreferencesUpdateOrCreateTopic(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"users:preferences", "update-or-create-topic",

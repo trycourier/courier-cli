@@ -10,7 +10,6 @@ import (
 )
 
 func TestUsersTokensRetrieve(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"users:tokens", "retrieve",
@@ -21,7 +20,6 @@ func TestUsersTokensRetrieve(t *testing.T) {
 }
 
 func TestUsersTokensUpdate(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"users:tokens", "update",
@@ -47,7 +45,6 @@ func TestUsersTokensUpdate(t *testing.T) {
 }
 
 func TestUsersTokensList(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"users:tokens", "list",
@@ -57,7 +54,6 @@ func TestUsersTokensList(t *testing.T) {
 }
 
 func TestUsersTokensDelete(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"users:tokens", "delete",
@@ -68,7 +64,6 @@ func TestUsersTokensDelete(t *testing.T) {
 }
 
 func TestUsersTokensAddMultiple(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"users:tokens", "add-multiple",
@@ -78,7 +73,6 @@ func TestUsersTokensAddMultiple(t *testing.T) {
 }
 
 func TestUsersTokensAddSingle(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"users:tokens", "add-single",

@@ -10,7 +10,6 @@ import (
 )
 
 func TestTenantsTemplatesRetrieve(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"tenants:templates", "retrieve",
@@ -21,7 +20,6 @@ func TestTenantsTemplatesRetrieve(t *testing.T) {
 }
 
 func TestTenantsTemplatesList(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"tenants:templates", "list",
@@ -33,7 +31,6 @@ func TestTenantsTemplatesList(t *testing.T) {
 }
 
 func TestTenantsTemplatesPublish(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"tenants:templates", "publish",
@@ -45,7 +42,6 @@ func TestTenantsTemplatesPublish(t *testing.T) {
 }
 
 func TestTenantsTemplatesReplace(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"tenants:templates", "replace",

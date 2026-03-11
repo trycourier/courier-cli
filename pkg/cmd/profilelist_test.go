@@ -10,7 +10,6 @@ import (
 )
 
 func TestProfilesListsRetrieve(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"profiles:lists", "retrieve",
@@ -21,7 +20,6 @@ func TestProfilesListsRetrieve(t *testing.T) {
 }
 
 func TestProfilesListsDelete(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"profiles:lists", "delete",
@@ -31,7 +29,6 @@ func TestProfilesListsDelete(t *testing.T) {
 }
 
 func TestProfilesListsSubscribe(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"profiles:lists", "subscribe",

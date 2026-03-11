@@ -9,7 +9,6 @@ import (
 )
 
 func TestMessagesRetrieve(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"messages", "retrieve",
@@ -19,7 +18,6 @@ func TestMessagesRetrieve(t *testing.T) {
 }
 
 func TestMessagesList(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"messages", "list",
@@ -42,7 +40,6 @@ func TestMessagesList(t *testing.T) {
 }
 
 func TestMessagesCancel(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"messages", "cancel",
@@ -52,7 +49,6 @@ func TestMessagesCancel(t *testing.T) {
 }
 
 func TestMessagesContent(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"messages", "content",
@@ -62,7 +58,6 @@ func TestMessagesContent(t *testing.T) {
 }
 
 func TestMessagesHistory(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"messages", "history",
