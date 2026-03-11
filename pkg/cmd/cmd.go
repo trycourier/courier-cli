@@ -131,6 +131,15 @@ func init() {
 				},
 			},
 			{
+				Name:     "journeys",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&journeysList,
+					&journeysInvoke,
+				},
+			},
+			{
 				Name:     "brands",
 				Category: "API RESOURCE",
 				Suggest:  true,
