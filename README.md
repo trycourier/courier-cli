@@ -8,6 +8,14 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 ## Installation
 
+### Installing with npm
+
+```sh
+npm install -g @trycourier/cli
+```
+
+This downloads a platform-specific native binary via a postinstall step. No Node.js runtime is needed after installation.
+
 ### Installing with Homebrew
 
 ```sh
