@@ -391,3 +391,58 @@ func TestGetCompletions_AllFlagsWhenNoPrefix(t *testing.T) {
 	// Should show all flag variations
 	assert.GreaterOrEqual(t, len(result.Completions), 6) // -o, --output, -v, --verbose, -f, --format
 }
+
+func TestRebuildColonSeparatedArgs_Empty(t *testing.T) {
+	assert.Equal(t, []string{}, rebuildColonSeparatedArgs([]string{}))
+}
+
+func TestRebuildColonSeparatedArgs_NoColons(t *testing.T) {
+	args := []string{"a", "b", "c"}
+	assert.Equal(t, []string{"a", "b", "c"}, rebuildColonSeparatedArgs(args))
+}
+
+func TestRebuildColonSeparatedArgs_SingleColon(t *testing.T) {
+	args := []string{"a", ":", "b"}
+	assert.Equal(t, []string{"a:b"}, rebuildColonSeparatedArgs(args))
+}
+
+func TestRebuildColonSeparatedArgs_MultipleColons(t *testing.T) {
+	args := []string{"a", ":", "b", ":", "c"}
+	assert.Equal(t, []string{"a:b:c"}, rebuildColonSeparatedArgs(args))
+}
+
+func TestRebuildColonSeparatedArgs_ColonAtEnd(t *testing.T) {
+	args := []string{"a", "b", ":"}
+	result := rebuildColonSeparatedArgs(args)
+	assert.Equal(t, []string{"a", "b:"}, result)
+}
+
+func TestRebuildColonSeparatedArgs_ColonAtStart(t *testing.T) {
+	args := []string{":", "a", "b"}
+	result := rebuildColonSeparatedArgs(args)
+	// A leading colon joins with the next arg
+	assert.Equal(t, []string{":", "a", "b"}, result)
+}
+
+func TestRebuildColonSeparatedArgs_MixedNormalAndColon(t *testing.T) {
+	args := []string{"config", ":", "get", "d"}
+	result := rebuildColonSeparatedArgs(args)
+	assert.Equal(t, []string{"config:get", "d"}, result)
+}
+
+func TestRebuildColonSeparatedArgs_ConsecutiveColons(t *testing.T) {
+	args := []string{"a", ":", ":", "b"}
+	result := rebuildColonSeparatedArgs(args)
+	assert.Equal(t, []string{"a::b"}, result)
+}
+
+func TestRebuildColonSeparatedArgs_SingleElement(t *testing.T) {
+	args := []string{"hello"}
+	assert.Equal(t, []string{"hello"}, rebuildColonSeparatedArgs(args))
+}
+
+func TestRebuildColonSeparatedArgs_ColonOnly(t *testing.T) {
+	args := []string{":"}
+	result := rebuildColonSeparatedArgs(args)
+	assert.Equal(t, []string{":"}, result)
+}
