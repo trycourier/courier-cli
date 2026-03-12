@@ -8,25 +8,13 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 ## Installation
 
-### Installing with Go
-
-To test or install the CLI locally, you need [Go](https://go.dev/doc/install) version 1.22 or later installed.
+### Installing with npm
 
 ```sh
-go install 'github.com/trycourier/courier-cli/v3/cmd/courier@latest'
+npm install -g @trycourier/cli
 ```
 
-Once you have run `go install`, the binary is placed in your Go bin directory:
-
-- **Default location**: `$HOME/go/bin` (or `$GOPATH/bin` if GOPATH is set)
-- **Check your path**: Run `go env GOPATH` to see the base directory
-
-If commands aren't found after installation, add the Go bin directory to your PATH:
-
-```sh
-# Add to your shell profile (.zshrc, .bashrc, etc.)
-export PATH="$PATH:$(go env GOPATH)/bin"
-```
+This downloads a platform-specific native binary via a postinstall step. No Node.js runtime is needed after installation.
 
 <!-- x-release-please-end -->
 
@@ -112,3 +100,24 @@ base64-encoding). Note that absolute paths will begin with `@file://` or
 ```bash
 courier <command> --arg @data://file.txt
 ```
+
+## Use with AI agents
+
+The CLI works as a tool backend for AI coding agents. Because every API endpoint maps to a single shell command with structured JSON output, agents can call Courier without an SDK or custom integration.
+
+```sh
+export COURIER_API_KEY=your_api_key
+
+# Send a message
+courier send message \
+  --message.to.user_id "user-123" \
+  --message.template "order-confirmation" \
+  --message.data '{"orderId": "ORD-456"}'
+
+# Check delivery status
+courier messages list --recipient "user-123" --format json
+```
+
+For richer agent integration, Courier also provides an [MCP server](https://github.com/trycourier/courier-mcp) that exposes the full API as structured tools for Cursor, Claude Code, Windsurf, and other MCP-compatible clients.
+
+See [Build with AI](https://www.courier.com/docs/tools/ai-onboarding) for setup instructions.
