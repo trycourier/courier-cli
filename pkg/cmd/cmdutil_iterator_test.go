@@ -92,7 +92,7 @@ func TestShowJSONIterator_Formats(t *testing.T) {
 				r, w, err := os.Pipe()
 				require.NoError(t, err)
 				defer r.Close()
-				err = ShowJSONIterator(w, "Test", iter, tt.format, "")
+				err = ShowJSONIterator(w, "Test", iter, tt.format, "", 0)
 				w.Close()
 				require.NoError(t, err)
 				buf := make([]byte, 8192)
@@ -103,7 +103,7 @@ func TestShowJSONIterator_Formats(t *testing.T) {
 				require.NoError(t, err)
 				defer os.Remove(tmpFile.Name())
 				defer tmpFile.Close()
-				err = ShowJSONIterator(tmpFile, "Test", iter, tt.format, "")
+				err = ShowJSONIterator(tmpFile, "Test", iter, tt.format, "", 0)
 				require.NoError(t, err)
 				tmpFile.Seek(0, 0)
 				content, err := os.ReadFile(tmpFile.Name())
@@ -128,7 +128,7 @@ func TestShowJSONIterator_EmptyIterator(t *testing.T) {
 	defer os.Remove(tmpFile.Name())
 	defer tmpFile.Close()
 
-	err = ShowJSONIterator(tmpFile, "Test", items, "json", "")
+	err = ShowJSONIterator(tmpFile, "Test", items, "json", "", 0)
 	require.NoError(t, err)
 
 	tmpFile.Seek(0, 0)
@@ -149,7 +149,7 @@ func TestShowJSONIterator_WithTransform(t *testing.T) {
 	defer os.Remove(tmpFile.Name())
 	defer tmpFile.Close()
 
-	err = ShowJSONIterator(tmpFile, "Test", items, "jsonl", "data.value")
+	err = ShowJSONIterator(tmpFile, "Test", items, "jsonl", "data.value", 0)
 	require.NoError(t, err)
 
 	tmpFile.Seek(0, 0)
@@ -178,7 +178,7 @@ func TestShowJSONIterator_NonRawJSONItem(t *testing.T) {
 	defer os.Remove(tmpFile.Name())
 	defer tmpFile.Close()
 
-	err = ShowJSONIterator(tmpFile, "Test", items, "raw", "")
+	err = ShowJSONIterator(tmpFile, "Test", items, "raw", "", 0)
 	require.NoError(t, err)
 
 	tmpFile.Seek(0, 0)
@@ -203,7 +203,7 @@ func TestShowJSONIterator_IteratorError(t *testing.T) {
 	defer os.Remove(tmpFile.Name())
 	defer tmpFile.Close()
 
-	err = ShowJSONIterator(tmpFile, "Test", items, "raw", "")
+	err = ShowJSONIterator(tmpFile, "Test", items, "raw", "", 0)
 	// After iterating all items, iter.Err() should be returned
 	assert.Error(t, err)
 }
