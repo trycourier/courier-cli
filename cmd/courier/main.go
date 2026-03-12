@@ -11,7 +11,7 @@ import (
 	"slices"
 
 	"github.com/tidwall/gjson"
-	"github.com/trycourier/courier-cli/pkg/cmd"
+	"github.com/trycourier/courier-cli/v3/pkg/cmd"
 	"github.com/trycourier/courier-go/v4"
 	"github.com/urfave/cli/v3"
 )

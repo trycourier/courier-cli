@@ -5,28 +5,47 @@ package cmd
 import (
 	"testing"
 
-	"github.com/trycourier/courier-cli/internal/mocktest"
+	"github.com/trycourier/courier-cli/v3/internal/mocktest"
 )
 
 func TestTenantsPreferencesItemsUpdate(t *testing.T) {
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"tenants:preferences:items", "update",
-		"--api-key", "string",
-		"--tenant-id", "tenant_id",
-		"--topic-id", "topic_id",
-		"--status", "OPTED_IN",
-		"--custom-routing", "[inbox]",
-		"--has-custom-routing=true",
-	)
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "tenants:preferences:items", "update",
+			"--api-key", "string",
+			"--tenant-id", "tenant_id",
+			"--topic-id", "topic_id",
+			"--status", "OPTED_IN",
+			"--custom-routing", "[inbox]",
+			"--has-custom-routing=true",
+		)
+	})
+
+	t.Run("piping data", func(t *testing.T) {
+		// Test piping YAML data over stdin
+		pipeData := []byte("" +
+			"status: OPTED_IN\n" +
+			"custom_routing:\n" +
+			"  - inbox\n" +
+			"has_custom_routing: true\n")
+		mocktest.TestRunMockTestWithPipeAndFlags(
+			t, pipeData, "tenants:preferences:items", "update",
+			"--api-key", "string",
+			"--tenant-id", "tenant_id",
+			"--topic-id", "topic_id",
+		)
+	})
 }
 
 func TestTenantsPreferencesItemsDelete(t *testing.T) {
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"tenants:preferences:items", "delete",
-		"--api-key", "string",
-		"--tenant-id", "tenant_id",
-		"--topic-id", "topic_id",
-	)
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "tenants:preferences:items", "delete",
+			"--api-key", "string",
+			"--tenant-id", "tenant_id",
+			"--topic-id", "topic_id",
+		)
+	})
 }

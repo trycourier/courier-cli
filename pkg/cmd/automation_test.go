@@ -5,15 +5,17 @@ package cmd
 import (
 	"testing"
 
-	"github.com/trycourier/courier-cli/internal/mocktest"
+	"github.com/trycourier/courier-cli/v3/internal/mocktest"
 )
 
 func TestAutomationsList(t *testing.T) {
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"automations", "list",
-		"--api-key", "string",
-		"--cursor", "cursor",
-		"--version", "published",
-	)
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "automations", "list",
+			"--api-key", "string",
+			"--cursor", "cursor",
+			"--version", "published",
+		)
+	})
 }

@@ -5,16 +5,18 @@ package cmd
 import (
 	"testing"
 
-	"github.com/trycourier/courier-cli/internal/mocktest"
+	"github.com/trycourier/courier-cli/v3/internal/mocktest"
 )
 
 func TestTenantsTemplatesVersionsRetrieve(t *testing.T) {
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"tenants:templates:versions", "retrieve",
-		"--api-key", "string",
-		"--tenant-id", "tenant_id",
-		"--template-id", "template_id",
-		"--version", "version",
-	)
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "tenants:templates:versions", "retrieve",
+			"--api-key", "string",
+			"--tenant-id", "tenant_id",
+			"--template-id", "template_id",
+			"--version", "version",
+		)
+	})
 }

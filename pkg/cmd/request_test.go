@@ -5,14 +5,16 @@ package cmd
 import (
 	"testing"
 
-	"github.com/trycourier/courier-cli/internal/mocktest"
+	"github.com/trycourier/courier-cli/v3/internal/mocktest"
 )
 
 func TestRequestsArchive(t *testing.T) {
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"requests", "archive",
-		"--api-key", "string",
-		"--request-id", "request_id",
-	)
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "requests", "archive",
+			"--api-key", "string",
+			"--request-id", "request_id",
+		)
+	})
 }

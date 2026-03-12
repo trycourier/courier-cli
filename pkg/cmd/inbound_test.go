@@ -5,18 +5,37 @@ package cmd
 import (
 	"testing"
 
-	"github.com/trycourier/courier-cli/internal/mocktest"
+	"github.com/trycourier/courier-cli/v3/internal/mocktest"
 )
 
 func TestInboundTrackEvent(t *testing.T) {
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"inbound", "track-event",
-		"--api-key", "string",
-		"--event", "New Order Placed",
-		"--message-id", "4c62c457-b329-4bea-9bfc-17bba86c393f",
-		"--properties", "{order_id: bar, total_orders: bar, last_order_id: bar}",
-		"--type", "track",
-		"--user-id", "1234",
-	)
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "inbound", "track-event",
+			"--api-key", "string",
+			"--event", "New Order Placed",
+			"--message-id", "4c62c457-b329-4bea-9bfc-17bba86c393f",
+			"--properties", "{order_id: bar, total_orders: bar, last_order_id: bar}",
+			"--type", "track",
+			"--user-id", "1234",
+		)
+	})
+
+	t.Run("piping data", func(t *testing.T) {
+		// Test piping YAML data over stdin
+		pipeData := []byte("" +
+			"event: New Order Placed\n" +
+			"messageId: 4c62c457-b329-4bea-9bfc-17bba86c393f\n" +
+			"properties:\n" +
+			"  order_id: bar\n" +
+			"  total_orders: bar\n" +
+			"  last_order_id: bar\n" +
+			"type: track\n" +
+			"userId: '1234'\n")
+		mocktest.TestRunMockTestWithPipeAndFlags(
+			t, pipeData, "inbound", "track-event",
+			"--api-key", "string",
+		)
+	})
 }

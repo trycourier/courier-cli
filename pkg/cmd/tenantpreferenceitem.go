@@ -6,8 +6,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/trycourier/courier-cli/internal/apiquery"
-	"github.com/trycourier/courier-cli/internal/requestflag"
+	"github.com/trycourier/courier-cli/v3/internal/apiquery"
+	"github.com/trycourier/courier-cli/v3/internal/requestflag"
 	"github.com/trycourier/courier-go/v4"
 	"github.com/urfave/cli/v3"
 )

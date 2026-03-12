@@ -5,14 +5,16 @@ package cmd
 import (
 	"testing"
 
-	"github.com/trycourier/courier-cli/internal/mocktest"
+	"github.com/trycourier/courier-cli/v3/internal/mocktest"
 )
 
 func TestNotificationsDraftRetrieveContent(t *testing.T) {
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"notifications:draft", "retrieve-content",
-		"--api-key", "string",
-		"--id", "id",
-	)
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "notifications:draft", "retrieve-content",
+			"--api-key", "string",
+			"--id", "id",
+		)
+	})
 }
