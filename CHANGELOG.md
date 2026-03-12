@@ -1,5 +1,31 @@
 # Changelog
 
+## 3.2.0 (2026-03-12)
+
+Full Changelog: [v3.1.6...v3.2.0](https://github.com/trycourier/courier-cli/compare/v3.1.6...v3.2.0)
+
+### Features
+
+* [feat] add journeys api ([ad19639](https://github.com/trycourier/courier-cli/commit/ad196390441597a2bd3a754468dbd0cfa9dfc120))
+* add `--max-items` flag for paginated/streaming endpoints ([1b04d3a](https://github.com/trycourier/courier-cli/commit/1b04d3ac7ba4296f61e0b0c857e2275032b0dbe0))
+* support passing required body params through pipes ([a555982](https://github.com/trycourier/courier-cli/commit/a555982030cb1767e781eeeb88c72a4de084fde9))
+
+
+### Bug Fixes
+
+* fix for encoding arrays with `any` type items ([e5d46ce](https://github.com/trycourier/courier-cli/commit/e5d46ce9dfc8fce75ad022d7056b9844d0aed4c2))
+* fix for test cases with newlines in YAML and better error reporting ([58be601](https://github.com/trycourier/courier-cli/commit/58be601bf0eb0189a091a3da87bbfbcf69efff4d))
+
+
+### Chores
+
+* **ci:** skip uploading artifacts on stainless-internal branches ([7d89ba3](https://github.com/trycourier/courier-cli/commit/7d89ba38e9ff375908207f077ae745123343fa11))
+* **internal:** codegen related update ([05da3b8](https://github.com/trycourier/courier-cli/commit/05da3b8bce65dc6b4418aafa51e163bbc29e8275))
+* **internal:** regenerate SDK with no functional changes ([ba5bcbe](https://github.com/trycourier/courier-cli/commit/ba5bcbe571ab9a11c640e7d1546efae702fe5d2d))
+* **internal:** remove Homebrew distribution support ([53995d5](https://github.com/trycourier/courier-cli/commit/53995d50cd79d160eee41c9e1f858a104dbaa1d9))
+* remove custom code ([4f5ec1b](https://github.com/trycourier/courier-cli/commit/4f5ec1bfba96d8d9c36125f7b99b9af1e100f15c))
+* restore custom npm distribution and README patches ([404d643](https://github.com/trycourier/courier-cli/commit/404d6438fc8c38236624bbb1c94a0b4ab4dabaee))
+
 ## 3.1.6 (2026-03-04)
 
 Full Changelog: [v3.1.5...v3.1.6](https://github.com/trycourier/courier-cli/compare/v3.1.5...v3.1.6)
