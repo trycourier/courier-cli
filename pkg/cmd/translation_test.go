@@ -5,7 +5,7 @@ package cmd
 import (
 	"testing"
 
-	"github.com/trycourier/courier-cli/internal/mocktest"
+	"github.com/trycourier/courier-cli/v3/internal/mocktest"
 )
 
 func TestTranslationsRetrieve(t *testing.T) {

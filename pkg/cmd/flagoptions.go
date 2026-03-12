@@ -14,10 +14,10 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/trycourier/courier-cli/internal/apiform"
-	"github.com/trycourier/courier-cli/internal/apiquery"
-	"github.com/trycourier/courier-cli/internal/debugmiddleware"
-	"github.com/trycourier/courier-cli/internal/requestflag"
+	"github.com/trycourier/courier-cli/v3/internal/apiform"
+	"github.com/trycourier/courier-cli/v3/internal/apiquery"
+	"github.com/trycourier/courier-cli/v3/internal/debugmiddleware"
+	"github.com/trycourier/courier-cli/v3/internal/requestflag"
 	"github.com/trycourier/courier-go/v4/option"
 
 	"github.com/goccy/go-yaml"
