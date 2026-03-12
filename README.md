@@ -16,26 +16,6 @@ npm install -g @trycourier/cli
 
 This downloads a platform-specific native binary via a postinstall step. No Node.js runtime is needed after installation.
 
-### Installing with Go
-
-To test or install the CLI locally, you need [Go](https://go.dev/doc/install) version 1.22 or later installed.
-
-```sh
-go install 'github.com/trycourier/courier-cli/cmd/courier@latest'
-```
-
-Once you have run `go install`, the binary is placed in your Go bin directory:
-
-- **Default location**: `$HOME/go/bin` (or `$GOPATH/bin` if GOPATH is set)
-- **Check your path**: Run `go env GOPATH` to see the base directory
-
-If commands aren't found after installation, add the Go bin directory to your PATH:
-
-```sh
-# Add to your shell profile (.zshrc, .bashrc, etc.)
-export PATH="$PATH:$(go env GOPATH)/bin"
-```
-
 <!-- x-release-please-end -->
 
 ### Running Locally
