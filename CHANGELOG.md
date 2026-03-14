@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.2.1 (2026-03-14)
+
+Full Changelog: [v3.2.0...v3.2.1](https://github.com/trycourier/courier-cli/compare/v3.2.0...v3.2.1)
+
+### Bug Fixes
+
+* only set client options when the corresponding CLI flag or env var is explicitly set ([8f2046d](https://github.com/trycourier/courier-cli/commit/8f2046d15135e11eb490c79d20a1ac817495aa68))
+
 ## 3.2.0 (2026-03-12)
 
 Full Changelog: [v3.1.6...v3.2.0](https://github.com/trycourier/courier-cli/compare/v3.1.6...v3.2.0)
