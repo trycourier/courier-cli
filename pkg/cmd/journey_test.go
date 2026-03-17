@@ -12,8 +12,9 @@ func TestJourneysList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "journeys", "list",
+			t,
 			"--api-key", "string",
+			"journeys", "list",
 			"--cursor", "cursor",
 			"--version", "published",
 		)
@@ -24,8 +25,9 @@ func TestJourneysInvoke(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "journeys", "invoke",
+			t,
 			"--api-key", "string",
+			"journeys", "invoke",
 			"--template-id", "templateId",
 			"--data", "{order_id: bar, amount: bar}",
 			"--profile", "{foo: bar}",
@@ -43,8 +45,9 @@ func TestJourneysInvoke(t *testing.T) {
 			"  foo: bar\n" +
 			"user_id: user-123\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "journeys", "invoke",
+			t, pipeData,
 			"--api-key", "string",
+			"journeys", "invoke",
 			"--template-id", "templateId",
 		)
 	})

@@ -13,8 +13,9 @@ func TestBrandsCreate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "brands", "create",
+			t,
 			"--api-key", "string",
+			"brands", "create",
 			"--name", "name",
 			"--id", "id",
 			"--settings", "{colors: {primary: primary, secondary: secondary}, email: {footer: {content: content, inheritDefault: true}, head: {inheritDefault: true, content: content}, header: {logo: {href: href, image: image}, barColor: barColor, inheritDefault: true}, templateOverride: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width, mjml: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width}, footerBackgroundColor: footerBackgroundColor, footerFullWidth: true}}, inapp: {colors: {primary: primary, secondary: secondary}, icons: {bell: bell, message: message}, widgetBackground: {bottomColor: bottomColor, topColor: topColor}, borderRadius: borderRadius, disableMessageIcon: true, fontFamily: fontFamily, placement: top}}",
@@ -28,8 +29,9 @@ func TestBrandsCreate(t *testing.T) {
 
 		// Alternative argument passing style using inner flags
 		mocktest.TestRunMockTestWithFlags(
-			t, "brands", "create",
+			t,
 			"--api-key", "string",
+			"brands", "create",
 			"--name", "name",
 			"--id", "id",
 			"--settings.colors", "{primary: primary, secondary: secondary}",
@@ -98,8 +100,9 @@ func TestBrandsCreate(t *testing.T) {
 			"    - name: name\n" +
 			"      value: value\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "brands", "create",
+			t, pipeData,
 			"--api-key", "string",
+			"brands", "create",
 		)
 	})
 }
@@ -108,8 +111,9 @@ func TestBrandsRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "brands", "retrieve",
+			t,
 			"--api-key", "string",
+			"brands", "retrieve",
 			"--brand-id", "brand_id",
 		)
 	})
@@ -119,8 +123,9 @@ func TestBrandsUpdate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "brands", "update",
+			t,
 			"--api-key", "string",
+			"brands", "update",
 			"--brand-id", "brand_id",
 			"--name", "name",
 			"--settings", "{colors: {primary: primary, secondary: secondary}, email: {footer: {content: content, inheritDefault: true}, head: {inheritDefault: true, content: content}, header: {logo: {href: href, image: image}, barColor: barColor, inheritDefault: true}, templateOverride: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width, mjml: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width}, footerBackgroundColor: footerBackgroundColor, footerFullWidth: true}}, inapp: {colors: {primary: primary, secondary: secondary}, icons: {bell: bell, message: message}, widgetBackground: {bottomColor: bottomColor, topColor: topColor}, borderRadius: borderRadius, disableMessageIcon: true, fontFamily: fontFamily, placement: top}}",
@@ -134,8 +139,9 @@ func TestBrandsUpdate(t *testing.T) {
 
 		// Alternative argument passing style using inner flags
 		mocktest.TestRunMockTestWithFlags(
-			t, "brands", "update",
+			t,
 			"--api-key", "string",
+			"brands", "update",
 			"--brand-id", "brand_id",
 			"--name", "name",
 			"--settings.colors", "{primary: primary, secondary: secondary}",
@@ -203,8 +209,9 @@ func TestBrandsUpdate(t *testing.T) {
 			"    - name: name\n" +
 			"      value: value\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "brands", "update",
+			t, pipeData,
 			"--api-key", "string",
+			"brands", "update",
 			"--brand-id", "brand_id",
 		)
 	})
@@ -214,8 +221,9 @@ func TestBrandsList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "brands", "list",
+			t,
 			"--api-key", "string",
+			"brands", "list",
 			"--cursor", "cursor",
 		)
 	})
@@ -225,8 +233,9 @@ func TestBrandsDelete(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "brands", "delete",
+			t,
 			"--api-key", "string",
+			"brands", "delete",
 			"--brand-id", "brand_id",
 		)
 	})

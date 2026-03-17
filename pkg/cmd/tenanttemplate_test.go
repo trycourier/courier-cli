@@ -13,8 +13,9 @@ func TestTenantsTemplatesRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "tenants:templates", "retrieve",
+			t,
 			"--api-key", "string",
+			"tenants:templates", "retrieve",
 			"--tenant-id", "tenant_id",
 			"--template-id", "template_id",
 		)
@@ -25,8 +26,9 @@ func TestTenantsTemplatesList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "tenants:templates", "list",
+			t,
 			"--api-key", "string",
+			"tenants:templates", "list",
 			"--tenant-id", "tenant_id",
 			"--cursor", "cursor",
 			"--limit", "0",
@@ -38,8 +40,9 @@ func TestTenantsTemplatesPublish(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "tenants:templates", "publish",
+			t,
 			"--api-key", "string",
+			"tenants:templates", "publish",
 			"--tenant-id", "tenant_id",
 			"--template-id", "template_id",
 			"--version", "version",
@@ -50,8 +53,9 @@ func TestTenantsTemplatesPublish(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("version: version")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "tenants:templates", "publish",
+			t, pipeData,
 			"--api-key", "string",
+			"tenants:templates", "publish",
 			"--tenant-id", "tenant_id",
 			"--template-id", "template_id",
 		)
@@ -62,8 +66,9 @@ func TestTenantsTemplatesReplace(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "tenants:templates", "replace",
+			t,
 			"--api-key", "string",
+			"tenants:templates", "replace",
 			"--tenant-id", "tenant_id",
 			"--template-id", "template_id",
 			"--template", "{content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, type: text}], version: version}, channels: {foo: {brand_id: brand_id, if: if, metadata: {utm: {campaign: campaign, content: content, medium: medium, source: source, term: term}}, override: {foo: bar}, providers: [string], routing_method: all, timeouts: {channel: 0, provider: 0}}}, providers: {foo: {if: if, metadata: {utm: {campaign: campaign, content: content, medium: medium, source: source, term: term}}, override: {foo: bar}, timeouts: 0}}, routing: {channels: [string], method: all}}",
@@ -77,8 +82,9 @@ func TestTenantsTemplatesReplace(t *testing.T) {
 
 		// Alternative argument passing style using inner flags
 		mocktest.TestRunMockTestWithFlags(
-			t, "tenants:templates", "replace",
+			t,
 			"--api-key", "string",
+			"tenants:templates", "replace",
 			"--tenant-id", "tenant_id",
 			"--template-id", "template_id",
 			"--template.content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, type: text}], version: version}",
@@ -140,8 +146,9 @@ func TestTenantsTemplatesReplace(t *testing.T) {
 			"    method: all\n" +
 			"published: true\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "tenants:templates", "replace",
+			t, pipeData,
 			"--api-key", "string",
+			"tenants:templates", "replace",
 			"--tenant-id", "tenant_id",
 			"--template-id", "template_id",
 		)

@@ -13,8 +13,9 @@ func TestNotificationsChecksUpdate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "notifications:checks", "update",
+			t,
 			"--api-key", "string",
+			"notifications:checks", "update",
 			"--id", "id",
 			"--submission-id", "submissionId",
 			"--check", "{id: id, status: RESOLVED, type: custom}",
@@ -27,8 +28,9 @@ func TestNotificationsChecksUpdate(t *testing.T) {
 
 		// Alternative argument passing style using inner flags
 		mocktest.TestRunMockTestWithFlags(
-			t, "notifications:checks", "update",
+			t,
 			"--api-key", "string",
+			"notifications:checks", "update",
 			"--id", "id",
 			"--submission-id", "submissionId",
 			"--check.id", "id",
@@ -45,8 +47,9 @@ func TestNotificationsChecksUpdate(t *testing.T) {
 			"    status: RESOLVED\n" +
 			"    type: custom\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "notifications:checks", "update",
+			t, pipeData,
 			"--api-key", "string",
+			"notifications:checks", "update",
 			"--id", "id",
 			"--submission-id", "submissionId",
 		)
@@ -57,8 +60,9 @@ func TestNotificationsChecksList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "notifications:checks", "list",
+			t,
 			"--api-key", "string",
+			"notifications:checks", "list",
 			"--id", "id",
 			"--submission-id", "submissionId",
 		)
@@ -69,8 +73,9 @@ func TestNotificationsChecksDelete(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "notifications:checks", "delete",
+			t,
 			"--api-key", "string",
+			"notifications:checks", "delete",
 			"--id", "id",
 			"--submission-id", "submissionId",
 		)

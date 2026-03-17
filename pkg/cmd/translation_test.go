@@ -12,8 +12,9 @@ func TestTranslationsRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "translations", "retrieve",
+			t,
 			"--api-key", "string",
+			"translations", "retrieve",
 			"--domain", "domain",
 			"--locale", "locale",
 		)
@@ -24,8 +25,9 @@ func TestTranslationsUpdate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "translations", "update",
+			t,
 			"--api-key", "string",
+			"translations", "update",
 			"--domain", "domain",
 			"--locale", "locale",
 			"--body", "body",
@@ -36,8 +38,9 @@ func TestTranslationsUpdate(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("body")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "translations", "update",
+			t, pipeData,
 			"--api-key", "string",
+			"translations", "update",
 			"--domain", "domain",
 			"--locale", "locale",
 		)

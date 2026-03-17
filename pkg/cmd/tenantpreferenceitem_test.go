@@ -12,8 +12,9 @@ func TestTenantsPreferencesItemsUpdate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "tenants:preferences:items", "update",
+			t,
 			"--api-key", "string",
+			"tenants:preferences:items", "update",
 			"--tenant-id", "tenant_id",
 			"--topic-id", "topic_id",
 			"--status", "OPTED_IN",
@@ -30,8 +31,9 @@ func TestTenantsPreferencesItemsUpdate(t *testing.T) {
 			"  - inbox\n" +
 			"has_custom_routing: true\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "tenants:preferences:items", "update",
+			t, pipeData,
 			"--api-key", "string",
+			"tenants:preferences:items", "update",
 			"--tenant-id", "tenant_id",
 			"--topic-id", "topic_id",
 		)
@@ -42,8 +44,9 @@ func TestTenantsPreferencesItemsDelete(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "tenants:preferences:items", "delete",
+			t,
 			"--api-key", "string",
+			"tenants:preferences:items", "delete",
 			"--tenant-id", "tenant_id",
 			"--topic-id", "topic_id",
 		)

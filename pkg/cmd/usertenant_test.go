@@ -13,8 +13,9 @@ func TestUsersTenantsList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "users:tenants", "list",
+			t,
 			"--api-key", "string",
+			"users:tenants", "list",
 			"--user-id", "user_id",
 			"--cursor", "cursor",
 			"--limit", "0",
@@ -26,8 +27,9 @@ func TestUsersTenantsAddMultiple(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "users:tenants", "add-multiple",
+			t,
 			"--api-key", "string",
+			"users:tenants", "add-multiple",
 			"--user-id", "user_id",
 			"--tenant", "{tenant_id: tenant_id, profile: {foo: bar}, type: user, user_id: user_id}",
 		)
@@ -39,8 +41,9 @@ func TestUsersTenantsAddMultiple(t *testing.T) {
 
 		// Alternative argument passing style using inner flags
 		mocktest.TestRunMockTestWithFlags(
-			t, "users:tenants", "add-multiple",
+			t,
 			"--api-key", "string",
+			"users:tenants", "add-multiple",
 			"--user-id", "user_id",
 			"--tenant.tenant-id", "tenant_id",
 			"--tenant.profile", "{foo: bar}",
@@ -59,8 +62,9 @@ func TestUsersTenantsAddMultiple(t *testing.T) {
 			"    type: user\n" +
 			"    user_id: user_id\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "users:tenants", "add-multiple",
+			t, pipeData,
 			"--api-key", "string",
+			"users:tenants", "add-multiple",
 			"--user-id", "user_id",
 		)
 	})
@@ -70,8 +74,9 @@ func TestUsersTenantsAddSingle(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "users:tenants", "add-single",
+			t,
 			"--api-key", "string",
+			"users:tenants", "add-single",
 			"--user-id", "user_id",
 			"--tenant-id", "tenant_id",
 			"--profile", "{foo: bar}",
@@ -84,8 +89,9 @@ func TestUsersTenantsAddSingle(t *testing.T) {
 			"profile:\n" +
 			"  foo: bar\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "users:tenants", "add-single",
+			t, pipeData,
 			"--api-key", "string",
+			"users:tenants", "add-single",
 			"--user-id", "user_id",
 			"--tenant-id", "tenant_id",
 		)
@@ -96,8 +102,9 @@ func TestUsersTenantsRemoveAll(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "users:tenants", "remove-all",
+			t,
 			"--api-key", "string",
+			"users:tenants", "remove-all",
 			"--user-id", "user_id",
 		)
 	})
@@ -107,8 +114,9 @@ func TestUsersTenantsRemoveSingle(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "users:tenants", "remove-single",
+			t,
 			"--api-key", "string",
+			"users:tenants", "remove-single",
 			"--user-id", "user_id",
 			"--tenant-id", "tenant_id",
 		)
