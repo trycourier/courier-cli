@@ -12,8 +12,9 @@ func TestTenantsTemplatesVersionsRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "tenants:templates:versions", "retrieve",
+			t,
 			"--api-key", "string",
+			"tenants:templates:versions", "retrieve",
 			"--tenant-id", "tenant_id",
 			"--template-id", "template_id",
 			"--version", "version",

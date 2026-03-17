@@ -12,8 +12,9 @@ func TestMessagesRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "messages", "retrieve",
+			t,
 			"--api-key", "string",
+			"messages", "retrieve",
 			"--message-id", "message_id",
 		)
 	})
@@ -23,8 +24,9 @@ func TestMessagesList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "messages", "list",
+			t,
 			"--api-key", "string",
+			"messages", "list",
 			"--archived=true",
 			"--cursor", "cursor",
 			"--enqueued-after", "enqueued_after",
@@ -47,8 +49,9 @@ func TestMessagesCancel(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "messages", "cancel",
+			t,
 			"--api-key", "string",
+			"messages", "cancel",
 			"--message-id", "message_id",
 		)
 	})
@@ -58,8 +61,9 @@ func TestMessagesContent(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "messages", "content",
+			t,
 			"--api-key", "string",
+			"messages", "content",
 			"--message-id", "message_id",
 		)
 	})
@@ -69,8 +73,9 @@ func TestMessagesHistory(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "messages", "history",
+			t,
 			"--api-key", "string",
+			"messages", "history",
 			"--message-id", "message_id",
 			"--type", "type",
 		)

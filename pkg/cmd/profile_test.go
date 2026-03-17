@@ -13,8 +13,9 @@ func TestProfilesCreate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "profiles", "create",
+			t,
 			"--api-key", "string",
+			"profiles", "create",
 			"--user-id", "user_id",
 			"--profile", "{foo: bar}",
 		)
@@ -26,8 +27,9 @@ func TestProfilesCreate(t *testing.T) {
 			"profile:\n" +
 			"  foo: bar\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "profiles", "create",
+			t, pipeData,
 			"--api-key", "string",
+			"profiles", "create",
 			"--user-id", "user_id",
 		)
 	})
@@ -37,8 +39,9 @@ func TestProfilesRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "profiles", "retrieve",
+			t,
 			"--api-key", "string",
+			"profiles", "retrieve",
 			"--user-id", "user_id",
 		)
 	})
@@ -48,8 +51,9 @@ func TestProfilesUpdate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "profiles", "update",
+			t,
 			"--api-key", "string",
+			"profiles", "update",
 			"--user-id", "user_id",
 			"--patch", "{op: op, path: path, value: value}",
 		)
@@ -61,8 +65,9 @@ func TestProfilesUpdate(t *testing.T) {
 
 		// Alternative argument passing style using inner flags
 		mocktest.TestRunMockTestWithFlags(
-			t, "profiles", "update",
+			t,
 			"--api-key", "string",
+			"profiles", "update",
 			"--user-id", "user_id",
 			"--patch.op", "op",
 			"--patch.path", "path",
@@ -78,8 +83,9 @@ func TestProfilesUpdate(t *testing.T) {
 			"    path: path\n" +
 			"    value: value\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "profiles", "update",
+			t, pipeData,
 			"--api-key", "string",
+			"profiles", "update",
 			"--user-id", "user_id",
 		)
 	})
@@ -89,8 +95,9 @@ func TestProfilesDelete(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "profiles", "delete",
+			t,
 			"--api-key", "string",
+			"profiles", "delete",
 			"--user-id", "user_id",
 		)
 	})
@@ -100,8 +107,9 @@ func TestProfilesReplace(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "profiles", "replace",
+			t,
 			"--api-key", "string",
+			"profiles", "replace",
 			"--user-id", "user_id",
 			"--profile", "{foo: bar}",
 		)
@@ -113,8 +121,9 @@ func TestProfilesReplace(t *testing.T) {
 			"profile:\n" +
 			"  foo: bar\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "profiles", "replace",
+			t, pipeData,
 			"--api-key", "string",
+			"profiles", "replace",
 			"--user-id", "user_id",
 		)
 	})

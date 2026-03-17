@@ -12,8 +12,9 @@ func TestNotificationsList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "notifications", "list",
+			t,
 			"--api-key", "string",
+			"notifications", "list",
 			"--cursor", "cursor",
 			"--notes=true",
 		)
@@ -24,8 +25,9 @@ func TestNotificationsRetrieveContent(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "notifications", "retrieve-content",
+			t,
 			"--api-key", "string",
+			"notifications", "retrieve-content",
 			"--id", "id",
 		)
 	})
