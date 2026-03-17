@@ -13,8 +13,9 @@ func TestProfilesListsRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "profiles:lists", "retrieve",
+			t,
 			"--api-key", "string",
+			"profiles:lists", "retrieve",
 			"--user-id", "user_id",
 			"--cursor", "cursor",
 		)
@@ -25,8 +26,9 @@ func TestProfilesListsDelete(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "profiles:lists", "delete",
+			t,
 			"--api-key", "string",
+			"profiles:lists", "delete",
 			"--user-id", "user_id",
 		)
 	})
@@ -36,8 +38,9 @@ func TestProfilesListsSubscribe(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "profiles:lists", "subscribe",
+			t,
 			"--api-key", "string",
+			"profiles:lists", "subscribe",
 			"--user-id", "user_id",
 			"--list", "{listId: listId, preferences: {categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}}",
 		)
@@ -49,8 +52,9 @@ func TestProfilesListsSubscribe(t *testing.T) {
 
 		// Alternative argument passing style using inner flags
 		mocktest.TestRunMockTestWithFlags(
-			t, "profiles:lists", "subscribe",
+			t,
 			"--api-key", "string",
+			"profiles:lists", "subscribe",
 			"--user-id", "user_id",
 			"--list.list-id", "listId",
 			"--list.preferences", "{categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}",
@@ -80,8 +84,9 @@ func TestProfilesListsSubscribe(t *testing.T) {
 			"            - until: until\n" +
 			"              start: start\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "profiles:lists", "subscribe",
+			t, pipeData,
 			"--api-key", "string",
+			"profiles:lists", "subscribe",
 			"--user-id", "user_id",
 		)
 	})

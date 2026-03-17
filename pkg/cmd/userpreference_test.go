@@ -13,8 +13,9 @@ func TestUsersPreferencesRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "users:preferences", "retrieve",
+			t,
 			"--api-key", "string",
+			"users:preferences", "retrieve",
 			"--user-id", "user_id",
 			"--tenant-id", "tenant_id",
 		)
@@ -25,8 +26,9 @@ func TestUsersPreferencesRetrieveTopic(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "users:preferences", "retrieve-topic",
+			t,
 			"--api-key", "string",
+			"users:preferences", "retrieve-topic",
 			"--user-id", "user_id",
 			"--topic-id", "topic_id",
 			"--tenant-id", "tenant_id",
@@ -38,8 +40,9 @@ func TestUsersPreferencesUpdateOrCreateTopic(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "users:preferences", "update-or-create-topic",
+			t,
 			"--api-key", "string",
+			"users:preferences", "update-or-create-topic",
 			"--user-id", "user_id",
 			"--topic-id", "topic_id",
 			"--topic", "{status: OPTED_IN, custom_routing: [inbox, email], has_custom_routing: true}",
@@ -53,8 +56,9 @@ func TestUsersPreferencesUpdateOrCreateTopic(t *testing.T) {
 
 		// Alternative argument passing style using inner flags
 		mocktest.TestRunMockTestWithFlags(
-			t, "users:preferences", "update-or-create-topic",
+			t,
 			"--api-key", "string",
+			"users:preferences", "update-or-create-topic",
 			"--user-id", "user_id",
 			"--topic-id", "topic_id",
 			"--topic.status", "OPTED_IN",
@@ -74,8 +78,9 @@ func TestUsersPreferencesUpdateOrCreateTopic(t *testing.T) {
 			"    - email\n" +
 			"  has_custom_routing: true\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "users:preferences", "update-or-create-topic",
+			t, pipeData,
 			"--api-key", "string",
+			"users:preferences", "update-or-create-topic",
 			"--user-id", "user_id",
 			"--topic-id", "topic_id",
 			"--tenant-id", "tenant_id",

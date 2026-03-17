@@ -12,8 +12,9 @@ func TestRequestsArchive(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "requests", "archive",
+			t,
 			"--api-key", "string",
+			"requests", "archive",
 			"--request-id", "request_id",
 		)
 	})

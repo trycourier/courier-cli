@@ -13,8 +13,9 @@ func TestAudiencesRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "audiences", "retrieve",
+			t,
 			"--api-key", "string",
+			"audiences", "retrieve",
 			"--audience-id", "audience_id",
 		)
 	})
@@ -24,8 +25,9 @@ func TestAudiencesUpdate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "audiences", "update",
+			t,
 			"--api-key", "string",
+			"audiences", "update",
 			"--audience-id", "audience_id",
 			"--description", "description",
 			"--filter", "{filters: [{operator: operator, filters: [], path: path, value: value}]}",
@@ -40,8 +42,9 @@ func TestAudiencesUpdate(t *testing.T) {
 
 		// Alternative argument passing style using inner flags
 		mocktest.TestRunMockTestWithFlags(
-			t, "audiences", "update",
+			t,
 			"--api-key", "string",
+			"audiences", "update",
 			"--audience-id", "audience_id",
 			"--description", "description",
 			"--filter.filters", "[{operator: operator, filters: [], path: path, value: value}]",
@@ -63,8 +66,9 @@ func TestAudiencesUpdate(t *testing.T) {
 			"name: name\n" +
 			"operator: AND\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "audiences", "update",
+			t, pipeData,
 			"--api-key", "string",
+			"audiences", "update",
 			"--audience-id", "audience_id",
 		)
 	})
@@ -74,8 +78,9 @@ func TestAudiencesList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "audiences", "list",
+			t,
 			"--api-key", "string",
+			"audiences", "list",
 			"--cursor", "cursor",
 		)
 	})
@@ -85,8 +90,9 @@ func TestAudiencesDelete(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "audiences", "delete",
+			t,
 			"--api-key", "string",
+			"audiences", "delete",
 			"--audience-id", "audience_id",
 		)
 	})
@@ -96,8 +102,9 @@ func TestAudiencesListMembers(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "audiences", "list-members",
+			t,
 			"--api-key", "string",
+			"audiences", "list-members",
 			"--audience-id", "audience_id",
 			"--cursor", "cursor",
 		)
