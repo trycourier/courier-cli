@@ -1,5 +1,28 @@
 # Changelog
 
+## 3.3.0 (2026-03-21)
+
+Full Changelog: [v3.2.0...v3.3.0](https://github.com/trycourier/courier-cli/compare/v3.2.0...v3.3.0)
+
+### Features
+
+* add default description for enum CLI flags without an explicit description ([2362387](https://github.com/trycourier/courier-cli/commit/2362387b7aceab3b8c0bfcf080e8abdd32034b55))
+
+
+### Bug Fixes
+
+* avoid reading from stdin unless request body is form encoded or json ([ff5e736](https://github.com/trycourier/courier-cli/commit/ff5e73627d22d20acdb693f32d861bfa55c78957))
+* better support passing client args in any position ([1d1a7bc](https://github.com/trycourier/courier-cli/commit/1d1a7bcebb53a5a5edaa01edfc487b12a8998f93))
+* improve linking behavior when developing on a branch not in the Go SDK ([f64072a](https://github.com/trycourier/courier-cli/commit/f64072aab6112b7b955e95a42811ced447ad78e6))
+* improved workflow for developing on branches ([a87115a](https://github.com/trycourier/courier-cli/commit/a87115aba6de8df61ad3220854ecca5e243b9616))
+* no longer require an API key when building on production repos ([c8aa9ec](https://github.com/trycourier/courier-cli/commit/c8aa9ec3dc7a847269b5a1d29a254198bf09a67e))
+* only set client options when the corresponding CLI flag or env var is explicitly set ([8f2046d](https://github.com/trycourier/courier-cli/commit/8f2046d15135e11eb490c79d20a1ac817495aa68))
+
+
+### Chores
+
+* **internal:** tweak CI branches ([1610ec2](https://github.com/trycourier/courier-cli/commit/1610ec22f71c7b36ec946721c9e7651c00de2ee1))
+
 ## 3.2.0 (2026-03-12)
 
 Full Changelog: [v3.1.6...v3.2.0](https://github.com/trycourier/courier-cli/compare/v3.1.6...v3.2.0)
