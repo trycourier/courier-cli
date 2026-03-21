@@ -12,8 +12,9 @@ func TestInboundTrackEvent(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "inbound", "track-event",
+			t,
 			"--api-key", "string",
+			"inbound", "track-event",
 			"--event", "New Order Placed",
 			"--message-id", "4c62c457-b329-4bea-9bfc-17bba86c393f",
 			"--properties", "{order_id: bar, total_orders: bar, last_order_id: bar}",
@@ -34,8 +35,9 @@ func TestInboundTrackEvent(t *testing.T) {
 			"type: track\n" +
 			"userId: '1234'\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "inbound", "track-event",
+			t, pipeData,
 			"--api-key", "string",
+			"inbound", "track-event",
 		)
 	})
 }

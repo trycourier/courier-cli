@@ -44,10 +44,12 @@ var notificationsChecksUpdate = requestflag.WithInnerFlags(cli.Command{
 		},
 		&requestflag.InnerFlag[string]{
 			Name:       "check.status",
+			Usage:      `Allowed values: "RESOLVED", "FAILED", "PENDING".`,
 			InnerField: "status",
 		},
 		&requestflag.InnerFlag[string]{
 			Name:       "check.type",
+			Usage:      `Allowed values: "custom".`,
 			InnerField: "type",
 		},
 	},

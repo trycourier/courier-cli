@@ -13,8 +13,9 @@ func TestBulkAddUsers(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "bulk", "add-users",
+			t,
 			"--api-key", "string",
+			"bulk", "add-users",
 			"--job-id", "job_id",
 			"--user", "{data: {}, preferences: {categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}, profile: {foo: bar}, recipient: recipient, to: {account_id: account_id, context: {tenant_id: tenant_id}, data: {foo: bar}, email: email, list_id: list_id, locale: locale, phone_number: phone_number, preferences: {notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}], source: subscription}}, categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}], source: subscription}}, templateId: templateId}, tenant_id: tenant_id, user_id: user_id}}",
 		)
@@ -26,8 +27,9 @@ func TestBulkAddUsers(t *testing.T) {
 
 		// Alternative argument passing style using inner flags
 		mocktest.TestRunMockTestWithFlags(
-			t, "bulk", "add-users",
+			t,
 			"--api-key", "string",
+			"bulk", "add-users",
 			"--job-id", "job_id",
 			"--user.data", "{}",
 			"--user.preferences", "{categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}",
@@ -95,8 +97,9 @@ func TestBulkAddUsers(t *testing.T) {
 			"      tenant_id: tenant_id\n" +
 			"      user_id: user_id\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "bulk", "add-users",
+			t, pipeData,
 			"--api-key", "string",
+			"bulk", "add-users",
 			"--job-id", "job_id",
 		)
 	})
@@ -106,8 +109,9 @@ func TestBulkCreateJob(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "bulk", "create-job",
+			t,
 			"--api-key", "string",
+			"bulk", "create-job",
 			"--message", "{event: event, brand: brand, content: {body: body, title: title}, data: {foo: bar}, locale: {foo: {foo: bar}}, override: {foo: bar}, template: template}",
 		)
 	})
@@ -118,8 +122,9 @@ func TestBulkCreateJob(t *testing.T) {
 
 		// Alternative argument passing style using inner flags
 		mocktest.TestRunMockTestWithFlags(
-			t, "bulk", "create-job",
+			t,
 			"--api-key", "string",
+			"bulk", "create-job",
 			"--message.event", "event",
 			"--message.brand", "brand",
 			"--message.content", "{body: body, title: title}",
@@ -148,8 +153,9 @@ func TestBulkCreateJob(t *testing.T) {
 			"    foo: bar\n" +
 			"  template: template\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "bulk", "create-job",
+			t, pipeData,
 			"--api-key", "string",
+			"bulk", "create-job",
 		)
 	})
 }
@@ -158,8 +164,9 @@ func TestBulkListUsers(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "bulk", "list-users",
+			t,
 			"--api-key", "string",
+			"bulk", "list-users",
 			"--job-id", "job_id",
 			"--cursor", "cursor",
 		)
@@ -170,8 +177,9 @@ func TestBulkRetrieveJob(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "bulk", "retrieve-job",
+			t,
 			"--api-key", "string",
+			"bulk", "retrieve-job",
 			"--job-id", "job_id",
 		)
 	})
@@ -181,8 +189,9 @@ func TestBulkRunJob(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "bulk", "run-job",
+			t,
 			"--api-key", "string",
+			"bulk", "run-job",
 			"--job-id", "job_id",
 		)
 	})

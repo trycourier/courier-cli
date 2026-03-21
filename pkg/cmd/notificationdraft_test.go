@@ -12,8 +12,9 @@ func TestNotificationsDraftRetrieveContent(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "notifications:draft", "retrieve-content",
+			t,
 			"--api-key", "string",
+			"notifications:draft", "retrieve-content",
 			"--id", "id",
 		)
 	})

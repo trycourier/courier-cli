@@ -13,8 +13,9 @@ func TestUsersTokensRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "users:tokens", "retrieve",
+			t,
 			"--api-key", "string",
+			"users:tokens", "retrieve",
 			"--user-id", "user_id",
 			"--token", "token",
 		)
@@ -25,8 +26,9 @@ func TestUsersTokensUpdate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "users:tokens", "update",
+			t,
 			"--api-key", "string",
+			"users:tokens", "update",
 			"--user-id", "user_id",
 			"--token", "token",
 			"--patch", "{op: op, path: path, value: value}",
@@ -39,8 +41,9 @@ func TestUsersTokensUpdate(t *testing.T) {
 
 		// Alternative argument passing style using inner flags
 		mocktest.TestRunMockTestWithFlags(
-			t, "users:tokens", "update",
+			t,
 			"--api-key", "string",
+			"users:tokens", "update",
 			"--user-id", "user_id",
 			"--token", "token",
 			"--patch.op", "op",
@@ -57,8 +60,9 @@ func TestUsersTokensUpdate(t *testing.T) {
 			"    path: path\n" +
 			"    value: value\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "users:tokens", "update",
+			t, pipeData,
 			"--api-key", "string",
+			"users:tokens", "update",
 			"--user-id", "user_id",
 			"--token", "token",
 		)
@@ -69,8 +73,9 @@ func TestUsersTokensList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "users:tokens", "list",
+			t,
 			"--api-key", "string",
+			"users:tokens", "list",
 			"--user-id", "user_id",
 		)
 	})
@@ -80,8 +85,9 @@ func TestUsersTokensDelete(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "users:tokens", "delete",
+			t,
 			"--api-key", "string",
+			"users:tokens", "delete",
 			"--user-id", "user_id",
 			"--token", "token",
 		)
@@ -92,8 +98,9 @@ func TestUsersTokensAddMultiple(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "users:tokens", "add-multiple",
+			t,
 			"--api-key", "string",
+			"users:tokens", "add-multiple",
 			"--user-id", "user_id",
 		)
 	})
@@ -103,8 +110,9 @@ func TestUsersTokensAddSingle(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "users:tokens", "add-single",
+			t,
 			"--api-key", "string",
+			"users:tokens", "add-single",
 			"--user-id", "user_id",
 			"--token", "token",
 			"--provider-key", "firebase-fcm",
@@ -121,8 +129,9 @@ func TestUsersTokensAddSingle(t *testing.T) {
 
 		// Alternative argument passing style using inner flags
 		mocktest.TestRunMockTestWithFlags(
-			t, "users:tokens", "add-single",
+			t,
 			"--api-key", "string",
+			"users:tokens", "add-single",
 			"--user-id", "user_id",
 			"--token", "token",
 			"--provider-key", "firebase-fcm",
@@ -160,8 +169,9 @@ func TestUsersTokensAddSingle(t *testing.T) {
 			"  long: long\n" +
 			"  os_version: os_version\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "users:tokens", "add-single",
+			t, pipeData,
 			"--api-key", "string",
+			"users:tokens", "add-single",
 			"--user-id", "user_id",
 			"--token", "token",
 		)

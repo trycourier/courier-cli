@@ -13,8 +13,9 @@ func TestTenantsRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "tenants", "retrieve",
+			t,
 			"--api-key", "string",
+			"tenants", "retrieve",
 			"--tenant-id", "tenant_id",
 		)
 	})
@@ -24,8 +25,9 @@ func TestTenantsUpdate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "tenants", "update",
+			t,
 			"--api-key", "string",
+			"tenants", "update",
 			"--tenant-id", "tenant_id",
 			"--name", "name",
 			"--brand-id", "brand_id",
@@ -42,8 +44,9 @@ func TestTenantsUpdate(t *testing.T) {
 
 		// Alternative argument passing style using inner flags
 		mocktest.TestRunMockTestWithFlags(
-			t, "tenants", "update",
+			t,
 			"--api-key", "string",
+			"tenants", "update",
 			"--tenant-id", "tenant_id",
 			"--name", "name",
 			"--brand-id", "brand_id",
@@ -72,8 +75,9 @@ func TestTenantsUpdate(t *testing.T) {
 			"user_profile:\n" +
 			"  foo: bar\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "tenants", "update",
+			t, pipeData,
 			"--api-key", "string",
+			"tenants", "update",
 			"--tenant-id", "tenant_id",
 		)
 	})
@@ -83,8 +87,9 @@ func TestTenantsList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "tenants", "list",
+			t,
 			"--api-key", "string",
+			"tenants", "list",
 			"--cursor", "cursor",
 			"--limit", "0",
 			"--parent-tenant-id", "parent_tenant_id",
@@ -96,8 +101,9 @@ func TestTenantsDelete(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "tenants", "delete",
+			t,
 			"--api-key", "string",
+			"tenants", "delete",
 			"--tenant-id", "tenant_id",
 		)
 	})
@@ -107,8 +113,9 @@ func TestTenantsListUsers(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "tenants", "list-users",
+			t,
 			"--api-key", "string",
+			"tenants", "list-users",
 			"--tenant-id", "tenant_id",
 			"--cursor", "cursor",
 			"--limit", "0",
