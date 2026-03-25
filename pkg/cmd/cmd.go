@@ -220,7 +220,12 @@ func init() {
 				Category: "API RESOURCE",
 				Suggest:  true,
 				Commands: []*cli.Command{
+					&notificationsCreate,
+					&notificationsRetrieve,
 					&notificationsList,
+					&notificationsArchive,
+					&notificationsPublish,
+					&notificationsReplace,
 					&notificationsRetrieveContent,
 				},
 			},
