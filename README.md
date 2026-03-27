@@ -27,6 +27,17 @@ After cloning the git repository for this project, you can use the
 ./scripts/run args...
 ```
 
+### Branch `next`
+
+The default branch is `main`. **Stainless** merge pipelines (for example from [api-spec](https://github.com/trycourier/api-spec)) and CI for this generated CLI usually run against **`next`**. When debugging merge failures or comparing to [`courier-go`](https://github.com/trycourier/courier-go), use:
+
+```sh
+git fetch origin next
+git checkout next
+```
+
+Releases are still published from `main` via release-please.
+
 ## Usage
 
 The CLI follows a resource-based command structure:
