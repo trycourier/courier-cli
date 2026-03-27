@@ -224,6 +224,7 @@ func init() {
 					&notificationsRetrieve,
 					&notificationsList,
 					&notificationsArchive,
+					&notificationsListVersions,
 					&notificationsPublish,
 					&notificationsReplace,
 					&notificationsRetrieveContent,

@@ -127,14 +127,44 @@ var notificationsArchive = cli.Command{
 	HideHelpCommand: true,
 }
 
-var notificationsPublish = cli.Command{
-	Name:    "publish",
-	Usage:   "Publish the current draft of a notification template.",
+var notificationsListVersions = cli.Command{
+	Name:    "list-versions",
+	Usage:   "List versions of a notification template.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
 			Name:     "id",
 			Required: true,
+		},
+		&requestflag.Flag[string]{
+			Name:      "cursor",
+			Usage:     "Opaque pagination cursor from a previous response. Omit for the first page.",
+			QueryPath: "cursor",
+		},
+		&requestflag.Flag[int64]{
+			Name:      "limit",
+			Usage:     "Maximum number of versions to return per page. Default 10, max 10.",
+			Default:   10,
+			QueryPath: "limit",
+		},
+	},
+	Action:          handleNotificationsListVersions,
+	HideHelpCommand: true,
+}
+
+var notificationsPublish = cli.Command{
+	Name:    "publish",
+	Usage:   "Publish a notification template. Publishes the current draft by default. Pass a\nversion in the request body to publish a specific historical version.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:     "id",
+			Required: true,
+		},
+		&requestflag.Flag[string]{
+			Name:     "version",
+			Usage:    `Historical version to publish (e.g. "v001"). Omit to publish the current draft.`,
+			BodyPath: "version",
 		},
 	},
 	Action:          handleNotificationsPublish,
@@ -348,7 +378,7 @@ func handleNotificationsArchive(ctx context.Context, cmd *cli.Command) error {
 	return client.Notifications.Archive(ctx, cmd.Value("id").(string), options...)
 }
 
-func handleNotificationsPublish(ctx context.Context, cmd *cli.Command) error {
+func handleNotificationsListVersions(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
 	if !cmd.IsSet("id") && len(unusedArgs) > 0 {
@@ -358,6 +388,8 @@ func handleNotificationsPublish(ctx context.Context, cmd *cli.Command) error {
 	if len(unusedArgs) > 0 {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
+
+	params := courier.NotificationListVersionsParams{}
 
 	options, err := flagOptions(
 		cmd,
@@ -370,7 +402,54 @@ func handleNotificationsPublish(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	return client.Notifications.Publish(ctx, cmd.Value("id").(string), options...)
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Notifications.ListVersions(
+		ctx,
+		cmd.Value("id").(string),
+		params,
+		options...,
+	)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(os.Stdout, "notifications list-versions", obj, format, transform)
+}
+
+func handleNotificationsPublish(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("id") && len(unusedArgs) > 0 {
+		cmd.Set("id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	params := courier.NotificationPublishParams{}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		ApplicationJSON,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	return client.Notifications.Publish(
+		ctx,
+		cmd.Value("id").(string),
+		params,
+		options...,
+	)
 }
 
 func handleNotificationsReplace(ctx context.Context, cmd *cli.Command) error {
