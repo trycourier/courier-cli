@@ -35,9 +35,8 @@ var sendMessage = requestflag.WithInnerFlags(cli.Command{
 			Name:       "message.brand-id",
 			InnerField: "brand_id",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "message.channels",
-			Usage:      "Define run-time configuration for channels. Valid ChannelId's: email, sms, push, inbox, direct_message, banner, webhook.",
 			InnerField: "channels",
 		},
 		&requestflag.InnerFlag[any]{
@@ -69,7 +68,7 @@ var sendMessage = requestflag.WithInnerFlags(cli.Command{
 			Name:       "message.preferences",
 			InnerField: "preferences",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "message.providers",
 			InnerField: "providers",
 		},
