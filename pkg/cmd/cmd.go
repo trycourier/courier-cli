@@ -97,6 +97,26 @@ func init() {
 				},
 			},
 			{
+				Name:     "providers",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&providersCreate,
+					&providersRetrieve,
+					&providersUpdate,
+					&providersList,
+					&providersDelete,
+				},
+			},
+			{
+				Name:     "providers:catalog",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&providersCatalogList,
+				},
+			},
+			{
 				Name:     "audit-events",
 				Category: "API RESOURCE",
 				Suggest:  true,
