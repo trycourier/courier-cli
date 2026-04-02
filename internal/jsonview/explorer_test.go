@@ -6,9 +6,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tidwall/gjson"
-
-	"github.com/stretchr/testify/require"
 )
+
+type rawJSONItem struct{ raw string }
+
+func (r rawJSONItem) RawJSON() string { return r.raw }
 
 func TestNewTextView(t *testing.T) {
 	t.Parallel()
@@ -457,6 +459,13 @@ func TestFormatObjectKey(t *testing.T) {
 			assert.Contains(t, output, tt.key)
 			assert.Contains(t, output, tt.contains)
 		})
+	}
+}
+
+func TestMarshalItemsToJSONArray_WithHasRawJSON(t *testing.T) {
+	items := []any{
+		rawJSONItem{raw: `{"id":1,"name":"alice"}`},
+		rawJSONItem{raw: `{"id":2,"name":"bob"}`},
 	}
 
 	got, err := marshalItemsToJSONArray(items)
