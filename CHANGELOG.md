@@ -1,5 +1,47 @@
 # Changelog
 
+## 3.3.0 (2026-04-02)
+
+Full Changelog: [v3.2.0...v3.3.0](https://github.com/trycourier/courier-cli/compare/v3.2.0...v3.3.0)
+
+### Features
+
+* add default description for enum CLI flags without an explicit description ([823fab6](https://github.com/trycourier/courier-cli/commit/823fab6fa75bcfc8ee2e8d5dca70b2f7db36a967))
+* **api:** add create/retrieve/archive/publish/replace methods, event-id param to notifications ([f586c70](https://github.com/trycourier/courier-cli/commit/f586c70a88de4be8995c0ef384eefe56a326e1de))
+* **api:** add providers CRUD and catalog list endpoints ([63678ee](https://github.com/trycourier/courier-cli/commit/63678ee1d1186dae6503dca94c243144d366b470))
+* **api:** add routing-strategies resource ([b890b18](https://github.com/trycourier/courier-cli/commit/b890b182dece67bd2c4d7f85ec800e22bc59c1bd))
+* set CLI flag constant values automatically where `x-stainless-const` is set ([614f808](https://github.com/trycourier/courier-cli/commit/614f808e7334e3adae68d5496319a666f50be09c))
+
+
+### Bug Fixes
+
+* avoid reading from stdin unless request body is form encoded or json ([492dabf](https://github.com/trycourier/courier-cli/commit/492dabffb192428fcd123625cdbc5272c7aee16a))
+* better support passing client args in any position ([1dad6ae](https://github.com/trycourier/courier-cli/commit/1dad6ae70c2fa1647dc1ba5fce44c53bef9fd00a))
+* cli no longer hangs when stdin is attached to a pipe with empty input ([5fe52d1](https://github.com/trycourier/courier-cli/commit/5fe52d1a064f7c4b2346bbacc350ac737ead2081))
+* fix for off-by-one error in pagination logic ([07c0b32](https://github.com/trycourier/courier-cli/commit/07c0b323427405e86bc80b01d489e79b1b6db3d5))
+* handle empty data set using `--format explore` ([4f47249](https://github.com/trycourier/courier-cli/commit/4f4724971e9e79203aecada10d2f04316270ae70))
+* improve linking behavior when developing on a branch not in the Go SDK ([4dd8baf](https://github.com/trycourier/courier-cli/commit/4dd8bafb13bed2cf62ff5f3ea77e92a151d11154))
+* improved workflow for developing on branches ([f99f909](https://github.com/trycourier/courier-cli/commit/f99f909d00174b9325924e53d23c8e0939d2b1b7))
+* no longer require an API key when building on production repos ([d125b34](https://github.com/trycourier/courier-cli/commit/d125b3498d30b59ee7c28a062ff54c3df942e9e0))
+* only set client options when the corresponding CLI flag or env var is explicitly set ([a428dd5](https://github.com/trycourier/courier-cli/commit/a428dd5b300cb862478eab3a6f40cbe30af4a9bd))
+* use `RawJSON` when iterating items with `--format explore` in the CLI ([9894736](https://github.com/trycourier/courier-cli/commit/98947362639207cd34f9bb54f1841f895b06fbb0))
+
+
+### Chores
+
+* **ci:** skip lint on metadata-only changes ([b5909a3](https://github.com/trycourier/courier-cli/commit/b5909a34bd3d5322acb1d0d3da42c8907372e12a))
+* **internal:** regenerate SDK with no functional changes ([c40831e](https://github.com/trycourier/courier-cli/commit/c40831e9e4a5fd779811dea448c1871ff337ecd1))
+* **internal:** regenerate SDK with no functional changes ([310af9f](https://github.com/trycourier/courier-cli/commit/310af9fe454d1f9d69021cb9a505e6990899bdcb))
+* **internal:** tweak CI branches ([8302597](https://github.com/trycourier/courier-cli/commit/83025978a62b26ceac906e634c3e68af4ee9f1ad))
+* **internal:** update gitignore ([fd4e24e](https://github.com/trycourier/courier-cli/commit/fd4e24e16d3cd271b9b75121b38b792f86490e33))
+* omit full usage information when missing required CLI parameters ([f4fe315](https://github.com/trycourier/courier-cli/commit/f4fe3151a945021ad870b883fe1c7fe00a19b4ad))
+
+
+### Documentation
+
+* add AGENTS.md for AI coding assistants ([b846ec0](https://github.com/trycourier/courier-cli/commit/b846ec0c161d736684ac085157bb56a2b896aaf0))
+* document next branch for Stainless and CI parity ([94b0b79](https://github.com/trycourier/courier-cli/commit/94b0b79e0d2c4eeb5d918ffd8cf7e21e6b998d5a))
+
 ## 3.2.0 (2026-03-12)
 
 Full Changelog: [v3.1.6...v3.2.0](https://github.com/trycourier/courier-cli/compare/v3.1.6...v3.2.0)
