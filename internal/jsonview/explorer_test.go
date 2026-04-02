@@ -6,6 +6,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tidwall/gjson"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewTextView(t *testing.T) {
@@ -456,4 +458,19 @@ func TestFormatObjectKey(t *testing.T) {
 			assert.Contains(t, output, tt.contains)
 		})
 	}
+
+	got, err := marshalItemsToJSONArray(items)
+	require.NoError(t, err)
+	require.JSONEq(t, `[{"id":1,"name":"alice"},{"id":2,"name":"bob"}]`, string(got))
+}
+
+func TestMarshalItemsToJSONArray_WithoutHasRawJSON(t *testing.T) {
+	items := []any{
+		map[string]any{"id": 1, "name": "alice"},
+		map[string]any{"id": 2, "name": "bob"},
+	}
+
+	got, err := marshalItemsToJSONArray(items)
+	require.NoError(t, err)
+	require.JSONEq(t, `[{"id":1,"name":"alice"},{"id":2,"name":"bob"}]`, string(got))
 }
