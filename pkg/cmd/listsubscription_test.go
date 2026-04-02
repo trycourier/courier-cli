@@ -13,8 +13,9 @@ func TestListsSubscriptionsList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "lists:subscriptions", "list",
+			t,
 			"--api-key", "string",
+			"lists:subscriptions", "list",
 			"--list-id", "list_id",
 			"--cursor", "cursor",
 		)
@@ -25,8 +26,9 @@ func TestListsSubscriptionsAdd(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "lists:subscriptions", "add",
+			t,
 			"--api-key", "string",
+			"lists:subscriptions", "add",
 			"--list-id", "list_id",
 			"--recipient", "{recipientId: recipientId, preferences: {categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}}",
 		)
@@ -38,8 +40,9 @@ func TestListsSubscriptionsAdd(t *testing.T) {
 
 		// Alternative argument passing style using inner flags
 		mocktest.TestRunMockTestWithFlags(
-			t, "lists:subscriptions", "add",
+			t,
 			"--api-key", "string",
+			"lists:subscriptions", "add",
 			"--list-id", "list_id",
 			"--recipient.recipient-id", "recipientId",
 			"--recipient.preferences", "{categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}",
@@ -69,8 +72,9 @@ func TestListsSubscriptionsAdd(t *testing.T) {
 			"            - until: until\n" +
 			"              start: start\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "lists:subscriptions", "add",
+			t, pipeData,
 			"--api-key", "string",
+			"lists:subscriptions", "add",
 			"--list-id", "list_id",
 		)
 	})
@@ -80,8 +84,9 @@ func TestListsSubscriptionsSubscribe(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "lists:subscriptions", "subscribe",
+			t,
 			"--api-key", "string",
+			"lists:subscriptions", "subscribe",
 			"--list-id", "list_id",
 			"--recipient", "{recipientId: recipientId, preferences: {categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}}",
 		)
@@ -93,8 +98,9 @@ func TestListsSubscriptionsSubscribe(t *testing.T) {
 
 		// Alternative argument passing style using inner flags
 		mocktest.TestRunMockTestWithFlags(
-			t, "lists:subscriptions", "subscribe",
+			t,
 			"--api-key", "string",
+			"lists:subscriptions", "subscribe",
 			"--list-id", "list_id",
 			"--recipient.recipient-id", "recipientId",
 			"--recipient.preferences", "{categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}",
@@ -124,8 +130,9 @@ func TestListsSubscriptionsSubscribe(t *testing.T) {
 			"            - until: until\n" +
 			"              start: start\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "lists:subscriptions", "subscribe",
+			t, pipeData,
 			"--api-key", "string",
+			"lists:subscriptions", "subscribe",
 			"--list-id", "list_id",
 		)
 	})
@@ -135,8 +142,9 @@ func TestListsSubscriptionsSubscribeUser(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "lists:subscriptions", "subscribe-user",
+			t,
 			"--api-key", "string",
+			"lists:subscriptions", "subscribe-user",
 			"--list-id", "list_id",
 			"--user-id", "user_id",
 			"--preferences", "{categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}",
@@ -149,8 +157,9 @@ func TestListsSubscriptionsSubscribeUser(t *testing.T) {
 
 		// Alternative argument passing style using inner flags
 		mocktest.TestRunMockTestWithFlags(
-			t, "lists:subscriptions", "subscribe-user",
+			t,
 			"--api-key", "string",
+			"lists:subscriptions", "subscribe-user",
 			"--list-id", "list_id",
 			"--user-id", "user_id",
 			"--preferences.categories", "{foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}",
@@ -179,8 +188,9 @@ func TestListsSubscriptionsSubscribeUser(t *testing.T) {
 			"        - until: until\n" +
 			"          start: start\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "lists:subscriptions", "subscribe-user",
+			t, pipeData,
 			"--api-key", "string",
+			"lists:subscriptions", "subscribe-user",
 			"--list-id", "list_id",
 			"--user-id", "user_id",
 		)
@@ -191,8 +201,9 @@ func TestListsSubscriptionsUnsubscribeUser(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "lists:subscriptions", "unsubscribe-user",
+			t,
 			"--api-key", "string",
+			"lists:subscriptions", "unsubscribe-user",
 			"--list-id", "list_id",
 			"--user-id", "user_id",
 		)

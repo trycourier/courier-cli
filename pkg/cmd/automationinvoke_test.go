@@ -13,8 +13,9 @@ func TestAutomationsInvokeInvokeAdHoc(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "automations:invoke", "invoke-ad-hoc",
+			t,
 			"--api-key", "string",
+			"automations:invoke", "invoke-ad-hoc",
 			"--automation", "{steps: [{action: delay, duration: duration, until: 20240408T080910.123}, {action: send, brand: brand, data: {foo: bar}, profile: {foo: bar}, recipient: recipient, template: 64TP5HKPFTM8VTK1Y75SJDQX9JK0}], cancelation_token: delay-send--user-yes--abc-123}",
 			"--brand", "brand",
 			"--data", "{name: bar}",
@@ -30,8 +31,9 @@ func TestAutomationsInvokeInvokeAdHoc(t *testing.T) {
 
 		// Alternative argument passing style using inner flags
 		mocktest.TestRunMockTestWithFlags(
-			t, "automations:invoke", "invoke-ad-hoc",
+			t,
 			"--api-key", "string",
+			"automations:invoke", "invoke-ad-hoc",
 			"--automation.steps", "[{action: delay, duration: duration, until: 20240408T080910.123}, {action: send, brand: brand, data: {foo: bar}, profile: {foo: bar}, recipient: recipient, template: 64TP5HKPFTM8VTK1Y75SJDQX9JK0}]",
 			"--automation.cancelation-token", "delay-send--user-yes--abc-123",
 			"--brand", "brand",
@@ -67,8 +69,9 @@ func TestAutomationsInvokeInvokeAdHoc(t *testing.T) {
 			"recipient: user-yes\n" +
 			"template: template\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "automations:invoke", "invoke-ad-hoc",
+			t, pipeData,
 			"--api-key", "string",
+			"automations:invoke", "invoke-ad-hoc",
 		)
 	})
 }
@@ -77,8 +80,9 @@ func TestAutomationsInvokeInvokeByTemplate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "automations:invoke", "invoke-by-template",
+			t,
 			"--api-key", "string",
+			"automations:invoke", "invoke-by-template",
 			"--template-id", "templateId",
 			"--recipient", "recipient",
 			"--brand", "brand",
@@ -99,8 +103,9 @@ func TestAutomationsInvokeInvokeByTemplate(t *testing.T) {
 			"  foo: bar\n" +
 			"template: template\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "automations:invoke", "invoke-by-template",
+			t, pipeData,
 			"--api-key", "string",
+			"automations:invoke", "invoke-by-template",
 			"--template-id", "templateId",
 		)
 	})

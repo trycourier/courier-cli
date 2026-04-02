@@ -135,6 +135,7 @@ var usersTokensAddSingle = requestflag.WithInnerFlags(cli.Command{
 		},
 		&requestflag.Flag[string]{
 			Name:     "provider-key",
+			Usage:    `Allowed values: "firebase-fcm", "apn", "expo", "onesignal".`,
 			Required: true,
 			BodyPath: "provider_key",
 		},

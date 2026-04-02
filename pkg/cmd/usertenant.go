@@ -70,6 +70,7 @@ var usersTenantsAddMultiple = requestflag.WithInnerFlags(cli.Command{
 		},
 		&requestflag.InnerFlag[any]{
 			Name:       "tenant.type",
+			Usage:      `Allowed values: "user".`,
 			InnerField: "type",
 		},
 		&requestflag.InnerFlag[any]{

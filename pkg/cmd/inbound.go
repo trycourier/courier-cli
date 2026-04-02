@@ -39,6 +39,7 @@ var inboundTrackEvent = cli.Command{
 		},
 		&requestflag.Flag[string]{
 			Name:     "type",
+			Usage:    `Allowed values: "track".`,
 			Required: true,
 			BodyPath: "type",
 		},

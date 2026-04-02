@@ -8,14 +8,16 @@ import (
 	"github.com/trycourier/courier-cli/v3/internal/mocktest"
 )
 
-func TestRequestsArchive(t *testing.T) {
+func TestProvidersCatalogList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
 			t,
 			"--api-key", "string",
-			"requests", "archive",
-			"--request-id", "request_id",
+			"providers:catalog", "list",
+			"--channel", "channel",
+			"--keys", "keys",
+			"--name", "name",
 		)
 	})
 }

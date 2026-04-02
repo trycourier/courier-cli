@@ -117,12 +117,10 @@ var tenantsTemplatesReplace = requestflag.WithInnerFlags(cli.Command{
 		},
 		&requestflag.InnerFlag[map[string]any]{
 			Name:       "template.channels",
-			Usage:      "Channel-specific delivery configuration (email, SMS, push, etc.)",
 			InnerField: "channels",
 		},
 		&requestflag.InnerFlag[map[string]any]{
 			Name:       "template.providers",
-			Usage:      "Provider-specific delivery configuration for routing to specific email/SMS providers",
 			InnerField: "providers",
 		},
 		&requestflag.InnerFlag[map[string]any]{

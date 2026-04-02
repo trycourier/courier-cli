@@ -87,6 +87,7 @@ var usersPreferencesUpdateOrCreateTopic = requestflag.WithInnerFlags(cli.Command
 	"topic": {
 		&requestflag.InnerFlag[string]{
 			Name:       "topic.status",
+			Usage:      `Allowed values: "OPTED_IN", "OPTED_OUT", "REQUIRED".`,
 			InnerField: "status",
 		},
 		&requestflag.InnerFlag[any]{

@@ -27,6 +27,7 @@ var tenantsPreferencesItemsUpdate = cli.Command{
 		},
 		&requestflag.Flag[string]{
 			Name:     "status",
+			Usage:    `Allowed values: "OPTED_OUT", "OPTED_IN", "REQUIRED".`,
 			Required: true,
 			BodyPath: "status",
 		},

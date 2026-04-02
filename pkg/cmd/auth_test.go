@@ -12,8 +12,9 @@ func TestAuthIssueToken(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "auth", "issue-token",
+			t,
 			"--api-key", "string",
+			"auth", "issue-token",
 			"--expires-in", "$YOUR_NUMBER days",
 			"--scope", "user_id:$YOUR_USER_ID write:user-tokens inbox:read:messages inbox:write:events read:preferences write:preferences read:brands",
 		)
@@ -27,8 +28,9 @@ func TestAuthIssueToken(t *testing.T) {
 			"  user_id:$YOUR_USER_ID write:user-tokens inbox:read:messages inbox:write:events\n" +
 			"  read:preferences write:preferences read:brands\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "auth", "issue-token",
+			t, pipeData,
 			"--api-key", "string",
+			"auth", "issue-token",
 		)
 	})
 }
