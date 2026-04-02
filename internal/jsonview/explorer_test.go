@@ -266,6 +266,20 @@ func TestCanNavigateInto(t *testing.T) {
 	}
 }
 
+func TestNavigateForward_EmptyRowData(t *testing.T) {
+	emptyArray := gjson.Parse("[]")
+	view, err := newTableView("", emptyArray, false)
+	require.NoError(t, err)
+
+	viewer := &JSONViewer{stack: []JSONView{view}, root: "Test"}
+
+	model, cmd := viewer.navigateForward()
+	require.Equal(t, model, viewer, "expected same viewer model returned")
+	require.Nil(t, cmd)
+
+	require.Equal(t, 1, len(viewer.stack), "expected stack length 1, got %d", len(viewer.stack))
+}
+
 func TestSum(t *testing.T) {
 	t.Parallel()
 
@@ -456,4 +470,32 @@ func TestFormatObjectKey(t *testing.T) {
 			assert.Contains(t, output, tt.contains)
 		})
 	}
+}
+
+type rawJSONItem struct {
+	raw string
+}
+
+func (r rawJSONItem) RawJSON() string { return r.raw }
+
+func TestMarshalItemsToJSONArray_WithHasRawJSON(t *testing.T) {
+	items := []any{
+		rawJSONItem{raw: `{"id":1,"name":"alice"}`},
+		rawJSONItem{raw: `{"id":2,"name":"bob"}`},
+	}
+
+	got, err := marshalItemsToJSONArray(items)
+	require.NoError(t, err)
+	require.JSONEq(t, `[{"id":1,"name":"alice"},{"id":2,"name":"bob"}]`, string(got))
+}
+
+func TestMarshalItemsToJSONArray_WithoutHasRawJSON(t *testing.T) {
+	items := []any{
+		map[string]any{"id": 1, "name": "alice"},
+		map[string]any{"id": 2, "name": "bob"},
+	}
+
+	got, err := marshalItemsToJSONArray(items)
+	require.NoError(t, err)
+	require.JSONEq(t, `[{"id":1,"name":"alice"},{"id":2,"name":"bob"}]`, string(got))
 }
