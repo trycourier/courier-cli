@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.4.0 (2026-04-03)
+
+Full Changelog: [v3.3.0...v3.4.0](https://github.com/trycourier/courier-cli/compare/v3.3.0...v3.4.0)
+
+### Features
+
+* allow `-` as value representing stdin to binary-only file parameters in CLIs ([a902634](https://github.com/trycourier/courier-cli/commit/a902634508d62e7aeaed7f7a32689e7955e38105))
+* better error message if scheme forgotten in CLI `*_BASE_URL`/`--base-url` ([2efc982](https://github.com/trycourier/courier-cli/commit/2efc9824db1675e76ed76ec684ecbb8535cf6a92))
+* binary-only parameters become CLI flags that take filenames only ([a9fe67e](https://github.com/trycourier/courier-cli/commit/a9fe67e4100a9d864ca53a6e3340e8ac6b574c1f))
+
 ## 3.3.0 (2026-04-02)
 
 Full Changelog: [v3.2.0...v3.3.0](https://github.com/trycourier/courier-cli/compare/v3.2.0...v3.3.0)
