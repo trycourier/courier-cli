@@ -171,6 +171,132 @@ var notificationsPublish = cli.Command{
 	HideHelpCommand: true,
 }
 
+var notificationsPutContent = requestflag.WithInnerFlags(cli.Command{
+	Name:    "put-content",
+	Usage:   "Replace the elemental content of a notification template. Overwrites all\nelements in the template with the provided content. Only supported for V2\n(elemental) templates.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:     "id",
+			Required: true,
+		},
+		&requestflag.Flag[map[string]any]{
+			Name:     "content",
+			Usage:    "Elemental content payload. The server defaults `version` when omitted.",
+			Required: true,
+			BodyPath: "content",
+		},
+		&requestflag.Flag[string]{
+			Name:     "state",
+			Usage:    "Template state. Defaults to `DRAFT`.",
+			Default:  "DRAFT",
+			BodyPath: "state",
+		},
+	},
+	Action:          handleNotificationsPutContent,
+	HideHelpCommand: true,
+}, map[string][]requestflag.HasOuterFlag{
+	"content": {
+		&requestflag.InnerFlag[[]any]{
+			Name:       "content.elements",
+			InnerField: "elements",
+		},
+		&requestflag.InnerFlag[string]{
+			Name:       "content.version",
+			Usage:      "Content version identifier (e.g., `2022-01-01`). Optional; server defaults when omitted.",
+			InnerField: "version",
+		},
+	},
+})
+
+var notificationsPutElement = cli.Command{
+	Name:    "put-element",
+	Usage:   "Update a single element within a notification template. Only supported for V2\n(elemental) templates.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:     "id",
+			Required: true,
+		},
+		&requestflag.Flag[string]{
+			Name:     "element-id",
+			Required: true,
+		},
+		&requestflag.Flag[string]{
+			Name:     "type",
+			Usage:    "Element type (text, meta, action, image, etc.).",
+			Required: true,
+			BodyPath: "type",
+		},
+		&requestflag.Flag[[]string]{
+			Name:     "channel",
+			BodyPath: "channels",
+		},
+		&requestflag.Flag[map[string]any]{
+			Name:     "data",
+			BodyPath: "data",
+		},
+		&requestflag.Flag[string]{
+			Name:     "if",
+			BodyPath: "if",
+		},
+		&requestflag.Flag[string]{
+			Name:     "loop",
+			BodyPath: "loop",
+		},
+		&requestflag.Flag[string]{
+			Name:     "ref",
+			BodyPath: "ref",
+		},
+		&requestflag.Flag[string]{
+			Name:     "state",
+			Usage:    "Template state. Defaults to `DRAFT`.",
+			Default:  "DRAFT",
+			BodyPath: "state",
+		},
+	},
+	Action:          handleNotificationsPutElement,
+	HideHelpCommand: true,
+}
+
+var notificationsPutLocale = requestflag.WithInnerFlags(cli.Command{
+	Name:    "put-locale",
+	Usage:   "Set locale-specific content overrides for a notification template. Each element\noverride must reference an existing element by ID. Only supported for V2\n(elemental) templates.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:     "id",
+			Required: true,
+		},
+		&requestflag.Flag[string]{
+			Name:     "locale-id",
+			Required: true,
+		},
+		&requestflag.Flag[[]map[string]any]{
+			Name:     "element",
+			Usage:    "Elements with locale-specific content overrides.",
+			Required: true,
+			BodyPath: "elements",
+		},
+		&requestflag.Flag[string]{
+			Name:     "state",
+			Usage:    "Template state. Defaults to `DRAFT`.",
+			Default:  "DRAFT",
+			BodyPath: "state",
+		},
+	},
+	Action:          handleNotificationsPutLocale,
+	HideHelpCommand: true,
+}, map[string][]requestflag.HasOuterFlag{
+	"element": {
+		&requestflag.InnerFlag[string]{
+			Name:       "element.id",
+			Usage:      "Target element ID.",
+			InnerField: "id",
+		},
+	},
+})
+
 var notificationsReplace = requestflag.WithInnerFlags(cli.Command{
 	Name:    "replace",
 	Usage:   "Replace a notification template. All fields are required.",
@@ -231,12 +357,17 @@ var notificationsReplace = requestflag.WithInnerFlags(cli.Command{
 
 var notificationsRetrieveContent = cli.Command{
 	Name:    "retrieve-content",
-	Usage:   "Perform retrieve-content operation",
+	Usage:   "Retrieve the content of a notification template. The response shape depends on\nwhether the template uses V1 (blocks/channels) or V2 (elemental) content. Use\nthe `version` query parameter to select draft, published, or a specific\nhistorical version.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
 			Name:     "id",
 			Required: true,
+		},
+		&requestflag.Flag[string]{
+			Name:      "version",
+			Usage:     "Accepts `draft`, `published`, or a version string (e.g., `v001`). Defaults to `published`.",
+			QueryPath: "version",
 		},
 	},
 	Action:          handleNotificationsRetrieveContent,
@@ -452,6 +583,136 @@ func handleNotificationsPublish(ctx context.Context, cmd *cli.Command) error {
 	)
 }
 
+func handleNotificationsPutContent(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("id") && len(unusedArgs) > 0 {
+		cmd.Set("id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	params := courier.NotificationPutContentParams{}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		ApplicationJSON,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Notifications.PutContent(
+		ctx,
+		cmd.Value("id").(string),
+		params,
+		options...,
+	)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(os.Stdout, "notifications put-content", obj, format, transform)
+}
+
+func handleNotificationsPutElement(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("element-id") && len(unusedArgs) > 0 {
+		cmd.Set("element-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	params := courier.NotificationPutElementParams{
+		ID: cmd.Value("id").(string),
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		ApplicationJSON,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Notifications.PutElement(
+		ctx,
+		cmd.Value("element-id").(string),
+		params,
+		options...,
+	)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(os.Stdout, "notifications put-element", obj, format, transform)
+}
+
+func handleNotificationsPutLocale(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("locale-id") && len(unusedArgs) > 0 {
+		cmd.Set("locale-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	params := courier.NotificationPutLocaleParams{
+		ID: cmd.Value("id").(string),
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		ApplicationJSON,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Notifications.PutLocale(
+		ctx,
+		cmd.Value("locale-id").(string),
+		params,
+		options...,
+	)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(os.Stdout, "notifications put-locale", obj, format, transform)
+}
+
 func handleNotificationsReplace(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
@@ -505,6 +766,8 @@ func handleNotificationsRetrieveContent(ctx context.Context, cmd *cli.Command) e
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
+	params := courier.NotificationGetContentParams{}
+
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -518,7 +781,12 @@ func handleNotificationsRetrieveContent(ctx context.Context, cmd *cli.Command) e
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Notifications.GetContent(ctx, cmd.Value("id").(string), options...)
+	_, err = client.Notifications.GetContent(
+		ctx,
+		cmd.Value("id").(string),
+		params,
+		options...,
+	)
 	if err != nil {
 		return err
 	}
