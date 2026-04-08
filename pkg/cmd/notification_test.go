@@ -152,6 +152,150 @@ func TestNotificationsPublish(t *testing.T) {
 	})
 }
 
+func TestNotificationsPutContent(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t,
+			"--api-key", "string",
+			"notifications", "put-content",
+			"--id", "id",
+			"--content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, raw: {foo: bar}, type: channel}], version: '2022-01-01'}",
+			"--state", "DRAFT",
+		)
+	})
+
+	t.Run("inner flags", func(t *testing.T) {
+		// Check that inner flags have been set up correctly
+		requestflag.CheckInnerFlags(notificationsPutContent)
+
+		// Alternative argument passing style using inner flags
+		mocktest.TestRunMockTestWithFlags(
+			t,
+			"--api-key", "string",
+			"notifications", "put-content",
+			"--id", "id",
+			"--content.elements", "[{channels: [string], if: if, loop: loop, ref: ref, channel: email, raw: {foo: bar}, type: channel}]",
+			"--content.version", "2022-01-01",
+			"--state", "DRAFT",
+		)
+	})
+
+	t.Run("piping data", func(t *testing.T) {
+		// Test piping YAML data over stdin
+		pipeData := []byte("" +
+			"content:\n" +
+			"  elements:\n" +
+			"    - channels:\n" +
+			"        - string\n" +
+			"      if: if\n" +
+			"      loop: loop\n" +
+			"      ref: ref\n" +
+			"      channel: email\n" +
+			"      raw:\n" +
+			"        foo: bar\n" +
+			"      type: channel\n" +
+			"  version: '2022-01-01'\n" +
+			"state: DRAFT\n")
+		mocktest.TestRunMockTestWithPipeAndFlags(
+			t, pipeData,
+			"--api-key", "string",
+			"notifications", "put-content",
+			"--id", "id",
+		)
+	})
+}
+
+func TestNotificationsPutElement(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t,
+			"--api-key", "string",
+			"notifications", "put-element",
+			"--id", "id",
+			"--element-id", "elementId",
+			"--type", "text",
+			"--channel", "string",
+			"--data", "{content: bar}",
+			"--if", "if",
+			"--loop", "loop",
+			"--ref", "ref",
+			"--state", "DRAFT",
+		)
+	})
+
+	t.Run("piping data", func(t *testing.T) {
+		// Test piping YAML data over stdin
+		pipeData := []byte("" +
+			"type: text\n" +
+			"channels:\n" +
+			"  - string\n" +
+			"data:\n" +
+			"  content: bar\n" +
+			"if: if\n" +
+			"loop: loop\n" +
+			"ref: ref\n" +
+			"state: DRAFT\n")
+		mocktest.TestRunMockTestWithPipeAndFlags(
+			t, pipeData,
+			"--api-key", "string",
+			"notifications", "put-element",
+			"--id", "id",
+			"--element-id", "elementId",
+		)
+	})
+}
+
+func TestNotificationsPutLocale(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t,
+			"--api-key", "string",
+			"notifications", "put-locale",
+			"--id", "id",
+			"--locale-id", "localeId",
+			"--element", "{id: elem_1}",
+			"--element", "{id: elem_2}",
+			"--state", "DRAFT",
+		)
+	})
+
+	t.Run("inner flags", func(t *testing.T) {
+		// Check that inner flags have been set up correctly
+		requestflag.CheckInnerFlags(notificationsPutLocale)
+
+		// Alternative argument passing style using inner flags
+		mocktest.TestRunMockTestWithFlags(
+			t,
+			"--api-key", "string",
+			"notifications", "put-locale",
+			"--id", "id",
+			"--locale-id", "localeId",
+			"--element.id", "elem_1",
+			"--element.id", "elem_2",
+			"--state", "DRAFT",
+		)
+	})
+
+	t.Run("piping data", func(t *testing.T) {
+		// Test piping YAML data over stdin
+		pipeData := []byte("" +
+			"elements:\n" +
+			"  - id: elem_1\n" +
+			"  - id: elem_2\n" +
+			"state: DRAFT\n")
+		mocktest.TestRunMockTestWithPipeAndFlags(
+			t, pipeData,
+			"--api-key", "string",
+			"notifications", "put-locale",
+			"--id", "id",
+			"--locale-id", "localeId",
+		)
+	})
+}
+
 func TestNotificationsReplace(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
@@ -228,6 +372,7 @@ func TestNotificationsRetrieveContent(t *testing.T) {
 			"--api-key", "string",
 			"notifications", "retrieve-content",
 			"--id", "id",
+			"--version", "version",
 		)
 	})
 }

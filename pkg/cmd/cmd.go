@@ -249,16 +249,11 @@ func init() {
 					&notificationsArchive,
 					&notificationsListVersions,
 					&notificationsPublish,
+					&notificationsPutContent,
+					&notificationsPutElement,
+					&notificationsPutLocale,
 					&notificationsReplace,
 					&notificationsRetrieveContent,
-				},
-			},
-			{
-				Name:     "notifications:draft",
-				Category: "API RESOURCE",
-				Suggest:  true,
-				Commands: []*cli.Command{
-					&notificationsDraftRetrieveContent,
 				},
 			},
 			{
