@@ -267,6 +267,9 @@ func TestCanNavigateInto(t *testing.T) {
 }
 
 func TestNavigateForward_EmptyRowData(t *testing.T) {
+	t.Parallel()
+
+	// An empty JSON array produces a TableView with no rows.
 	emptyArray := gjson.Parse("[]")
 	view, err := newTableView("", emptyArray, false)
 	require.NoError(t, err)
@@ -479,6 +482,8 @@ type rawJSONItem struct {
 func (r rawJSONItem) RawJSON() string { return r.raw }
 
 func TestMarshalItemsToJSONArray_WithHasRawJSON(t *testing.T) {
+	t.Parallel()
+
 	items := []any{
 		rawJSONItem{raw: `{"id":1,"name":"alice"}`},
 		rawJSONItem{raw: `{"id":2,"name":"bob"}`},
@@ -490,6 +495,8 @@ func TestMarshalItemsToJSONArray_WithHasRawJSON(t *testing.T) {
 }
 
 func TestMarshalItemsToJSONArray_WithoutHasRawJSON(t *testing.T) {
+	t.Parallel()
+
 	items := []any{
 		map[string]any{"id": 1, "name": "alice"},
 		map[string]any{"id": 2, "name": "bob"},

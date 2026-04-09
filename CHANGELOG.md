@@ -1,5 +1,31 @@
 # Changelog
 
+## 3.4.0 (2026-04-09)
+
+Full Changelog: [v3.3.0...v3.4.0](https://github.com/trycourier/courier-cli/compare/v3.3.0...v3.4.0)
+
+### Features
+
+* allow `-` as value representing stdin to binary-only file parameters in CLIs ([a902634](https://github.com/trycourier/courier-cli/commit/a902634508d62e7aeaed7f7a32689e7955e38105))
+* **api:** add put-content/element/locale to notifications, remove draft resource ([73eb073](https://github.com/trycourier/courier-cli/commit/73eb0735e93404b04352079a847b0bccba564390))
+* better error message if scheme forgotten in CLI `*_BASE_URL`/`--base-url` ([2efc982](https://github.com/trycourier/courier-cli/commit/2efc9824db1675e76ed76ec684ecbb8535cf6a92))
+* binary-only parameters become CLI flags that take filenames only ([a9fe67e](https://github.com/trycourier/courier-cli/commit/a9fe67e4100a9d864ca53a6e3340e8ac6b574c1f))
+
+
+### Bug Fixes
+
+* fall back to main branch if linking fails in CI ([431a672](https://github.com/trycourier/courier-cli/commit/431a672eb91d5c3fff0c8347d0b2cc38c3aad7ce))
+* fix quoting typo ([de9edff](https://github.com/trycourier/courier-cli/commit/de9edffc25bc25741d1a856b52071c330c36f15b))
+
+
+### Chores
+
+* **cli:** let `--format raw` be used in conjunction with `--transform` ([1dfbfc5](https://github.com/trycourier/courier-cli/commit/1dfbfc55e22eebc1944bb3d11848f094311ee092))
+* **internal:** regenerate SDK with no functional changes ([8c16167](https://github.com/trycourier/courier-cli/commit/8c161672c1fc1cf23c6cd83f5534b845807098e6))
+* mark all CLI-related tests in Go with `t.Parallel()` ([3fb3d21](https://github.com/trycourier/courier-cli/commit/3fb3d215383204aa49743d2be374636da370afa6))
+* modify CLI tests to inject stdout so mutating `os.Stdout` isn't necessary ([cf2b66d](https://github.com/trycourier/courier-cli/commit/cf2b66de2f94d4dbc2dc391e116a6f71548939f8))
+* switch some CLI Go tests from `os.Chdir` to `t.Chdir` ([e6cd02b](https://github.com/trycourier/courier-cli/commit/e6cd02bbbbbaf8b7ff84f948d9483977c06cd30a))
+
 ## 3.3.0 (2026-04-02)
 
 Full Changelog: [v3.2.0...v3.3.0](https://github.com/trycourier/courier-cli/compare/v3.2.0...v3.3.0)

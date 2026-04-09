@@ -39,6 +39,9 @@ func init() {
 				Name:        "base-url",
 				DefaultText: "url",
 				Usage:       "Override the base URL for API requests",
+				Validator: func(baseURL string) error {
+					return ValidateBaseURL(baseURL, "--base-url")
+				},
 			},
 			&cli.StringFlag{
 				Name:  "format",
@@ -246,16 +249,11 @@ func init() {
 					&notificationsArchive,
 					&notificationsListVersions,
 					&notificationsPublish,
+					&notificationsPutContent,
+					&notificationsPutElement,
+					&notificationsPutLocale,
 					&notificationsReplace,
 					&notificationsRetrieveContent,
-				},
-			},
-			{
-				Name:     "notifications:draft",
-				Category: "API RESOURCE",
-				Suggest:  true,
-				Commands: []*cli.Command{
-					&notificationsDraftRetrieveContent,
 				},
 			},
 			{
@@ -266,6 +264,19 @@ func init() {
 					&notificationsChecksUpdate,
 					&notificationsChecksList,
 					&notificationsChecksDelete,
+				},
+			},
+			{
+				Name:     "routing-strategies",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&routingStrategiesCreate,
+					&routingStrategiesRetrieve,
+					&routingStrategiesList,
+					&routingStrategiesArchive,
+					&routingStrategiesListNotifications,
+					&routingStrategiesReplace,
 				},
 			},
 			{
