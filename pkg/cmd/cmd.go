@@ -267,6 +267,19 @@ func init() {
 				},
 			},
 			{
+				Name:     "routing-strategies",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&routingStrategiesCreate,
+					&routingStrategiesRetrieve,
+					&routingStrategiesList,
+					&routingStrategiesArchive,
+					&routingStrategiesListNotifications,
+					&routingStrategiesReplace,
+				},
+			},
+			{
 				Name:     "profiles",
 				Category: "API RESOURCE",
 				Suggest:  true,
