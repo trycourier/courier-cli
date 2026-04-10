@@ -29,11 +29,11 @@ var automationsInvokeInvokeAdHoc = requestflag.WithInnerFlags(cli.Command{
 			Name:     "brand",
 			BodyPath: "brand",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[map[string]any]{
 			Name:     "data",
 			BodyPath: "data",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[map[string]any]{
 			Name:     "profile",
 			BodyPath: "profile",
 		},
@@ -50,7 +50,7 @@ var automationsInvokeInvokeAdHoc = requestflag.WithInnerFlags(cli.Command{
 	HideHelpCommand: true,
 }, map[string][]requestflag.HasOuterFlag{
 	"automation": {
-		&requestflag.InnerFlag[[]any]{
+		&requestflag.InnerFlag[[]map[string]any]{
 			Name:       "automation.steps",
 			InnerField: "steps",
 		},
@@ -79,11 +79,11 @@ var automationsInvokeInvokeByTemplate = cli.Command{
 			Name:     "brand",
 			BodyPath: "brand",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[map[string]any]{
 			Name:     "data",
 			BodyPath: "data",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[map[string]any]{
 			Name:     "profile",
 			BodyPath: "profile",
 		},

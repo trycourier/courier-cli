@@ -37,7 +37,7 @@ var notificationsCreate = requestflag.WithInnerFlags(cli.Command{
 	HideHelpCommand: true,
 }, map[string][]requestflag.HasOuterFlag{
 	"notification": {
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "notification.brand",
 			Usage:      "Brand reference, or null for no brand.",
 			InnerField: "brand",
@@ -51,12 +51,12 @@ var notificationsCreate = requestflag.WithInnerFlags(cli.Command{
 			Usage:      "Display name for the template.",
 			InnerField: "name",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "notification.routing",
 			Usage:      "Routing strategy reference, or null for none.",
 			InnerField: "routing",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "notification.subscription",
 			Usage:      "Subscription topic reference, or null for none.",
 			InnerField: "subscription",
@@ -197,7 +197,7 @@ var notificationsPutContent = requestflag.WithInnerFlags(cli.Command{
 	HideHelpCommand: true,
 }, map[string][]requestflag.HasOuterFlag{
 	"content": {
-		&requestflag.InnerFlag[[]any]{
+		&requestflag.InnerFlag[[]map[string]any]{
 			Name:       "content.elements",
 			InnerField: "elements",
 		},
@@ -323,7 +323,7 @@ var notificationsReplace = requestflag.WithInnerFlags(cli.Command{
 	HideHelpCommand: true,
 }, map[string][]requestflag.HasOuterFlag{
 	"notification": {
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "notification.brand",
 			Usage:      "Brand reference, or null for no brand.",
 			InnerField: "brand",
@@ -337,12 +337,12 @@ var notificationsReplace = requestflag.WithInnerFlags(cli.Command{
 			Usage:      "Display name for the template.",
 			InnerField: "name",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "notification.routing",
 			Usage:      "Routing strategy reference, or null for none.",
 			InnerField: "routing",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "notification.subscription",
 			Usage:      "Subscription topic reference, or null for none.",
 			InnerField: "subscription",

@@ -63,7 +63,7 @@ var usersTenantsAddMultiple = requestflag.WithInnerFlags(cli.Command{
 			Usage:      "Tenant ID for the association between tenant and user",
 			InnerField: "tenant_id",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "tenant.profile",
 			Usage:      "Additional metadata to be applied to a user profile when used in a tenant context",
 			InnerField: "profile",
@@ -94,7 +94,7 @@ var usersTenantsAddSingle = cli.Command{
 			Name:     "tenant-id",
 			Required: true,
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[map[string]any]{
 			Name:     "profile",
 			BodyPath: "profile",
 		},

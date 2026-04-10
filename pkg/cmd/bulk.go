@@ -43,7 +43,7 @@ var bulkAddUsers = requestflag.WithInnerFlags(cli.Command{
 			Name:       "user.preferences",
 			InnerField: "preferences",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "user.profile",
 			Usage:      "User profile information. For email-based bulk jobs, `profile.email` is required \nfor provider routing to determine if the message can be delivered. The email \naddress should be provided here rather than in `to.email`.\n",
 			InnerField: "profile",
@@ -90,15 +90,15 @@ var bulkCreateJob = requestflag.WithInnerFlags(cli.Command{
 			Usage:      "Elemental content (optional, for V2 format). When provided, this will be used \ninstead of the notification associated with the `event` field.\n",
 			InnerField: "content",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "message.data",
 			InnerField: "data",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "message.locale",
 			InnerField: "locale",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "message.override",
 			InnerField: "override",
 		},

@@ -58,12 +58,12 @@ var tenantsUpdate = requestflag.WithInnerFlags(cli.Command{
 			Usage:    "Tenant's parent id (if any).",
 			BodyPath: "parent_tenant_id",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[map[string]any]{
 			Name:     "properties",
 			Usage:    "Arbitrary properties accessible to a template.",
 			BodyPath: "properties",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[map[string]any]{
 			Name:     "user-profile",
 			Usage:    "A user profile object merged with user profile on send.",
 			BodyPath: "user_profile",
