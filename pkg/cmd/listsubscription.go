@@ -116,11 +116,11 @@ var listsSubscriptionsSubscribeUser = requestflag.WithInnerFlags(cli.Command{
 	HideHelpCommand: true,
 }, map[string][]requestflag.HasOuterFlag{
 	"preferences": {
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "preferences.categories",
 			InnerField: "categories",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "preferences.notifications",
 			InnerField: "notifications",
 		},

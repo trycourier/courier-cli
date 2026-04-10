@@ -139,7 +139,7 @@ var usersTokensAddSingle = requestflag.WithInnerFlags(cli.Command{
 			Required: true,
 			BodyPath: "provider_key",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[map[string]any]{
 			Name:     "device",
 			Usage:    "Information about the device the token came from.",
 			BodyPath: "device",
@@ -154,7 +154,7 @@ var usersTokensAddSingle = requestflag.WithInnerFlags(cli.Command{
 			Usage:    "Properties about the token.",
 			BodyPath: "properties",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[map[string]any]{
 			Name:     "tracking",
 			Usage:    "Tracking information about the device the token came from.",
 			BodyPath: "tracking",

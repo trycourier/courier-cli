@@ -39,7 +39,7 @@ var sendMessage = requestflag.WithInnerFlags(cli.Command{
 			Name:       "message.channels",
 			InnerField: "channels",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "message.content",
 			Usage:      "Describes content that will work for email, inbox, push, chat, or any channel id.",
 			InnerField: "content",
@@ -48,23 +48,23 @@ var sendMessage = requestflag.WithInnerFlags(cli.Command{
 			Name:       "message.context",
 			InnerField: "context",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "message.data",
 			InnerField: "data",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "message.delay",
 			InnerField: "delay",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "message.expiry",
 			InnerField: "expiry",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "message.metadata",
 			InnerField: "metadata",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "message.preferences",
 			InnerField: "preferences",
 		},
@@ -72,7 +72,7 @@ var sendMessage = requestflag.WithInnerFlags(cli.Command{
 			Name:       "message.providers",
 			InnerField: "providers",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "message.routing",
 			Usage:      "Customize which channels/providers Courier may deliver the message through.",
 			InnerField: "routing",
@@ -81,7 +81,7 @@ var sendMessage = requestflag.WithInnerFlags(cli.Command{
 			Name:       "message.template",
 			InnerField: "template",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "message.timeout",
 			InnerField: "timeout",
 		},
