@@ -62,7 +62,7 @@ var providersRetrieve = cli.Command{
 
 var providersUpdate = cli.Command{
 	Name:    "update",
-	Usage:   "Update an existing provider configuration. The `provider` key is required. All\nother fields are optional — omitted fields are cleared from the stored\nconfiguration (this is a full replacement, not a partial merge).",
+	Usage:   "Replace an existing provider configuration. The `provider` key is required and\ndetermines which provider-specific settings schema is applied. All other fields\nare optional — omitted fields are cleared from the stored configuration (this is\na full replacement, not a partial merge). Changing the provider type for an\nexisting configuration is not supported.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -71,7 +71,7 @@ var providersUpdate = cli.Command{
 		},
 		&requestflag.Flag[string]{
 			Name:     "provider",
-			Usage:    "The provider key identifying the type.",
+			Usage:    "The provider key identifying the type. Required on every request because it selects the provider-specific settings schema for validation.",
 			Required: true,
 			BodyPath: "provider",
 		},
