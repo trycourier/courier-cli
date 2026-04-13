@@ -1,5 +1,24 @@
 # Changelog
 
+## 3.4.1 (2026-04-13)
+
+Full Changelog: [v3.4.0...v3.4.1](https://github.com/trycourier/courier-cli/compare/v3.4.0...v3.4.1)
+
+### Bug Fixes
+
+* **cli:** fix incompatible Go types for flag generated as array of maps ([213bd1d](https://github.com/trycourier/courier-cli/commit/213bd1d825283670c97ead0231a72fe72071d582))
+* fix for failing to drop invalid module replace in link script ([ecb6b7b](https://github.com/trycourier/courier-cli/commit/ecb6b7b4bc868ef0ffede0efd7fd614b277c7282))
+
+
+### Chores
+
+* **cli:** additional test cases for `ShowJSONIterator` ([7a49de2](https://github.com/trycourier/courier-cli/commit/7a49de24ba244acf937ed42fcdd14b2b38583bd4))
+
+
+### Documentation
+
+* **api:** update usage text for providers update method ([797aaf8](https://github.com/trycourier/courier-cli/commit/797aaf8b1d7a31cf2981022e2df0bc3ab4441163))
+
 ## 3.4.0 (2026-04-09)
 
 Full Changelog: [v3.3.0...v3.4.0](https://github.com/trycourier/courier-cli/compare/v3.3.0...v3.4.0)
