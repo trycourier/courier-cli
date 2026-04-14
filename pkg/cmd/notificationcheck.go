@@ -17,7 +17,7 @@ import (
 
 var notificationsChecksUpdate = requestflag.WithInnerFlags(cli.Command{
 	Name:    "update",
-	Usage:   "Perform update operation",
+	Usage:   "Replace the checks for a notification template submission.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -57,7 +57,7 @@ var notificationsChecksUpdate = requestflag.WithInnerFlags(cli.Command{
 
 var notificationsChecksList = cli.Command{
 	Name:    "list",
-	Usage:   "Perform list operation",
+	Usage:   "Retrieve the checks for a notification template submission.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -75,7 +75,7 @@ var notificationsChecksList = cli.Command{
 
 var notificationsChecksDelete = cli.Command{
 	Name:    "delete",
-	Usage:   "Perform delete operation",
+	Usage:   "Cancel a notification template submission.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
