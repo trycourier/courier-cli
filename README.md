@@ -112,3 +112,23 @@ base64-encoding). Note that absolute paths will begin with `@file://` or
 ```bash
 courier <command> --arg @data://file.txt
 ```
+
+## Linking different Go SDK versions
+
+You can link the CLI against a different version of the Courier Go SDK
+for development purposes using the `./scripts/link` script.
+
+To link to a specific version from a repository (version can be a branch,
+git tag, or commit hash):
+
+```bash
+./scripts/link github.com/org/repo@version
+```
+
+To link to a local copy of the SDK:
+
+```bash
+./scripts/link ../path/to/courier-go
+```
+
+If you run the link script without any arguments, it will default to `../courier-go`.
