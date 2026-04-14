@@ -22,7 +22,7 @@ var notificationsCreate = requestflag.WithInnerFlags(cli.Command{
 	Flags: []cli.Flag{
 		&requestflag.Flag[map[string]any]{
 			Name:     "notification",
-			Usage:    "Full document shape used in POST and PUT request bodies, and returned inside the GET response envelope.",
+			Usage:    "Core template fields used in POST and PUT request bodies (nested under a `notification` key) and returned at the top level in responses.",
 			Required: true,
 			BodyPath: "notification",
 		},
@@ -308,7 +308,7 @@ var notificationsReplace = requestflag.WithInnerFlags(cli.Command{
 		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "notification",
-			Usage:    "Full document shape used in POST and PUT request bodies, and returned inside the GET response envelope.",
+			Usage:    "Core template fields used in POST and PUT request bodies (nested under a `notification` key) and returned at the top level in responses.",
 			Required: true,
 			BodyPath: "notification",
 		},
