@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.4.2 (2026-04-14)
+
+Full Changelog: [v3.4.1...v3.4.2](https://github.com/trycourier/courier-cli/compare/v3.4.1...v3.4.2)
+
+### Chores
+
+* **internal:** regenerate SDK with no functional changes ([f00bb03](https://github.com/trycourier/courier-cli/commit/f00bb03b74254edfad802f08c495e228f43fc509))
+
 ## 3.4.1 (2026-04-13)
 
 Full Changelog: [v3.4.0...v3.4.1](https://github.com/trycourier/courier-cli/compare/v3.4.0...v3.4.1)
