@@ -116,8 +116,9 @@ func handleProfilesListsRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "profiles:lists retrieve", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "profiles:lists retrieve", obj, format, explicitFormat, transform)
 }
 
 func handleProfilesListsDelete(ctx context.Context, cmd *cli.Command) error {
@@ -151,8 +152,9 @@ func handleProfilesListsDelete(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "profiles:lists delete", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "profiles:lists delete", obj, format, explicitFormat, transform)
 }
 
 func handleProfilesListsSubscribe(ctx context.Context, cmd *cli.Command) error {
@@ -193,6 +195,7 @@ func handleProfilesListsSubscribe(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "profiles:lists subscribe", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "profiles:lists subscribe", obj, format, explicitFormat, transform)
 }

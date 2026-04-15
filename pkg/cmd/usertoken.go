@@ -259,8 +259,9 @@ func handleUsersTokensRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "users:tokens retrieve", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "users:tokens retrieve", obj, format, explicitFormat, transform)
 }
 
 func handleUsersTokensUpdate(ctx context.Context, cmd *cli.Command) error {
@@ -328,8 +329,9 @@ func handleUsersTokensList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "users:tokens list", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "users:tokens list", obj, format, explicitFormat, transform)
 }
 
 func handleUsersTokensDelete(ctx context.Context, cmd *cli.Command) error {

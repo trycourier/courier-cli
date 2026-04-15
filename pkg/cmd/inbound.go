@@ -83,6 +83,7 @@ func handleInboundTrackEvent(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "inbound track-event", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "inbound track-event", obj, format, explicitFormat, transform)
 }

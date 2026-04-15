@@ -66,6 +66,7 @@ func handleAutomationsList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "automations list", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "automations list", obj, format, explicitFormat, transform)
 }

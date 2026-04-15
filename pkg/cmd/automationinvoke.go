@@ -126,8 +126,9 @@ func handleAutomationsInvokeInvokeAdHoc(ctx context.Context, cmd *cli.Command) e
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "automations:invoke invoke-ad-hoc", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "automations:invoke invoke-ad-hoc", obj, format, explicitFormat, transform)
 }
 
 func handleAutomationsInvokeInvokeByTemplate(ctx context.Context, cmd *cli.Command) error {
@@ -168,6 +169,7 @@ func handleAutomationsInvokeInvokeByTemplate(ctx context.Context, cmd *cli.Comma
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "automations:invoke invoke-by-template", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "automations:invoke invoke-by-template", obj, format, explicitFormat, transform)
 }

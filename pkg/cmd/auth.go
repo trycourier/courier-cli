@@ -67,6 +67,7 @@ func handleAuthIssueToken(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "auth issue-token", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "auth issue-token", obj, format, explicitFormat, transform)
 }

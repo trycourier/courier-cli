@@ -219,8 +219,9 @@ func handleBulkCreateJob(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "bulk create-job", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "bulk create-job", obj, format, explicitFormat, transform)
 }
 
 func handleBulkListUsers(ctx context.Context, cmd *cli.Command) error {
@@ -261,8 +262,9 @@ func handleBulkListUsers(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "bulk list-users", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "bulk list-users", obj, format, explicitFormat, transform)
 }
 
 func handleBulkRetrieveJob(ctx context.Context, cmd *cli.Command) error {
@@ -296,8 +298,9 @@ func handleBulkRetrieveJob(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "bulk retrieve-job", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "bulk retrieve-job", obj, format, explicitFormat, transform)
 }
 
 func handleBulkRunJob(ctx context.Context, cmd *cli.Command) error {

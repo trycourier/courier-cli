@@ -150,8 +150,9 @@ func handleAudiencesRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "audiences retrieve", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "audiences retrieve", obj, format, explicitFormat, transform)
 }
 
 func handleAudiencesUpdate(ctx context.Context, cmd *cli.Command) error {
@@ -192,8 +193,9 @@ func handleAudiencesUpdate(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "audiences update", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "audiences update", obj, format, explicitFormat, transform)
 }
 
 func handleAudiencesList(ctx context.Context, cmd *cli.Command) error {
@@ -226,8 +228,9 @@ func handleAudiencesList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "audiences list", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "audiences list", obj, format, explicitFormat, transform)
 }
 
 func handleAudiencesDelete(ctx context.Context, cmd *cli.Command) error {
@@ -293,6 +296,7 @@ func handleAudiencesListMembers(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "audiences list-members", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "audiences list-members", obj, format, explicitFormat, transform)
 }
