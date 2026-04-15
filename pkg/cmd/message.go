@@ -187,8 +187,9 @@ func handleMessagesRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "messages retrieve", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "messages retrieve", obj, format, explicitFormat, transform)
 }
 
 func handleMessagesList(ctx context.Context, cmd *cli.Command) error {
@@ -221,8 +222,9 @@ func handleMessagesList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "messages list", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "messages list", obj, format, explicitFormat, transform)
 }
 
 func handleMessagesCancel(ctx context.Context, cmd *cli.Command) error {
@@ -256,8 +258,9 @@ func handleMessagesCancel(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "messages cancel", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "messages cancel", obj, format, explicitFormat, transform)
 }
 
 func handleMessagesContent(ctx context.Context, cmd *cli.Command) error {
@@ -291,8 +294,9 @@ func handleMessagesContent(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "messages content", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "messages content", obj, format, explicitFormat, transform)
 }
 
 func handleMessagesHistory(ctx context.Context, cmd *cli.Command) error {
@@ -333,6 +337,7 @@ func handleMessagesHistory(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "messages history", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "messages history", obj, format, explicitFormat, transform)
 }

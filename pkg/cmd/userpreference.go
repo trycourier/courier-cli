@@ -140,8 +140,9 @@ func handleUsersPreferencesRetrieve(ctx context.Context, cmd *cli.Command) error
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "users:preferences retrieve", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "users:preferences retrieve", obj, format, explicitFormat, transform)
 }
 
 func handleUsersPreferencesRetrieveTopic(ctx context.Context, cmd *cli.Command) error {
@@ -184,8 +185,9 @@ func handleUsersPreferencesRetrieveTopic(ctx context.Context, cmd *cli.Command) 
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "users:preferences retrieve-topic", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "users:preferences retrieve-topic", obj, format, explicitFormat, transform)
 }
 
 func handleUsersPreferencesUpdateOrCreateTopic(ctx context.Context, cmd *cli.Command) error {
@@ -228,6 +230,7 @@ func handleUsersPreferencesUpdateOrCreateTopic(ctx context.Context, cmd *cli.Com
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "users:preferences update-or-create-topic", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "users:preferences update-or-create-topic", obj, format, explicitFormat, transform)
 }

@@ -95,8 +95,9 @@ func handleJourneysList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "journeys list", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "journeys list", obj, format, explicitFormat, transform)
 }
 
 func handleJourneysInvoke(ctx context.Context, cmd *cli.Command) error {
@@ -137,6 +138,7 @@ func handleJourneysInvoke(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "journeys invoke", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "journeys invoke", obj, format, explicitFormat, transform)
 }

@@ -185,8 +185,9 @@ func handleBrandsCreate(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "brands create", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "brands create", obj, format, explicitFormat, transform)
 }
 
 func handleBrandsRetrieve(ctx context.Context, cmd *cli.Command) error {
@@ -220,8 +221,9 @@ func handleBrandsRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "brands retrieve", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "brands retrieve", obj, format, explicitFormat, transform)
 }
 
 func handleBrandsUpdate(ctx context.Context, cmd *cli.Command) error {
@@ -262,8 +264,9 @@ func handleBrandsUpdate(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "brands update", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "brands update", obj, format, explicitFormat, transform)
 }
 
 func handleBrandsList(ctx context.Context, cmd *cli.Command) error {
@@ -296,8 +299,9 @@ func handleBrandsList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "brands list", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "brands list", obj, format, explicitFormat, transform)
 }
 
 func handleBrandsDelete(ctx context.Context, cmd *cli.Command) error {

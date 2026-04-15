@@ -157,8 +157,9 @@ func handleProfilesCreate(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "profiles create", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "profiles create", obj, format, explicitFormat, transform)
 }
 
 func handleProfilesRetrieve(ctx context.Context, cmd *cli.Command) error {
@@ -192,8 +193,9 @@ func handleProfilesRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "profiles retrieve", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "profiles retrieve", obj, format, explicitFormat, transform)
 }
 
 func handleProfilesUpdate(ctx context.Context, cmd *cli.Command) error {
@@ -291,6 +293,7 @@ func handleProfilesReplace(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "profiles replace", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "profiles replace", obj, format, explicitFormat, transform)
 }

@@ -170,8 +170,9 @@ func handleTenantsTemplatesRetrieve(ctx context.Context, cmd *cli.Command) error
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "tenants:templates retrieve", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "tenants:templates retrieve", obj, format, explicitFormat, transform)
 }
 
 func handleTenantsTemplatesList(ctx context.Context, cmd *cli.Command) error {
@@ -212,8 +213,9 @@ func handleTenantsTemplatesList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "tenants:templates list", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "tenants:templates list", obj, format, explicitFormat, transform)
 }
 
 func handleTenantsTemplatesPublish(ctx context.Context, cmd *cli.Command) error {
@@ -256,8 +258,9 @@ func handleTenantsTemplatesPublish(ctx context.Context, cmd *cli.Command) error 
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "tenants:templates publish", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "tenants:templates publish", obj, format, explicitFormat, transform)
 }
 
 func handleTenantsTemplatesReplace(ctx context.Context, cmd *cli.Command) error {
@@ -300,6 +303,7 @@ func handleTenantsTemplatesReplace(ctx context.Context, cmd *cli.Command) error 
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "tenants:templates replace", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "tenants:templates replace", obj, format, explicitFormat, transform)
 }

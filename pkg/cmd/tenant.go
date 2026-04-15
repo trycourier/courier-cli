@@ -174,8 +174,9 @@ func handleTenantsRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "tenants retrieve", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "tenants retrieve", obj, format, explicitFormat, transform)
 }
 
 func handleTenantsUpdate(ctx context.Context, cmd *cli.Command) error {
@@ -216,8 +217,9 @@ func handleTenantsUpdate(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "tenants update", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "tenants update", obj, format, explicitFormat, transform)
 }
 
 func handleTenantsList(ctx context.Context, cmd *cli.Command) error {
@@ -250,8 +252,9 @@ func handleTenantsList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "tenants list", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "tenants list", obj, format, explicitFormat, transform)
 }
 
 func handleTenantsDelete(ctx context.Context, cmd *cli.Command) error {
@@ -317,6 +320,7 @@ func handleTenantsListUsers(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "tenants list-users", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "tenants list-users", obj, format, explicitFormat, transform)
 }
