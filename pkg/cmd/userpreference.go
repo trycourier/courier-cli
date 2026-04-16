@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -142,7 +141,12 @@ func handleUsersPreferencesRetrieve(ctx context.Context, cmd *cli.Command) error
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "users:preferences retrieve", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "users:preferences retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleUsersPreferencesRetrieveTopic(ctx context.Context, cmd *cli.Command) error {
@@ -187,7 +191,12 @@ func handleUsersPreferencesRetrieveTopic(ctx context.Context, cmd *cli.Command) 
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "users:preferences retrieve-topic", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "users:preferences retrieve-topic",
+		Transform:      transform,
+	})
 }
 
 func handleUsersPreferencesUpdateOrCreateTopic(ctx context.Context, cmd *cli.Command) error {
@@ -232,5 +241,10 @@ func handleUsersPreferencesUpdateOrCreateTopic(ctx context.Context, cmd *cli.Com
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "users:preferences update-or-create-topic", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "users:preferences update-or-create-topic",
+		Transform:      transform,
+	})
 }

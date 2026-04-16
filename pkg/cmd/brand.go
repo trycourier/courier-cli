@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -187,7 +186,12 @@ func handleBrandsCreate(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "brands create", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "brands create",
+		Transform:      transform,
+	})
 }
 
 func handleBrandsRetrieve(ctx context.Context, cmd *cli.Command) error {
@@ -223,7 +227,12 @@ func handleBrandsRetrieve(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "brands retrieve", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "brands retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleBrandsUpdate(ctx context.Context, cmd *cli.Command) error {
@@ -266,7 +275,12 @@ func handleBrandsUpdate(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "brands update", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "brands update",
+		Transform:      transform,
+	})
 }
 
 func handleBrandsList(ctx context.Context, cmd *cli.Command) error {
@@ -301,7 +315,12 @@ func handleBrandsList(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "brands list", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "brands list",
+		Transform:      transform,
+	})
 }
 
 func handleBrandsDelete(ctx context.Context, cmd *cli.Command) error {

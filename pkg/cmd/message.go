@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -189,7 +188,12 @@ func handleMessagesRetrieve(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "messages retrieve", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "messages retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleMessagesList(ctx context.Context, cmd *cli.Command) error {
@@ -224,7 +228,12 @@ func handleMessagesList(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "messages list", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "messages list",
+		Transform:      transform,
+	})
 }
 
 func handleMessagesCancel(ctx context.Context, cmd *cli.Command) error {
@@ -260,7 +269,12 @@ func handleMessagesCancel(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "messages cancel", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "messages cancel",
+		Transform:      transform,
+	})
 }
 
 func handleMessagesContent(ctx context.Context, cmd *cli.Command) error {
@@ -296,7 +310,12 @@ func handleMessagesContent(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "messages content", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "messages content",
+		Transform:      transform,
+	})
 }
 
 func handleMessagesHistory(ctx context.Context, cmd *cli.Command) error {
@@ -339,5 +358,10 @@ func handleMessagesHistory(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "messages history", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "messages history",
+		Transform:      transform,
+	})
 }

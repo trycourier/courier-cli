@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -176,7 +175,12 @@ func handleTenantsRetrieve(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "tenants retrieve", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "tenants retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleTenantsUpdate(ctx context.Context, cmd *cli.Command) error {
@@ -219,7 +223,12 @@ func handleTenantsUpdate(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "tenants update", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "tenants update",
+		Transform:      transform,
+	})
 }
 
 func handleTenantsList(ctx context.Context, cmd *cli.Command) error {
@@ -254,7 +263,12 @@ func handleTenantsList(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "tenants list", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "tenants list",
+		Transform:      transform,
+	})
 }
 
 func handleTenantsDelete(ctx context.Context, cmd *cli.Command) error {
@@ -322,5 +336,10 @@ func handleTenantsListUsers(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "tenants list-users", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "tenants list-users",
+		Transform:      transform,
+	})
 }

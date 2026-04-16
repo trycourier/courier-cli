@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -156,7 +155,12 @@ func handleProvidersCreate(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "providers create", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "providers create",
+		Transform:      transform,
+	})
 }
 
 func handleProvidersRetrieve(ctx context.Context, cmd *cli.Command) error {
@@ -192,7 +196,12 @@ func handleProvidersRetrieve(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "providers retrieve", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "providers retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleProvidersUpdate(ctx context.Context, cmd *cli.Command) error {
@@ -235,7 +244,12 @@ func handleProvidersUpdate(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "providers update", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "providers update",
+		Transform:      transform,
+	})
 }
 
 func handleProvidersList(ctx context.Context, cmd *cli.Command) error {
@@ -270,7 +284,12 @@ func handleProvidersList(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "providers list", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "providers list",
+		Transform:      transform,
+	})
 }
 
 func handleProvidersDelete(ctx context.Context, cmd *cli.Command) error {
