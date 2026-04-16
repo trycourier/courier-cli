@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -406,7 +405,12 @@ func handleNotificationsCreate(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "notifications create", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "notifications create",
+		Transform:      transform,
+	})
 }
 
 func handleNotificationsRetrieve(ctx context.Context, cmd *cli.Command) error {
@@ -449,7 +453,12 @@ func handleNotificationsRetrieve(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "notifications retrieve", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "notifications retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleNotificationsList(ctx context.Context, cmd *cli.Command) error {
@@ -484,7 +493,12 @@ func handleNotificationsList(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "notifications list", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "notifications list",
+		Transform:      transform,
+	})
 }
 
 func handleNotificationsArchive(ctx context.Context, cmd *cli.Command) error {
@@ -552,7 +566,12 @@ func handleNotificationsListVersions(ctx context.Context, cmd *cli.Command) erro
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "notifications list-versions", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "notifications list-versions",
+		Transform:      transform,
+	})
 }
 
 func handleNotificationsPublish(ctx context.Context, cmd *cli.Command) error {
@@ -627,7 +646,12 @@ func handleNotificationsPutContent(ctx context.Context, cmd *cli.Command) error 
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "notifications put-content", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "notifications put-content",
+		Transform:      transform,
+	})
 }
 
 func handleNotificationsPutElement(ctx context.Context, cmd *cli.Command) error {
@@ -672,7 +696,12 @@ func handleNotificationsPutElement(ctx context.Context, cmd *cli.Command) error 
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "notifications put-element", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "notifications put-element",
+		Transform:      transform,
+	})
 }
 
 func handleNotificationsPutLocale(ctx context.Context, cmd *cli.Command) error {
@@ -717,7 +746,12 @@ func handleNotificationsPutLocale(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "notifications put-locale", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "notifications put-locale",
+		Transform:      transform,
+	})
 }
 
 func handleNotificationsReplace(ctx context.Context, cmd *cli.Command) error {
@@ -760,7 +794,12 @@ func handleNotificationsReplace(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "notifications replace", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "notifications replace",
+		Transform:      transform,
+	})
 }
 
 func handleNotificationsRetrieveContent(ctx context.Context, cmd *cli.Command) error {
@@ -803,5 +842,10 @@ func handleNotificationsRetrieveContent(ctx context.Context, cmd *cli.Command) e
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "notifications retrieve-content", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "notifications retrieve-content",
+		Transform:      transform,
+	})
 }

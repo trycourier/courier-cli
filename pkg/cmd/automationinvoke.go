@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -128,7 +127,12 @@ func handleAutomationsInvokeInvokeAdHoc(ctx context.Context, cmd *cli.Command) e
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "automations:invoke invoke-ad-hoc", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "automations:invoke invoke-ad-hoc",
+		Transform:      transform,
+	})
 }
 
 func handleAutomationsInvokeInvokeByTemplate(ctx context.Context, cmd *cli.Command) error {
@@ -171,5 +175,10 @@ func handleAutomationsInvokeInvokeByTemplate(ctx context.Context, cmd *cli.Comma
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "automations:invoke invoke-by-template", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "automations:invoke invoke-by-template",
+		Transform:      transform,
+	})
 }

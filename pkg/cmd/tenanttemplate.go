@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -172,7 +171,12 @@ func handleTenantsTemplatesRetrieve(ctx context.Context, cmd *cli.Command) error
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "tenants:templates retrieve", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "tenants:templates retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleTenantsTemplatesList(ctx context.Context, cmd *cli.Command) error {
@@ -215,7 +219,12 @@ func handleTenantsTemplatesList(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "tenants:templates list", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "tenants:templates list",
+		Transform:      transform,
+	})
 }
 
 func handleTenantsTemplatesPublish(ctx context.Context, cmd *cli.Command) error {
@@ -260,7 +269,12 @@ func handleTenantsTemplatesPublish(ctx context.Context, cmd *cli.Command) error 
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "tenants:templates publish", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "tenants:templates publish",
+		Transform:      transform,
+	})
 }
 
 func handleTenantsTemplatesReplace(ctx context.Context, cmd *cli.Command) error {
@@ -305,5 +319,10 @@ func handleTenantsTemplatesReplace(ctx context.Context, cmd *cli.Command) error 
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "tenants:templates replace", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "tenants:templates replace",
+		Transform:      transform,
+	})
 }
