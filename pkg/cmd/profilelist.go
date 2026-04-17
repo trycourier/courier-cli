@@ -120,6 +120,7 @@ func handleProfilesListsRetrieve(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "profiles:lists retrieve",
 		Transform:      transform,
 	})
@@ -161,6 +162,7 @@ func handleProfilesListsDelete(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "profiles:lists delete",
 		Transform:      transform,
 	})
@@ -209,6 +211,7 @@ func handleProfilesListsSubscribe(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "profiles:lists subscribe",
 		Transform:      transform,
 	})

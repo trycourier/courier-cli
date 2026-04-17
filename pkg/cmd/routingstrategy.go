@@ -229,6 +229,7 @@ func handleRoutingStrategiesCreate(ctx context.Context, cmd *cli.Command) error 
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "routing-strategies create",
 		Transform:      transform,
 	})
@@ -270,6 +271,7 @@ func handleRoutingStrategiesRetrieve(ctx context.Context, cmd *cli.Command) erro
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "routing-strategies retrieve",
 		Transform:      transform,
 	})
@@ -310,6 +312,7 @@ func handleRoutingStrategiesList(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "routing-strategies list",
 		Transform:      transform,
 	})
@@ -383,6 +386,7 @@ func handleRoutingStrategiesListNotifications(ctx context.Context, cmd *cli.Comm
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "routing-strategies list-notifications",
 		Transform:      transform,
 	})
@@ -431,6 +435,7 @@ func handleRoutingStrategiesReplace(ctx context.Context, cmd *cli.Command) error
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "routing-strategies replace",
 		Transform:      transform,
 	})

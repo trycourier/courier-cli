@@ -144,6 +144,7 @@ func handleUsersPreferencesRetrieve(ctx context.Context, cmd *cli.Command) error
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "users:preferences retrieve",
 		Transform:      transform,
 	})
@@ -194,6 +195,7 @@ func handleUsersPreferencesRetrieveTopic(ctx context.Context, cmd *cli.Command) 
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "users:preferences retrieve-topic",
 		Transform:      transform,
 	})
@@ -244,6 +246,7 @@ func handleUsersPreferencesUpdateOrCreateTopic(ctx context.Context, cmd *cli.Com
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "users:preferences update-or-create-topic",
 		Transform:      transform,
 	})

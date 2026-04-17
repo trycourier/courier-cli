@@ -174,6 +174,7 @@ func handleTenantsTemplatesRetrieve(ctx context.Context, cmd *cli.Command) error
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "tenants:templates retrieve",
 		Transform:      transform,
 	})
@@ -222,6 +223,7 @@ func handleTenantsTemplatesList(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "tenants:templates list",
 		Transform:      transform,
 	})
@@ -272,6 +274,7 @@ func handleTenantsTemplatesPublish(ctx context.Context, cmd *cli.Command) error 
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "tenants:templates publish",
 		Transform:      transform,
 	})
@@ -322,6 +325,7 @@ func handleTenantsTemplatesReplace(ctx context.Context, cmd *cli.Command) error 
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "tenants:templates replace",
 		Transform:      transform,
 	})
