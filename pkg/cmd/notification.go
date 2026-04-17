@@ -408,6 +408,7 @@ func handleNotificationsCreate(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "notifications create",
 		Transform:      transform,
 	})
@@ -456,6 +457,7 @@ func handleNotificationsRetrieve(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "notifications retrieve",
 		Transform:      transform,
 	})
@@ -496,6 +498,7 @@ func handleNotificationsList(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "notifications list",
 		Transform:      transform,
 	})
@@ -569,6 +572,7 @@ func handleNotificationsListVersions(ctx context.Context, cmd *cli.Command) erro
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "notifications list-versions",
 		Transform:      transform,
 	})
@@ -649,6 +653,7 @@ func handleNotificationsPutContent(ctx context.Context, cmd *cli.Command) error 
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "notifications put-content",
 		Transform:      transform,
 	})
@@ -699,6 +704,7 @@ func handleNotificationsPutElement(ctx context.Context, cmd *cli.Command) error 
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "notifications put-element",
 		Transform:      transform,
 	})
@@ -749,6 +755,7 @@ func handleNotificationsPutLocale(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "notifications put-locale",
 		Transform:      transform,
 	})
@@ -797,6 +804,7 @@ func handleNotificationsReplace(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "notifications replace",
 		Transform:      transform,
 	})
@@ -845,6 +853,7 @@ func handleNotificationsRetrieveContent(ctx context.Context, cmd *cli.Command) e
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "notifications retrieve-content",
 		Transform:      transform,
 	})

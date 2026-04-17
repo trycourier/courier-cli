@@ -130,6 +130,7 @@ func handleAutomationsInvokeInvokeAdHoc(ctx context.Context, cmd *cli.Command) e
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "automations:invoke invoke-ad-hoc",
 		Transform:      transform,
 	})
@@ -178,6 +179,7 @@ func handleAutomationsInvokeInvokeByTemplate(ctx context.Context, cmd *cli.Comma
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "automations:invoke invoke-by-template",
 		Transform:      transform,
 	})

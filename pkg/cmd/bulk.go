@@ -223,6 +223,7 @@ func handleBulkCreateJob(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "bulk create-job",
 		Transform:      transform,
 	})
@@ -271,6 +272,7 @@ func handleBulkListUsers(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "bulk list-users",
 		Transform:      transform,
 	})
@@ -312,6 +314,7 @@ func handleBulkRetrieveJob(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "bulk retrieve-job",
 		Transform:      transform,
 	})

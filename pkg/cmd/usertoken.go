@@ -263,6 +263,7 @@ func handleUsersTokensRetrieve(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "users:tokens retrieve",
 		Transform:      transform,
 	})
@@ -338,6 +339,7 @@ func handleUsersTokensList(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "users:tokens list",
 		Transform:      transform,
 	})

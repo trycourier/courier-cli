@@ -135,6 +135,7 @@ func handleNotificationsChecksUpdate(ctx context.Context, cmd *cli.Command) erro
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "notifications:checks update",
 		Transform:      transform,
 	})
@@ -185,6 +186,7 @@ func handleNotificationsChecksList(ctx context.Context, cmd *cli.Command) error 
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "notifications:checks list",
 		Transform:      transform,
 	})

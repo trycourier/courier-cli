@@ -79,6 +79,7 @@ func handleAuditEventsRetrieve(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "audit-events retrieve",
 		Transform:      transform,
 	})
@@ -119,6 +120,7 @@ func handleAuditEventsList(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "audit-events list",
 		Transform:      transform,
 	})
