@@ -1,5 +1,29 @@
 # Changelog
 
+## 3.5.0 (2026-04-23)
+
+Full Changelog: [v3.4.2...v3.5.0](https://github.com/trycourier/courier-cli/compare/v3.4.2...v3.5.0)
+
+### Features
+
+* **cli:** add `--raw-output`/`-r` option to print raw (non-JSON) strings ([780a9c0](https://github.com/trycourier/courier-cli/commit/780a9c0e5dc5f889e1756e00b7712b58fd1c2cf6))
+* **cli:** alias parameters in data with `x-stainless-cli-data-alias` ([4c52102](https://github.com/trycourier/courier-cli/commit/4c5210271156ddab475383aa6d512d915c43e7b6))
+* **cli:** send filename and content type when reading input from files ([8de2857](https://github.com/trycourier/courier-cli/commit/8de28579f6a831bfdc78ec33b16bcf31c55d06bb))
+
+
+### Chores
+
+* **ci:** support manually triggering release workflow ([99e6955](https://github.com/trycourier/courier-cli/commit/99e6955357951c874d777c4a26a920d602b7ec72))
+* **cli:** fall back to JSON when using default "explore" with non-TTY ([09aeebd](https://github.com/trycourier/courier-cli/commit/09aeebd03bb1402bd278940cdeb8ea69b01517b6))
+* **cli:** switch long lists of positional args over to param structs ([389c820](https://github.com/trycourier/courier-cli/commit/389c8207c4c54f657dfd310ce5ab1d8d751cc357))
+* **cli:** use `ShowJSONOpts` as argument to `formatJSON` instead of many positionals ([747c709](https://github.com/trycourier/courier-cli/commit/747c7090e140eb34ff022c5d9e42454618efe5c4))
+* **internal:** more robust bootstrap script ([3934247](https://github.com/trycourier/courier-cli/commit/39342478242318700e674e0ed42b1950e7bce5a1))
+
+
+### Documentation
+
+* **api:** update notification parameter descriptions ([40e76a4](https://github.com/trycourier/courier-cli/commit/40e76a403eab7c2c445e532fcbce8494b9cef78a))
+
 ## 3.4.2 (2026-04-14)
 
 Full Changelog: [v3.4.1...v3.4.2](https://github.com/trycourier/courier-cli/compare/v3.4.1...v3.4.2)
