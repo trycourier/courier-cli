@@ -20,8 +20,9 @@ var messagesRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "message-id",
-			Required: true,
+			Name:      "message-id",
+			Required:  true,
+			PathParam: "message_id",
 		},
 	},
 	Action:          handleMessagesRetrieve,
@@ -114,8 +115,9 @@ var messagesCancel = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "message-id",
-			Required: true,
+			Name:      "message-id",
+			Required:  true,
+			PathParam: "message_id",
 		},
 	},
 	Action:          handleMessagesCancel,
@@ -128,8 +130,9 @@ var messagesContent = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "message-id",
-			Required: true,
+			Name:      "message-id",
+			Required:  true,
+			PathParam: "message_id",
 		},
 	},
 	Action:          handleMessagesContent,
@@ -142,8 +145,9 @@ var messagesHistory = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "message-id",
-			Required: true,
+			Name:      "message-id",
+			Required:  true,
+			PathParam: "message_id",
 		},
 		&requestflag.Flag[*string]{
 			Name:      "type",
@@ -205,8 +209,6 @@ func handleMessagesList(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.MessageListParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -217,6 +219,8 @@ func handleMessagesList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.MessageListParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -333,8 +337,6 @@ func handleMessagesHistory(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.MessageHistoryParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -345,6 +347,8 @@ func handleMessagesHistory(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.MessageHistoryParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))

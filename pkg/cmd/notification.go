@@ -74,8 +74,9 @@ var notificationsRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
 		&requestflag.Flag[string]{
 			Name:      "version",
@@ -118,8 +119,9 @@ var notificationsArchive = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
 	},
 	Action:          handleNotificationsArchive,
@@ -132,8 +134,9 @@ var notificationsListVersions = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
 		&requestflag.Flag[string]{
 			Name:      "cursor",
@@ -157,8 +160,9 @@ var notificationsPublish = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
 		&requestflag.Flag[string]{
 			Name:     "version",
@@ -176,8 +180,9 @@ var notificationsPutContent = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "content",
@@ -214,12 +219,14 @@ var notificationsPutElement = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "element-id",
-			Required: true,
+			Name:      "element-id",
+			Required:  true,
+			PathParam: "elementId",
 		},
 		&requestflag.Flag[string]{
 			Name:     "type",
@@ -264,12 +271,14 @@ var notificationsPutLocale = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "locale-id",
-			Required: true,
+			Name:      "locale-id",
+			Required:  true,
+			PathParam: "localeId",
 		},
 		&requestflag.Flag[[]map[string]any]{
 			Name:     "element",
@@ -302,8 +311,9 @@ var notificationsReplace = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "notification",
@@ -360,8 +370,9 @@ var notificationsRetrieveContent = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
 		&requestflag.Flag[string]{
 			Name:      "version",
@@ -381,8 +392,6 @@ func handleNotificationsCreate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.NotificationNewParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -393,6 +402,8 @@ func handleNotificationsCreate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.NotificationNewParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -425,8 +436,6 @@ func handleNotificationsRetrieve(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.NotificationGetParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -437,6 +446,8 @@ func handleNotificationsRetrieve(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.NotificationGetParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -471,8 +482,6 @@ func handleNotificationsList(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.NotificationListParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -483,6 +492,8 @@ func handleNotificationsList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.NotificationListParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -540,8 +551,6 @@ func handleNotificationsListVersions(ctx context.Context, cmd *cli.Command) erro
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.NotificationListVersionsParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -552,6 +561,8 @@ func handleNotificationsListVersions(ctx context.Context, cmd *cli.Command) erro
 	if err != nil {
 		return err
 	}
+
+	params := courier.NotificationListVersionsParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -589,8 +600,6 @@ func handleNotificationsPublish(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.NotificationPublishParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -601,6 +610,8 @@ func handleNotificationsPublish(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.NotificationPublishParams{}
 
 	return client.Notifications.Publish(
 		ctx,
@@ -621,8 +632,6 @@ func handleNotificationsPutContent(ctx context.Context, cmd *cli.Command) error 
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.NotificationPutContentParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -633,6 +642,8 @@ func handleNotificationsPutContent(ctx context.Context, cmd *cli.Command) error 
 	if err != nil {
 		return err
 	}
+
+	params := courier.NotificationPutContentParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -670,10 +681,6 @@ func handleNotificationsPutElement(ctx context.Context, cmd *cli.Command) error 
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.NotificationPutElementParams{
-		ID: cmd.Value("id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -683,6 +690,10 @@ func handleNotificationsPutElement(ctx context.Context, cmd *cli.Command) error 
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.NotificationPutElementParams{
+		ID: cmd.Value("id").(string),
 	}
 
 	var res []byte
@@ -721,10 +732,6 @@ func handleNotificationsPutLocale(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.NotificationPutLocaleParams{
-		ID: cmd.Value("id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -734,6 +741,10 @@ func handleNotificationsPutLocale(ctx context.Context, cmd *cli.Command) error {
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.NotificationPutLocaleParams{
+		ID: cmd.Value("id").(string),
 	}
 
 	var res []byte
@@ -772,8 +783,6 @@ func handleNotificationsReplace(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.NotificationReplaceParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -784,6 +793,8 @@ func handleNotificationsReplace(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.NotificationReplaceParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -821,8 +832,6 @@ func handleNotificationsRetrieveContent(ctx context.Context, cmd *cli.Command) e
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.NotificationGetContentParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -833,6 +842,8 @@ func handleNotificationsRetrieveContent(ctx context.Context, cmd *cli.Command) e
 	if err != nil {
 		return err
 	}
+
+	params := courier.NotificationGetContentParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))

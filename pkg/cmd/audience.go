@@ -20,8 +20,9 @@ var audiencesRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "audience-id",
-			Required: true,
+			Name:      "audience-id",
+			Required:  true,
+			PathParam: "audience_id",
 		},
 	},
 	Action:          handleAudiencesRetrieve,
@@ -34,8 +35,9 @@ var audiencesUpdate = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "audience-id",
-			Required: true,
+			Name:      "audience-id",
+			Required:  true,
+			PathParam: "audience_id",
 		},
 		&requestflag.Flag[*string]{
 			Name:     "description",
@@ -91,8 +93,9 @@ var audiencesDelete = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "audience-id",
-			Required: true,
+			Name:      "audience-id",
+			Required:  true,
+			PathParam: "audience_id",
 		},
 	},
 	Action:          handleAudiencesDelete,
@@ -105,8 +108,9 @@ var audiencesListMembers = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "audience-id",
-			Required: true,
+			Name:      "audience-id",
+			Required:  true,
+			PathParam: "audience_id",
 		},
 		&requestflag.Flag[*string]{
 			Name:      "cursor",
@@ -171,8 +175,6 @@ func handleAudiencesUpdate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.AudienceUpdateParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -183,6 +185,8 @@ func handleAudiencesUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.AudienceUpdateParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -217,8 +221,6 @@ func handleAudiencesList(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.AudienceListParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -229,6 +231,8 @@ func handleAudiencesList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.AudienceListParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -286,8 +290,6 @@ func handleAudiencesListMembers(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.AudienceListMembersParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -298,6 +300,8 @@ func handleAudiencesListMembers(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.AudienceListMembersParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))

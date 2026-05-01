@@ -20,8 +20,9 @@ var tenantsRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "tenant-id",
-			Required: true,
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
 		},
 	},
 	Action:          handleTenantsRetrieve,
@@ -34,8 +35,9 @@ var tenantsUpdate = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "tenant-id",
-			Required: true,
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
 		},
 		&requestflag.Flag[string]{
 			Name:     "name",
@@ -110,8 +112,9 @@ var tenantsDelete = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "tenant-id",
-			Required: true,
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
 		},
 	},
 	Action:          handleTenantsDelete,
@@ -124,8 +127,9 @@ var tenantsListUsers = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "tenant-id",
-			Required: true,
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
 		},
 		&requestflag.Flag[*string]{
 			Name:      "cursor",
@@ -195,8 +199,6 @@ func handleTenantsUpdate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.TenantUpdateParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -207,6 +209,8 @@ func handleTenantsUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.TenantUpdateParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -241,8 +245,6 @@ func handleTenantsList(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.TenantListParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -253,6 +255,8 @@ func handleTenantsList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.TenantListParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -310,8 +314,6 @@ func handleTenantsListUsers(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.TenantListUsersParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -322,6 +324,8 @@ func handleTenantsListUsers(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.TenantListUsersParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))

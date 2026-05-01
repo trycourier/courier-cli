@@ -20,8 +20,9 @@ var listsSubscriptionsList = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
+			Name:      "list-id",
+			Required:  true,
+			PathParam: "list_id",
 		},
 		&requestflag.Flag[*string]{
 			Name:      "cursor",
@@ -39,8 +40,9 @@ var listsSubscriptionsAdd = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
+			Name:      "list-id",
+			Required:  true,
+			PathParam: "list_id",
 		},
 		&requestflag.Flag[[]map[string]any]{
 			Name:     "recipient",
@@ -69,8 +71,9 @@ var listsSubscriptionsSubscribe = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
+			Name:      "list-id",
+			Required:  true,
+			PathParam: "list_id",
 		},
 		&requestflag.Flag[[]map[string]any]{
 			Name:     "recipient",
@@ -99,12 +102,14 @@ var listsSubscriptionsSubscribeUser = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
+			Name:      "list-id",
+			Required:  true,
+			PathParam: "list_id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "preferences",
@@ -132,12 +137,14 @@ var listsSubscriptionsUnsubscribeUser = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
+			Name:      "list-id",
+			Required:  true,
+			PathParam: "list_id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 	},
 	Action:          handleListsSubscriptionsUnsubscribeUser,
@@ -155,8 +162,6 @@ func handleListsSubscriptionsList(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.ListSubscriptionListParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -167,6 +172,8 @@ func handleListsSubscriptionsList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.ListSubscriptionListParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -204,8 +211,6 @@ func handleListsSubscriptionsAdd(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.ListSubscriptionAddParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -216,6 +221,8 @@ func handleListsSubscriptionsAdd(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.ListSubscriptionAddParams{}
 
 	return client.Lists.Subscriptions.Add(
 		ctx,
@@ -236,8 +243,6 @@ func handleListsSubscriptionsSubscribe(ctx context.Context, cmd *cli.Command) er
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.ListSubscriptionSubscribeParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -248,6 +253,8 @@ func handleListsSubscriptionsSubscribe(ctx context.Context, cmd *cli.Command) er
 	if err != nil {
 		return err
 	}
+
+	params := courier.ListSubscriptionSubscribeParams{}
 
 	return client.Lists.Subscriptions.Subscribe(
 		ctx,
@@ -268,10 +275,6 @@ func handleListsSubscriptionsSubscribeUser(ctx context.Context, cmd *cli.Command
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.ListSubscriptionSubscribeUserParams{
-		ListID: cmd.Value("list-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -281,6 +284,10 @@ func handleListsSubscriptionsSubscribeUser(ctx context.Context, cmd *cli.Command
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.ListSubscriptionSubscribeUserParams{
+		ListID: cmd.Value("list-id").(string),
 	}
 
 	return client.Lists.Subscriptions.SubscribeUser(
@@ -302,10 +309,6 @@ func handleListsSubscriptionsUnsubscribeUser(ctx context.Context, cmd *cli.Comma
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.ListSubscriptionUnsubscribeUserParams{
-		ListID: cmd.Value("list-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -315,6 +318,10 @@ func handleListsSubscriptionsUnsubscribeUser(ctx context.Context, cmd *cli.Comma
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.ListSubscriptionUnsubscribeUserParams{
+		ListID: cmd.Value("list-id").(string),
 	}
 
 	return client.Lists.Subscriptions.UnsubscribeUser(

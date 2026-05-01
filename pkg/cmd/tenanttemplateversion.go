@@ -20,16 +20,19 @@ var tenantsTemplatesVersionsRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "tenant-id",
-			Required: true,
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "template-id",
-			Required: true,
+			Name:      "template-id",
+			Required:  true,
+			PathParam: "template_id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "version",
-			Required: true,
+			Name:      "version",
+			Required:  true,
+			PathParam: "version",
 		},
 	},
 	Action:          handleTenantsTemplatesVersionsRetrieve,
@@ -47,11 +50,6 @@ func handleTenantsTemplatesVersionsRetrieve(ctx context.Context, cmd *cli.Comman
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.TenantTemplateVersionGetParams{
-		TenantID:   cmd.Value("tenant-id").(string),
-		TemplateID: cmd.Value("template-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -61,6 +59,11 @@ func handleTenantsTemplatesVersionsRetrieve(ctx context.Context, cmd *cli.Comman
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.TenantTemplateVersionGetParams{
+		TenantID:   cmd.Value("tenant-id").(string),
+		TemplateID: cmd.Value("template-id").(string),
 	}
 
 	var res []byte

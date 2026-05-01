@@ -71,8 +71,9 @@ var routingStrategiesRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
 	},
 	Action:          handleRoutingStrategiesRetrieve,
@@ -106,8 +107,9 @@ var routingStrategiesArchive = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
 	},
 	Action:          handleRoutingStrategiesArchive,
@@ -120,8 +122,9 @@ var routingStrategiesListNotifications = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
 		&requestflag.Flag[*string]{
 			Name:      "cursor",
@@ -145,8 +148,9 @@ var routingStrategiesReplace = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
 		&requestflag.Flag[string]{
 			Name:     "name",
@@ -202,8 +206,6 @@ func handleRoutingStrategiesCreate(ctx context.Context, cmd *cli.Command) error 
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.RoutingStrategyNewParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -214,6 +216,8 @@ func handleRoutingStrategiesCreate(ctx context.Context, cmd *cli.Command) error 
 	if err != nil {
 		return err
 	}
+
+	params := courier.RoutingStrategyNewParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -285,8 +289,6 @@ func handleRoutingStrategiesList(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.RoutingStrategyListParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -297,6 +299,8 @@ func handleRoutingStrategiesList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.RoutingStrategyListParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -354,8 +358,6 @@ func handleRoutingStrategiesListNotifications(ctx context.Context, cmd *cli.Comm
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.RoutingStrategyListNotificationsParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -366,6 +368,8 @@ func handleRoutingStrategiesListNotifications(ctx context.Context, cmd *cli.Comm
 	if err != nil {
 		return err
 	}
+
+	params := courier.RoutingStrategyListNotificationsParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -403,8 +407,6 @@ func handleRoutingStrategiesReplace(ctx context.Context, cmd *cli.Command) error
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.RoutingStrategyReplaceParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -415,6 +417,8 @@ func handleRoutingStrategiesReplace(ctx context.Context, cmd *cli.Command) error
 	if err != nil {
 		return err
 	}
+
+	params := courier.RoutingStrategyReplaceParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
