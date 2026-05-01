@@ -43,7 +43,7 @@ var tenantsUpdate = requestflag.WithInnerFlags(cli.Command{
 			Required: true,
 			BodyPath: "name",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "brand-id",
 			Usage:    "Brand to be used for the account when one is not specified by the send call.",
 			BodyPath: "brand_id",
@@ -52,7 +52,7 @@ var tenantsUpdate = requestflag.WithInnerFlags(cli.Command{
 			Name:     "default-preferences",
 			BodyPath: "default_preferences",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "parent-tenant-id",
 			Usage:    "Tenant's parent id (if any).",
 			BodyPath: "parent_tenant_id",
@@ -84,17 +84,17 @@ var tenantsList = cli.Command{
 	Usage:   "Get a List of Tenants",
 	Suggest: true,
 	Flags: []cli.Flag{
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "Continue the pagination with the next cursor",
 			QueryPath: "cursor",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*int64]{
 			Name:      "limit",
 			Usage:     "The number of tenants to return \n(defaults to 20, maximum value of 100)",
 			QueryPath: "limit",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "parent-tenant-id",
 			Usage:     "Filter the list of tenants by parent_id",
 			QueryPath: "parent_tenant_id",
@@ -127,12 +127,12 @@ var tenantsListUsers = cli.Command{
 			Name:     "tenant-id",
 			Required: true,
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "Continue the pagination with the next cursor",
 			QueryPath: "cursor",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*int64]{
 			Name:      "limit",
 			Usage:     "The number of accounts to return \n(defaults to 20, maximum value of 100)",
 			QueryPath: "limit",

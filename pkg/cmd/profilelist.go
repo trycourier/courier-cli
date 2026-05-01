@@ -23,7 +23,7 @@ var profilesListsRetrieve = cli.Command{
 			Name:     "user-id",
 			Required: true,
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "A unique identifier that allows for fetching the next set of message statuses.",
 			QueryPath: "cursor",

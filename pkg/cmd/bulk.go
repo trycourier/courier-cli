@@ -47,7 +47,7 @@ var bulkAddUsers = requestflag.WithInnerFlags(cli.Command{
 			Usage:      "User profile information. For email-based bulk jobs, `profile.email` is required \nfor provider routing to determine if the message can be delivered. The email \naddress should be provided here rather than in `to.email`.\n",
 			InnerField: "profile",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "user.recipient",
 			Usage:      "User ID (legacy field, use profile or to.user_id instead)",
 			InnerField: "recipient",
@@ -80,11 +80,11 @@ var bulkCreateJob = requestflag.WithInnerFlags(cli.Command{
 			Usage:      "Event ID or Notification ID (required). Can be either a \nNotification ID (e.g., \"FRH3QXM9E34W4RKP7MRC8NZ1T8V8\") or a custom Event ID \n(e.g., \"welcome-email\") mapped to a notification.\n",
 			InnerField: "event",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "message.brand",
 			InnerField: "brand",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[map[string]any]{
 			Name:       "message.content",
 			Usage:      "Elemental content (optional, for V2 format). When provided, this will be used \ninstead of the notification associated with the `event` field.\n",
 			InnerField: "content",
@@ -101,7 +101,7 @@ var bulkCreateJob = requestflag.WithInnerFlags(cli.Command{
 			Name:       "message.override",
 			InnerField: "override",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "message.template",
 			Usage:      "Notification ID or template ID (optional, for V2 format). When provided, \nthis will be used instead of the notification associated with the `event` field.\n",
 			InnerField: "template",
@@ -118,7 +118,7 @@ var bulkListUsers = cli.Command{
 			Name:     "job-id",
 			Required: true,
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "A unique identifier that allows for fetching the next set of users added to the bulk job",
 			QueryPath: "cursor",

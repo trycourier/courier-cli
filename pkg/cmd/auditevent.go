@@ -33,7 +33,7 @@ var auditEventsList = cli.Command{
 	Usage:   "Fetch the list of audit events",
 	Suggest: true,
 	Flags: []cli.Flag{
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "A unique identifier that allows for fetching the next set of audit events.",
 			QueryPath: "cursor",

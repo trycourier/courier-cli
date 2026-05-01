@@ -24,7 +24,7 @@ var brandsCreate = requestflag.WithInnerFlags(cli.Command{
 			Required: true,
 			BodyPath: "name",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "id",
 			BodyPath: "id",
 		},
@@ -130,7 +130,7 @@ var brandsList = cli.Command{
 	Usage:   "Get the list of brands.",
 	Suggest: true,
 	Flags: []cli.Flag{
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "A unique identifier that allows for fetching the next set of brands.",
 			QueryPath: "cursor",

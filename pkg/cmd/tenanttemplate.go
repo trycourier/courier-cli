@@ -41,12 +41,12 @@ var tenantsTemplatesList = cli.Command{
 			Name:     "tenant-id",
 			Required: true,
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "Continue the pagination with the next cursor",
 			QueryPath: "cursor",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*int64]{
 			Name:      "limit",
 			Usage:     "The number of templates to return (defaults to 20, maximum value of 100)",
 			QueryPath: "limit",

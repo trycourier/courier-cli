@@ -24,7 +24,7 @@ var automationsInvokeInvokeAdHoc = requestflag.WithInnerFlags(cli.Command{
 			Required: true,
 			BodyPath: "automation",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "brand",
 			BodyPath: "brand",
 		},
@@ -36,11 +36,11 @@ var automationsInvokeInvokeAdHoc = requestflag.WithInnerFlags(cli.Command{
 			Name:     "profile",
 			BodyPath: "profile",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "recipient",
 			BodyPath: "recipient",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "template",
 			BodyPath: "template",
 		},
@@ -53,7 +53,7 @@ var automationsInvokeInvokeAdHoc = requestflag.WithInnerFlags(cli.Command{
 			Name:       "automation.steps",
 			InnerField: "steps",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "automation.cancelation-token",
 			InnerField: "cancelation_token",
 		},
@@ -69,12 +69,12 @@ var automationsInvokeInvokeByTemplate = cli.Command{
 			Name:     "template-id",
 			Required: true,
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "recipient",
 			Required: true,
 			BodyPath: "recipient",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "brand",
 			BodyPath: "brand",
 		},
@@ -86,7 +86,7 @@ var automationsInvokeInvokeByTemplate = cli.Command{
 			Name:     "profile",
 			BodyPath: "profile",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "template",
 			BodyPath: "template",
 		},

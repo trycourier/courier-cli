@@ -33,72 +33,72 @@ var messagesList = cli.Command{
 	Usage:   "Fetch the statuses of messages you've previously sent.",
 	Suggest: true,
 	Flags: []cli.Flag{
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*bool]{
 			Name:      "archived",
 			Usage:     "A boolean value that indicates whether archived messages should be included in the response.",
 			QueryPath: "archived",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "A unique identifier that allows for fetching the next set of messages.",
 			QueryPath: "cursor",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "enqueued-after",
 			Usage:     "The enqueued datetime of a message to filter out messages received before.",
 			QueryPath: "enqueued_after",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "event",
 			Usage:     "A unique identifier representing the event that was used to send the event.",
 			QueryPath: "event",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "list",
 			Usage:     "A unique identifier representing the list the message was sent to.",
 			QueryPath: "list",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "message-id",
 			Usage:     "A unique identifier representing the message_id returned from either /send or /send/list.",
 			QueryPath: "messageId",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "notification",
 			Usage:     "A unique identifier representing the notification that was used to send the event.",
 			QueryPath: "notification",
 		},
-		&requestflag.Flag[[]any]{
+		&requestflag.Flag[[]string]{
 			Name:      "provider",
 			Usage:     "The key assocated to the provider you want to filter on. E.g., sendgrid, inbox, twilio, slack, msteams, etc. Allows multiple values to be set in query parameters.",
 			QueryPath: "provider",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "recipient",
 			Usage:     "A unique identifier representing the recipient associated with the requested profile.",
 			QueryPath: "recipient",
 		},
-		&requestflag.Flag[[]any]{
+		&requestflag.Flag[[]string]{
 			Name:      "status",
 			Usage:     "An indicator of the current status of the message. Allows multiple values to be set in query parameters.",
 			QueryPath: "status",
 		},
-		&requestflag.Flag[[]any]{
+		&requestflag.Flag[[]string]{
 			Name:      "tag",
 			Usage:     "A tag placed in the metadata.tags during a notification send. Allows multiple values to be set in query parameters.",
 			QueryPath: "tag",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "tags",
 			Usage:     "A comma delimited list of 'tags'. Messages will be returned if they match any of the tags passed in.",
 			QueryPath: "tags",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "tenant-id",
 			Usage:     "Messages sent with the context of a Tenant",
 			QueryPath: "tenant_id",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "trace-id",
 			Usage:     "The unique identifier used to trace the requests",
 			QueryPath: "traceId",
@@ -145,7 +145,7 @@ var messagesHistory = cli.Command{
 			Name:     "message-id",
 			Required: true,
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "type",
 			Usage:     "A supported Message History type that will filter the events returned.",
 			QueryPath: "type",

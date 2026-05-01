@@ -36,7 +36,7 @@ var tenantsPreferencesItemsUpdate = cli.Command{
 			Usage:    "The default channels to send to this tenant when has_custom_routing is enabled",
 			BodyPath: "custom_routing",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*bool]{
 			Name:     "has-custom-routing",
 			Usage:    "Override channel routing with custom preferences. This will override any template preferences that are set, but a user can still customize their preferences",
 			BodyPath: "has_custom_routing",
