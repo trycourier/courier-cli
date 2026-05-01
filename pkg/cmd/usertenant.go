@@ -23,12 +23,12 @@ var usersTenantsList = cli.Command{
 			Name:     "user-id",
 			Required: true,
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "Continue the pagination with the next cursor",
 			QueryPath: "cursor",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*int64]{
 			Name:      "limit",
 			Usage:     "The number of accounts to return \n(defaults to 20, maximum value of 100)",
 			QueryPath: "limit",
@@ -67,12 +67,12 @@ var usersTenantsAddMultiple = requestflag.WithInnerFlags(cli.Command{
 			Usage:      "Additional metadata to be applied to a user profile when used in a tenant context",
 			InnerField: "profile",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "tenant.type",
 			Usage:      `Allowed values: "user".`,
 			InnerField: "type",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "tenant.user-id",
 			Usage:      "User ID for the association between tenant and user",
 			InnerField: "user_id",

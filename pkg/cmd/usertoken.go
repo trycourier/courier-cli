@@ -65,7 +65,7 @@ var usersTokensUpdate = requestflag.WithInnerFlags(cli.Command{
 			Usage:      "The JSON path specifying the part of the profile to operate on.",
 			InnerField: "path",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "patch.value",
 			Usage:      "The value for the operation.",
 			InnerField: "value",
@@ -163,54 +163,54 @@ var usersTokensAddSingle = requestflag.WithInnerFlags(cli.Command{
 	HideHelpCommand: true,
 }, map[string][]requestflag.HasOuterFlag{
 	"device": {
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "device.ad-id",
 			Usage:      "Id of the advertising identifier",
 			InnerField: "ad_id",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "device.app-id",
 			Usage:      "Id of the application the token is used for",
 			InnerField: "app_id",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "device.device-id",
 			Usage:      "Id of the device the token is associated with",
 			InnerField: "device_id",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "device.manufacturer",
 			Usage:      "The device manufacturer",
 			InnerField: "manufacturer",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "device.model",
 			Usage:      "The device model",
 			InnerField: "model",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "device.platform",
 			Usage:      "The device platform i.e. android, ios, web",
 			InnerField: "platform",
 		},
 	},
 	"tracking": {
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "tracking.ip",
 			Usage:      "The IP address of the device",
 			InnerField: "ip",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "tracking.lat",
 			Usage:      "The latitude of the device",
 			InnerField: "lat",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "tracking.long",
 			Usage:      "The longitude of the device",
 			InnerField: "long",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "tracking.os-version",
 			Usage:      "The operating system version",
 			InnerField: "os_version",

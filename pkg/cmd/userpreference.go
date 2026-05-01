@@ -23,7 +23,7 @@ var usersPreferencesRetrieve = cli.Command{
 			Name:     "user-id",
 			Required: true,
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "tenant-id",
 			Usage:     "Query the preferences of a user for this specific tenant context.",
 			QueryPath: "tenant_id",
@@ -46,7 +46,7 @@ var usersPreferencesRetrieveTopic = cli.Command{
 			Name:     "topic-id",
 			Required: true,
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "tenant-id",
 			Usage:     "Query the preferences of a user for this specific tenant context.",
 			QueryPath: "tenant_id",
@@ -74,7 +74,7 @@ var usersPreferencesUpdateOrCreateTopic = requestflag.WithInnerFlags(cli.Command
 			Required: true,
 			BodyPath: "topic",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "tenant-id",
 			Usage:     "Update the preferences of a user for this specific tenant context.",
 			QueryPath: "tenant_id",
@@ -94,7 +94,7 @@ var usersPreferencesUpdateOrCreateTopic = requestflag.WithInnerFlags(cli.Command
 			Usage:      "The Channels a user has chosen to receive notifications through for this topic",
 			InnerField: "custom_routing",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*bool]{
 			Name:       "topic.has-custom-routing",
 			InnerField: "has_custom_routing",
 		},

@@ -23,7 +23,7 @@ var listsSubscriptionsList = cli.Command{
 			Name:     "list-id",
 			Required: true,
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "A unique identifier that allows for fetching the next set of list subscriptions",
 			QueryPath: "cursor",

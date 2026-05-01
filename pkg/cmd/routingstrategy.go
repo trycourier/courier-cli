@@ -34,7 +34,7 @@ var routingStrategiesCreate = requestflag.WithInnerFlags(cli.Command{
 			Name:     "channels",
 			BodyPath: "channels",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "description",
 			Usage:    "Optional description of the routing strategy.",
 			BodyPath: "description",
@@ -84,7 +84,7 @@ var routingStrategiesList = cli.Command{
 	Usage:   "List routing strategies in your workspace. Returns metadata only (no\nrouting/channels/providers content). Use GET /routing-strategies/{id} for full\ndetails.",
 	Suggest: true,
 	Flags: []cli.Flag{
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "Opaque pagination cursor from a previous response. Omit for the first page.",
 			QueryPath: "cursor",
@@ -123,7 +123,7 @@ var routingStrategiesListNotifications = cli.Command{
 			Name:     "id",
 			Required: true,
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "Opaque pagination cursor from a previous response. Omit for the first page.",
 			QueryPath: "cursor",
@@ -163,7 +163,7 @@ var routingStrategiesReplace = requestflag.WithInnerFlags(cli.Command{
 			Name:     "channels",
 			BodyPath: "channels",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "description",
 			Usage:    "Optional description. Omit or null to clear.",
 			BodyPath: "description",

@@ -30,7 +30,7 @@ var sendMessage = requestflag.WithInnerFlags(cli.Command{
 	HideHelpCommand: true,
 }, map[string][]requestflag.HasOuterFlag{
 	"message": {
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "message.brand-id",
 			InnerField: "brand_id",
 		},
@@ -76,7 +76,7 @@ var sendMessage = requestflag.WithInnerFlags(cli.Command{
 			Usage:      "Customize which channels/providers Courier may deliver the message through.",
 			InnerField: "routing",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "message.template",
 			InnerField: "template",
 		},

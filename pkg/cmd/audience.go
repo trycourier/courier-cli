@@ -37,7 +37,7 @@ var audiencesUpdate = requestflag.WithInnerFlags(cli.Command{
 			Name:     "audience-id",
 			Required: true,
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "description",
 			Usage:    "A description of the audience",
 			BodyPath: "description",
@@ -47,12 +47,12 @@ var audiencesUpdate = requestflag.WithInnerFlags(cli.Command{
 			Usage:    "Filter configuration for audience membership containing an array of filter rules",
 			BodyPath: "filter",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "name",
 			Usage:    "The name of the audience",
 			BodyPath: "name",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "operator",
 			Usage:    "The logical operator (AND/OR) for the top-level filter",
 			BodyPath: "operator",
@@ -75,7 +75,7 @@ var audiencesList = cli.Command{
 	Usage:   "Get the audiences associated with the authorization token.",
 	Suggest: true,
 	Flags: []cli.Flag{
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "A unique identifier that allows for fetching the next set of audiences",
 			QueryPath: "cursor",
@@ -108,7 +108,7 @@ var audiencesListMembers = cli.Command{
 			Name:     "audience-id",
 			Required: true,
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "A unique identifier that allows for fetching the next set of members",
 			QueryPath: "cursor",

@@ -42,7 +42,7 @@ var inboundTrackEvent = cli.Command{
 			Required: true,
 			BodyPath: "type",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "user-id",
 			Usage:    "The user id associated with the track",
 			BodyPath: "userId",

@@ -92,7 +92,7 @@ var notificationsList = cli.Command{
 	Usage:   "List notification templates in your workspace.",
 	Suggest: true,
 	Flags: []cli.Flag{
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "Opaque pagination cursor from a previous response. Omit for the first page.",
 			QueryPath: "cursor",
@@ -102,7 +102,7 @@ var notificationsList = cli.Command{
 			Usage:     "Filter to templates linked to this event map ID.",
 			QueryPath: "event_id",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*bool]{
 			Name:      "notes",
 			Usage:     "Include template notes in the response. Only applies to legacy templates.",
 			QueryPath: "notes",
