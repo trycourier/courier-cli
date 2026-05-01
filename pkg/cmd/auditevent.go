@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -21,8 +20,9 @@ var auditEventsRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "audit-event-id",
-			Required: true,
+			Name:      "audit-event-id",
+			Required:  true,
+			PathParam: "audit-event-id",
 		},
 	},
 	Action:          handleAuditEventsRetrieve,
@@ -34,7 +34,7 @@ var auditEventsList = cli.Command{
 	Usage:   "Fetch the list of audit events",
 	Suggest: true,
 	Flags: []cli.Flag{
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "A unique identifier that allows for fetching the next set of audit events.",
 			QueryPath: "cursor",
@@ -75,8 +75,15 @@ func handleAuditEventsRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "audit-events retrieve", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "audit-events retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleAuditEventsList(ctx context.Context, cmd *cli.Command) error {
@@ -86,8 +93,6 @@ func handleAuditEventsList(ctx context.Context, cmd *cli.Command) error {
 	if len(unusedArgs) > 0 {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
-
-	params := courier.AuditEventListParams{}
 
 	options, err := flagOptions(
 		cmd,
@@ -100,6 +105,8 @@ func handleAuditEventsList(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
+	params := courier.AuditEventListParams{}
+
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
 	_, err = client.AuditEvents.List(ctx, params, options...)
@@ -109,6 +116,13 @@ func handleAuditEventsList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "audit-events list", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "audit-events list",
+		Transform:      transform,
+	})
 }

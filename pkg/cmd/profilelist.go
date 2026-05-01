@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -21,10 +20,11 @@ var profilesListsRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "A unique identifier that allows for fetching the next set of message statuses.",
 			QueryPath: "cursor",
@@ -40,8 +40,9 @@ var profilesListsDelete = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 	},
 	Action:          handleProfilesListsDelete,
@@ -54,8 +55,9 @@ var profilesListsSubscribe = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 		&requestflag.Flag[[]map[string]any]{
 			Name:     "list",
@@ -89,8 +91,6 @@ func handleProfilesListsRetrieve(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.ProfileListGetParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -101,6 +101,8 @@ func handleProfilesListsRetrieve(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.ProfileListGetParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -116,8 +118,15 @@ func handleProfilesListsRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "profiles:lists retrieve", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "profiles:lists retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleProfilesListsDelete(ctx context.Context, cmd *cli.Command) error {
@@ -151,8 +160,15 @@ func handleProfilesListsDelete(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "profiles:lists delete", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "profiles:lists delete",
+		Transform:      transform,
+	})
 }
 
 func handleProfilesListsSubscribe(ctx context.Context, cmd *cli.Command) error {
@@ -166,8 +182,6 @@ func handleProfilesListsSubscribe(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.ProfileListSubscribeParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -178,6 +192,8 @@ func handleProfilesListsSubscribe(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.ProfileListSubscribeParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -193,6 +209,13 @@ func handleProfilesListsSubscribe(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "profiles:lists subscribe", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "profiles:lists subscribe",
+		Transform:      transform,
+	})
 }

@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -21,12 +20,14 @@ var translationsRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "domain",
-			Required: true,
+			Name:      "domain",
+			Required:  true,
+			PathParam: "domain",
 		},
 		&requestflag.Flag[string]{
-			Name:     "locale",
-			Required: true,
+			Name:      "locale",
+			Required:  true,
+			PathParam: "locale",
 		},
 	},
 	Action:          handleTranslationsRetrieve,
@@ -39,12 +40,14 @@ var translationsUpdate = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "domain",
-			Required: true,
+			Name:      "domain",
+			Required:  true,
+			PathParam: "domain",
 		},
 		&requestflag.Flag[string]{
-			Name:     "locale",
-			Required: true,
+			Name:      "locale",
+			Required:  true,
+			PathParam: "locale",
 		},
 		&requestflag.Flag[string]{
 			Name:     "body",
@@ -67,10 +70,6 @@ func handleTranslationsRetrieve(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.TranslationGetParams{
-		Domain: cmd.Value("domain").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -80,6 +79,10 @@ func handleTranslationsRetrieve(ctx context.Context, cmd *cli.Command) error {
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.TranslationGetParams{
+		Domain: cmd.Value("domain").(string),
 	}
 
 	var res []byte
@@ -96,8 +99,15 @@ func handleTranslationsRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "translations retrieve", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "translations retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleTranslationsUpdate(ctx context.Context, cmd *cli.Command) error {
@@ -111,10 +121,6 @@ func handleTranslationsUpdate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.TranslationUpdateParams{
-		Domain: cmd.Value("domain").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -124,6 +130,10 @@ func handleTranslationsUpdate(ctx context.Context, cmd *cli.Command) error {
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.TranslationUpdateParams{
+		Domain: cmd.Value("domain").(string),
 	}
 
 	return client.Translations.Update(

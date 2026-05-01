@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -21,8 +20,9 @@ var messagesRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "message-id",
-			Required: true,
+			Name:      "message-id",
+			Required:  true,
+			PathParam: "message_id",
 		},
 	},
 	Action:          handleMessagesRetrieve,
@@ -34,72 +34,72 @@ var messagesList = cli.Command{
 	Usage:   "Fetch the statuses of messages you've previously sent.",
 	Suggest: true,
 	Flags: []cli.Flag{
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*bool]{
 			Name:      "archived",
 			Usage:     "A boolean value that indicates whether archived messages should be included in the response.",
 			QueryPath: "archived",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "A unique identifier that allows for fetching the next set of messages.",
 			QueryPath: "cursor",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "enqueued-after",
 			Usage:     "The enqueued datetime of a message to filter out messages received before.",
 			QueryPath: "enqueued_after",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "event",
 			Usage:     "A unique identifier representing the event that was used to send the event.",
 			QueryPath: "event",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "list",
 			Usage:     "A unique identifier representing the list the message was sent to.",
 			QueryPath: "list",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "message-id",
 			Usage:     "A unique identifier representing the message_id returned from either /send or /send/list.",
 			QueryPath: "messageId",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "notification",
 			Usage:     "A unique identifier representing the notification that was used to send the event.",
 			QueryPath: "notification",
 		},
-		&requestflag.Flag[[]any]{
+		&requestflag.Flag[[]string]{
 			Name:      "provider",
 			Usage:     "The key assocated to the provider you want to filter on. E.g., sendgrid, inbox, twilio, slack, msteams, etc. Allows multiple values to be set in query parameters.",
 			QueryPath: "provider",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "recipient",
 			Usage:     "A unique identifier representing the recipient associated with the requested profile.",
 			QueryPath: "recipient",
 		},
-		&requestflag.Flag[[]any]{
+		&requestflag.Flag[[]string]{
 			Name:      "status",
 			Usage:     "An indicator of the current status of the message. Allows multiple values to be set in query parameters.",
 			QueryPath: "status",
 		},
-		&requestflag.Flag[[]any]{
+		&requestflag.Flag[[]string]{
 			Name:      "tag",
 			Usage:     "A tag placed in the metadata.tags during a notification send. Allows multiple values to be set in query parameters.",
 			QueryPath: "tag",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "tags",
 			Usage:     "A comma delimited list of 'tags'. Messages will be returned if they match any of the tags passed in.",
 			QueryPath: "tags",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "tenant-id",
 			Usage:     "Messages sent with the context of a Tenant",
 			QueryPath: "tenant_id",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "trace-id",
 			Usage:     "The unique identifier used to trace the requests",
 			QueryPath: "traceId",
@@ -115,8 +115,9 @@ var messagesCancel = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "message-id",
-			Required: true,
+			Name:      "message-id",
+			Required:  true,
+			PathParam: "message_id",
 		},
 	},
 	Action:          handleMessagesCancel,
@@ -129,8 +130,9 @@ var messagesContent = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "message-id",
-			Required: true,
+			Name:      "message-id",
+			Required:  true,
+			PathParam: "message_id",
 		},
 	},
 	Action:          handleMessagesContent,
@@ -143,10 +145,11 @@ var messagesHistory = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "message-id",
-			Required: true,
+			Name:      "message-id",
+			Required:  true,
+			PathParam: "message_id",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "type",
 			Usage:     "A supported Message History type that will filter the events returned.",
 			QueryPath: "type",
@@ -187,8 +190,15 @@ func handleMessagesRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "messages retrieve", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "messages retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleMessagesList(ctx context.Context, cmd *cli.Command) error {
@@ -198,8 +208,6 @@ func handleMessagesList(ctx context.Context, cmd *cli.Command) error {
 	if len(unusedArgs) > 0 {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
-
-	params := courier.MessageListParams{}
 
 	options, err := flagOptions(
 		cmd,
@@ -212,6 +220,8 @@ func handleMessagesList(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
+	params := courier.MessageListParams{}
+
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
 	_, err = client.Messages.List(ctx, params, options...)
@@ -221,8 +231,15 @@ func handleMessagesList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "messages list", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "messages list",
+		Transform:      transform,
+	})
 }
 
 func handleMessagesCancel(ctx context.Context, cmd *cli.Command) error {
@@ -256,8 +273,15 @@ func handleMessagesCancel(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "messages cancel", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "messages cancel",
+		Transform:      transform,
+	})
 }
 
 func handleMessagesContent(ctx context.Context, cmd *cli.Command) error {
@@ -291,8 +315,15 @@ func handleMessagesContent(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "messages content", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "messages content",
+		Transform:      transform,
+	})
 }
 
 func handleMessagesHistory(ctx context.Context, cmd *cli.Command) error {
@@ -306,8 +337,6 @@ func handleMessagesHistory(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.MessageHistoryParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -318,6 +347,8 @@ func handleMessagesHistory(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.MessageHistoryParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -333,6 +364,13 @@ func handleMessagesHistory(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "messages history", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "messages history",
+		Transform:      transform,
+	})
 }

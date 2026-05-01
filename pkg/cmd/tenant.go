@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -21,8 +20,9 @@ var tenantsRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "tenant-id",
-			Required: true,
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
 		},
 	},
 	Action:          handleTenantsRetrieve,
@@ -35,8 +35,9 @@ var tenantsUpdate = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "tenant-id",
-			Required: true,
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
 		},
 		&requestflag.Flag[string]{
 			Name:     "name",
@@ -44,7 +45,7 @@ var tenantsUpdate = requestflag.WithInnerFlags(cli.Command{
 			Required: true,
 			BodyPath: "name",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "brand-id",
 			Usage:    "Brand to be used for the account when one is not specified by the send call.",
 			BodyPath: "brand_id",
@@ -53,7 +54,7 @@ var tenantsUpdate = requestflag.WithInnerFlags(cli.Command{
 			Name:     "default-preferences",
 			BodyPath: "default_preferences",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "parent-tenant-id",
 			Usage:    "Tenant's parent id (if any).",
 			BodyPath: "parent_tenant_id",
@@ -85,17 +86,17 @@ var tenantsList = cli.Command{
 	Usage:   "Get a List of Tenants",
 	Suggest: true,
 	Flags: []cli.Flag{
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "Continue the pagination with the next cursor",
 			QueryPath: "cursor",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*int64]{
 			Name:      "limit",
 			Usage:     "The number of tenants to return \n(defaults to 20, maximum value of 100)",
 			QueryPath: "limit",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "parent-tenant-id",
 			Usage:     "Filter the list of tenants by parent_id",
 			QueryPath: "parent_tenant_id",
@@ -111,8 +112,9 @@ var tenantsDelete = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "tenant-id",
-			Required: true,
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
 		},
 	},
 	Action:          handleTenantsDelete,
@@ -125,15 +127,16 @@ var tenantsListUsers = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "tenant-id",
-			Required: true,
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "Continue the pagination with the next cursor",
 			QueryPath: "cursor",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*int64]{
 			Name:      "limit",
 			Usage:     "The number of accounts to return \n(defaults to 20, maximum value of 100)",
 			QueryPath: "limit",
@@ -174,8 +177,15 @@ func handleTenantsRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "tenants retrieve", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "tenants retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleTenantsUpdate(ctx context.Context, cmd *cli.Command) error {
@@ -189,8 +199,6 @@ func handleTenantsUpdate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.TenantUpdateParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -201,6 +209,8 @@ func handleTenantsUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.TenantUpdateParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -216,8 +226,15 @@ func handleTenantsUpdate(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "tenants update", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "tenants update",
+		Transform:      transform,
+	})
 }
 
 func handleTenantsList(ctx context.Context, cmd *cli.Command) error {
@@ -227,8 +244,6 @@ func handleTenantsList(ctx context.Context, cmd *cli.Command) error {
 	if len(unusedArgs) > 0 {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
-
-	params := courier.TenantListParams{}
 
 	options, err := flagOptions(
 		cmd,
@@ -241,6 +256,8 @@ func handleTenantsList(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
+	params := courier.TenantListParams{}
+
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
 	_, err = client.Tenants.List(ctx, params, options...)
@@ -250,8 +267,15 @@ func handleTenantsList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "tenants list", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "tenants list",
+		Transform:      transform,
+	})
 }
 
 func handleTenantsDelete(ctx context.Context, cmd *cli.Command) error {
@@ -290,8 +314,6 @@ func handleTenantsListUsers(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.TenantListUsersParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -302,6 +324,8 @@ func handleTenantsListUsers(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.TenantListUsersParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -317,6 +341,13 @@ func handleTenantsListUsers(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "tenants list-users", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "tenants list-users",
+		Transform:      transform,
+	})
 }
