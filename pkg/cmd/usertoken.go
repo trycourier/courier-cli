@@ -20,12 +20,14 @@ var usersTokensRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "token",
-			Required: true,
+			Name:      "token",
+			Required:  true,
+			PathParam: "token",
 		},
 	},
 	Action:          handleUsersTokensRetrieve,
@@ -38,12 +40,14 @@ var usersTokensUpdate = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "token",
-			Required: true,
+			Name:      "token",
+			Required:  true,
+			PathParam: "token",
 		},
 		&requestflag.Flag[[]map[string]any]{
 			Name:     "patch",
@@ -79,8 +83,9 @@ var usersTokensList = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 	},
 	Action:          handleUsersTokensList,
@@ -93,12 +98,14 @@ var usersTokensDelete = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "token",
-			Required: true,
+			Name:      "token",
+			Required:  true,
+			PathParam: "token",
 		},
 	},
 	Action:          handleUsersTokensDelete,
@@ -111,8 +118,9 @@ var usersTokensAddMultiple = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 	},
 	Action:          handleUsersTokensAddMultiple,
@@ -125,12 +133,14 @@ var usersTokensAddSingle = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "token",
-			Required: true,
+			Name:      "token",
+			Required:  true,
+			PathParam: "token",
 		},
 		&requestflag.Flag[string]{
 			Name:     "provider-key",
@@ -229,10 +239,6 @@ func handleUsersTokensRetrieve(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.UserTokenGetParams{
-		UserID: cmd.Value("user-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -242,6 +248,10 @@ func handleUsersTokensRetrieve(ctx context.Context, cmd *cli.Command) error {
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.UserTokenGetParams{
+		UserID: cmd.Value("user-id").(string),
 	}
 
 	var res []byte
@@ -280,10 +290,6 @@ func handleUsersTokensUpdate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.UserTokenUpdateParams{
-		UserID: cmd.Value("user-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -293,6 +299,10 @@ func handleUsersTokensUpdate(ctx context.Context, cmd *cli.Command) error {
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.UserTokenUpdateParams{
+		UserID: cmd.Value("user-id").(string),
 	}
 
 	return client.Users.Tokens.Update(
@@ -356,10 +366,6 @@ func handleUsersTokensDelete(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.UserTokenDeleteParams{
-		UserID: cmd.Value("user-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -369,6 +375,10 @@ func handleUsersTokensDelete(ctx context.Context, cmd *cli.Command) error {
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.UserTokenDeleteParams{
+		UserID: cmd.Value("user-id").(string),
 	}
 
 	return client.Users.Tokens.Delete(
@@ -415,10 +425,6 @@ func handleUsersTokensAddSingle(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.UserTokenAddSingleParams{
-		UserID: cmd.Value("user-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -428,6 +434,10 @@ func handleUsersTokensAddSingle(ctx context.Context, cmd *cli.Command) error {
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.UserTokenAddSingleParams{
+		UserID: cmd.Value("user-id").(string),
 	}
 
 	return client.Users.Tokens.AddSingle(

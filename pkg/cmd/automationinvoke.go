@@ -66,8 +66,9 @@ var automationsInvokeInvokeByTemplate = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "template-id",
-			Required: true,
+			Name:      "template-id",
+			Required:  true,
+			PathParam: "templateId",
 		},
 		&requestflag.Flag[*string]{
 			Name:     "recipient",
@@ -103,8 +104,6 @@ func handleAutomationsInvokeInvokeAdHoc(ctx context.Context, cmd *cli.Command) e
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.AutomationInvokeInvokeAdHocParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -115,6 +114,8 @@ func handleAutomationsInvokeInvokeAdHoc(ctx context.Context, cmd *cli.Command) e
 	if err != nil {
 		return err
 	}
+
+	params := courier.AutomationInvokeInvokeAdHocParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -147,8 +148,6 @@ func handleAutomationsInvokeInvokeByTemplate(ctx context.Context, cmd *cli.Comma
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.AutomationInvokeInvokeByTemplateParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -159,6 +158,8 @@ func handleAutomationsInvokeInvokeByTemplate(ctx context.Context, cmd *cli.Comma
 	if err != nil {
 		return err
 	}
+
+	params := courier.AutomationInvokeInvokeByTemplateParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))

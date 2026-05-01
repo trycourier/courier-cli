@@ -68,8 +68,9 @@ var brandsRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "brand-id",
-			Required: true,
+			Name:      "brand-id",
+			Required:  true,
+			PathParam: "brand_id",
 		},
 	},
 	Action:          handleBrandsRetrieve,
@@ -82,8 +83,9 @@ var brandsUpdate = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "brand-id",
-			Required: true,
+			Name:      "brand-id",
+			Required:  true,
+			PathParam: "brand_id",
 		},
 		&requestflag.Flag[string]{
 			Name:     "name",
@@ -146,8 +148,9 @@ var brandsDelete = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "brand-id",
-			Required: true,
+			Name:      "brand-id",
+			Required:  true,
+			PathParam: "brand_id",
 		},
 	},
 	Action:          handleBrandsDelete,
@@ -162,8 +165,6 @@ func handleBrandsCreate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.BrandNewParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -174,6 +175,8 @@ func handleBrandsCreate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.BrandNewParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -248,8 +251,6 @@ func handleBrandsUpdate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.BrandUpdateParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -260,6 +261,8 @@ func handleBrandsUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.BrandUpdateParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -294,8 +297,6 @@ func handleBrandsList(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.BrandListParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -306,6 +307,8 @@ func handleBrandsList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.BrandListParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))

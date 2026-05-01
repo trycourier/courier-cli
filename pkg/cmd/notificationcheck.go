@@ -20,12 +20,14 @@ var notificationsChecksUpdate = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "submission-id",
-			Required: true,
+			Name:      "submission-id",
+			Required:  true,
+			PathParam: "submissionId",
 		},
 		&requestflag.Flag[[]map[string]any]{
 			Name:     "check",
@@ -60,12 +62,14 @@ var notificationsChecksList = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "submission-id",
-			Required: true,
+			Name:      "submission-id",
+			Required:  true,
+			PathParam: "submissionId",
 		},
 	},
 	Action:          handleNotificationsChecksList,
@@ -78,12 +82,14 @@ var notificationsChecksDelete = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "submission-id",
-			Required: true,
+			Name:      "submission-id",
+			Required:  true,
+			PathParam: "submissionId",
 		},
 	},
 	Action:          handleNotificationsChecksDelete,
@@ -101,10 +107,6 @@ func handleNotificationsChecksUpdate(ctx context.Context, cmd *cli.Command) erro
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.NotificationCheckUpdateParams{
-		ID: cmd.Value("id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -114,6 +116,10 @@ func handleNotificationsChecksUpdate(ctx context.Context, cmd *cli.Command) erro
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.NotificationCheckUpdateParams{
+		ID: cmd.Value("id").(string),
 	}
 
 	var res []byte
@@ -152,10 +158,6 @@ func handleNotificationsChecksList(ctx context.Context, cmd *cli.Command) error 
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.NotificationCheckListParams{
-		ID: cmd.Value("id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -165,6 +167,10 @@ func handleNotificationsChecksList(ctx context.Context, cmd *cli.Command) error 
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.NotificationCheckListParams{
+		ID: cmd.Value("id").(string),
 	}
 
 	var res []byte
@@ -203,10 +209,6 @@ func handleNotificationsChecksDelete(ctx context.Context, cmd *cli.Command) erro
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.NotificationCheckDeleteParams{
-		ID: cmd.Value("id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -216,6 +218,10 @@ func handleNotificationsChecksDelete(ctx context.Context, cmd *cli.Command) erro
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.NotificationCheckDeleteParams{
+		ID: cmd.Value("id").(string),
 	}
 
 	return client.Notifications.Checks.Delete(

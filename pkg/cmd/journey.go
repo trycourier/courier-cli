@@ -41,8 +41,9 @@ var journeysInvoke = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "template-id",
-			Required: true,
+			Name:      "template-id",
+			Required:  true,
+			PathParam: "templateId",
 		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "data",
@@ -72,8 +73,6 @@ func handleJourneysList(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.JourneyListParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -84,6 +83,8 @@ func handleJourneysList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.JourneyListParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -116,8 +117,6 @@ func handleJourneysInvoke(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.JourneyInvokeParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -128,6 +127,8 @@ func handleJourneysInvoke(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.JourneyInvokeParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))

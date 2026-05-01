@@ -20,8 +20,9 @@ var usersTenantsList = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 		&requestflag.Flag[*string]{
 			Name:      "cursor",
@@ -44,8 +45,9 @@ var usersTenantsAddMultiple = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 		&requestflag.Flag[[]map[string]any]{
 			Name:     "tenant",
@@ -86,12 +88,14 @@ var usersTenantsAddSingle = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "tenant-id",
-			Required: true,
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
 		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "profile",
@@ -108,8 +112,9 @@ var usersTenantsRemoveAll = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 	},
 	Action:          handleUsersTenantsRemoveAll,
@@ -122,12 +127,14 @@ var usersTenantsRemoveSingle = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "tenant-id",
-			Required: true,
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
 		},
 	},
 	Action:          handleUsersTenantsRemoveSingle,
@@ -145,8 +152,6 @@ func handleUsersTenantsList(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.UserTenantListParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -157,6 +162,8 @@ func handleUsersTenantsList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.UserTenantListParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -194,8 +201,6 @@ func handleUsersTenantsAddMultiple(ctx context.Context, cmd *cli.Command) error 
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.UserTenantAddMultipleParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -206,6 +211,8 @@ func handleUsersTenantsAddMultiple(ctx context.Context, cmd *cli.Command) error 
 	if err != nil {
 		return err
 	}
+
+	params := courier.UserTenantAddMultipleParams{}
 
 	return client.Users.Tenants.AddMultiple(
 		ctx,
@@ -226,10 +233,6 @@ func handleUsersTenantsAddSingle(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.UserTenantAddSingleParams{
-		UserID: cmd.Value("user-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -239,6 +242,10 @@ func handleUsersTenantsAddSingle(ctx context.Context, cmd *cli.Command) error {
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.UserTenantAddSingleParams{
+		UserID: cmd.Value("user-id").(string),
 	}
 
 	return client.Users.Tenants.AddSingle(
@@ -285,10 +292,6 @@ func handleUsersTenantsRemoveSingle(ctx context.Context, cmd *cli.Command) error
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.UserTenantRemoveSingleParams{
-		UserID: cmd.Value("user-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -298,6 +301,10 @@ func handleUsersTenantsRemoveSingle(ctx context.Context, cmd *cli.Command) error
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.UserTenantRemoveSingleParams{
+		UserID: cmd.Value("user-id").(string),
 	}
 
 	return client.Users.Tenants.RemoveSingle(

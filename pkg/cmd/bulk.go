@@ -20,8 +20,9 @@ var bulkAddUsers = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "job-id",
-			Required: true,
+			Name:      "job-id",
+			Required:  true,
+			PathParam: "job_id",
 		},
 		&requestflag.Flag[[]map[string]any]{
 			Name:     "user",
@@ -115,8 +116,9 @@ var bulkListUsers = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "job-id",
-			Required: true,
+			Name:      "job-id",
+			Required:  true,
+			PathParam: "job_id",
 		},
 		&requestflag.Flag[*string]{
 			Name:      "cursor",
@@ -134,8 +136,9 @@ var bulkRetrieveJob = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "job-id",
-			Required: true,
+			Name:      "job-id",
+			Required:  true,
+			PathParam: "job_id",
 		},
 	},
 	Action:          handleBulkRetrieveJob,
@@ -148,8 +151,9 @@ var bulkRunJob = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "job-id",
-			Required: true,
+			Name:      "job-id",
+			Required:  true,
+			PathParam: "job_id",
 		},
 	},
 	Action:          handleBulkRunJob,
@@ -167,8 +171,6 @@ func handleBulkAddUsers(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.BulkAddUsersParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -179,6 +181,8 @@ func handleBulkAddUsers(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.BulkAddUsersParams{}
 
 	return client.Bulk.AddUsers(
 		ctx,
@@ -196,8 +200,6 @@ func handleBulkCreateJob(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.BulkNewJobParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -208,6 +210,8 @@ func handleBulkCreateJob(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.BulkNewJobParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -240,8 +244,6 @@ func handleBulkListUsers(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.BulkListUsersParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -252,6 +254,8 @@ func handleBulkListUsers(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.BulkListUsersParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))

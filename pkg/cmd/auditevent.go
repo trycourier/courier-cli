@@ -20,8 +20,9 @@ var auditEventsRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "audit-event-id",
-			Required: true,
+			Name:      "audit-event-id",
+			Required:  true,
+			PathParam: "audit-event-id",
 		},
 	},
 	Action:          handleAuditEventsRetrieve,
@@ -93,8 +94,6 @@ func handleAuditEventsList(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.AuditEventListParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -105,6 +104,8 @@ func handleAuditEventsList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.AuditEventListParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))

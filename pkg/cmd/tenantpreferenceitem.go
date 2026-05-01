@@ -18,12 +18,14 @@ var tenantsPreferencesItemsUpdate = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "tenant-id",
-			Required: true,
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "topic-id",
-			Required: true,
+			Name:      "topic-id",
+			Required:  true,
+			PathParam: "topic_id",
 		},
 		&requestflag.Flag[string]{
 			Name:     "status",
@@ -52,12 +54,14 @@ var tenantsPreferencesItemsDelete = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "tenant-id",
-			Required: true,
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "topic-id",
-			Required: true,
+			Name:      "topic-id",
+			Required:  true,
+			PathParam: "topic_id",
 		},
 	},
 	Action:          handleTenantsPreferencesItemsDelete,
@@ -75,10 +79,6 @@ func handleTenantsPreferencesItemsUpdate(ctx context.Context, cmd *cli.Command) 
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.TenantPreferenceItemUpdateParams{
-		TenantID: cmd.Value("tenant-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -88,6 +88,10 @@ func handleTenantsPreferencesItemsUpdate(ctx context.Context, cmd *cli.Command) 
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.TenantPreferenceItemUpdateParams{
+		TenantID: cmd.Value("tenant-id").(string),
 	}
 
 	return client.Tenants.Preferences.Items.Update(
@@ -109,10 +113,6 @@ func handleTenantsPreferencesItemsDelete(ctx context.Context, cmd *cli.Command) 
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.TenantPreferenceItemDeleteParams{
-		TenantID: cmd.Value("tenant-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -122,6 +122,10 @@ func handleTenantsPreferencesItemsDelete(ctx context.Context, cmd *cli.Command) 
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.TenantPreferenceItemDeleteParams{
+		TenantID: cmd.Value("tenant-id").(string),
 	}
 
 	return client.Tenants.Preferences.Items.Delete(

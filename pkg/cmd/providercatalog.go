@@ -47,8 +47,6 @@ func handleProvidersCatalogList(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.ProviderCatalogListParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -59,6 +57,8 @@ func handleProvidersCatalogList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.ProviderCatalogListParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))

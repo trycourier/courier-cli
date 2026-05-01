@@ -20,12 +20,14 @@ var translationsRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "domain",
-			Required: true,
+			Name:      "domain",
+			Required:  true,
+			PathParam: "domain",
 		},
 		&requestflag.Flag[string]{
-			Name:     "locale",
-			Required: true,
+			Name:      "locale",
+			Required:  true,
+			PathParam: "locale",
 		},
 	},
 	Action:          handleTranslationsRetrieve,
@@ -38,12 +40,14 @@ var translationsUpdate = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "domain",
-			Required: true,
+			Name:      "domain",
+			Required:  true,
+			PathParam: "domain",
 		},
 		&requestflag.Flag[string]{
-			Name:     "locale",
-			Required: true,
+			Name:      "locale",
+			Required:  true,
+			PathParam: "locale",
 		},
 		&requestflag.Flag[string]{
 			Name:     "body",
@@ -66,10 +70,6 @@ func handleTranslationsRetrieve(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.TranslationGetParams{
-		Domain: cmd.Value("domain").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -79,6 +79,10 @@ func handleTranslationsRetrieve(ctx context.Context, cmd *cli.Command) error {
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.TranslationGetParams{
+		Domain: cmd.Value("domain").(string),
 	}
 
 	var res []byte
@@ -117,10 +121,6 @@ func handleTranslationsUpdate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.TranslationUpdateParams{
-		Domain: cmd.Value("domain").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -130,6 +130,10 @@ func handleTranslationsUpdate(ctx context.Context, cmd *cli.Command) error {
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.TranslationUpdateParams{
+		Domain: cmd.Value("domain").(string),
 	}
 
 	return client.Translations.Update(

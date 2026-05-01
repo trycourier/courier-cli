@@ -20,8 +20,9 @@ var listsRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
+			Name:      "list-id",
+			Required:  true,
+			PathParam: "list_id",
 		},
 	},
 	Action:          handleListsRetrieve,
@@ -34,8 +35,9 @@ var listsUpdate = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
+			Name:      "list-id",
+			Required:  true,
+			PathParam: "list_id",
 		},
 		&requestflag.Flag[string]{
 			Name:     "name",
@@ -88,8 +90,9 @@ var listsDelete = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
+			Name:      "list-id",
+			Required:  true,
+			PathParam: "list_id",
 		},
 	},
 	Action:          handleListsDelete,
@@ -102,8 +105,9 @@ var listsRestore = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
+			Name:      "list-id",
+			Required:  true,
+			PathParam: "list_id",
 		},
 	},
 	Action:          handleListsRestore,
@@ -163,8 +167,6 @@ func handleListsUpdate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.ListUpdateParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -175,6 +177,8 @@ func handleListsUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.ListUpdateParams{}
 
 	return client.Lists.Update(
 		ctx,
@@ -192,8 +196,6 @@ func handleListsList(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.ListListParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -204,6 +206,8 @@ func handleListsList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.ListListParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -261,8 +265,6 @@ func handleListsRestore(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.ListRestoreParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -273,6 +275,8 @@ func handleListsRestore(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.ListRestoreParams{}
 
 	return client.Lists.Restore(
 		ctx,
