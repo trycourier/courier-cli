@@ -163,8 +163,28 @@ func init() {
 				Category: "API RESOURCE",
 				Suggest:  true,
 				Commands: []*cli.Command{
+					&journeysCreate,
+					&journeysRetrieve,
 					&journeysList,
+					&journeysArchive,
 					&journeysInvoke,
+					&journeysListVersions,
+					&journeysPublish,
+					&journeysReplace,
+				},
+			},
+			{
+				Name:     "journeys:templates",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&journeysTemplatesCreate,
+					&journeysTemplatesRetrieve,
+					&journeysTemplatesList,
+					&journeysTemplatesArchive,
+					&journeysTemplatesListVersions,
+					&journeysTemplatesPublish,
+					&journeysTemplatesReplace,
 				},
 			},
 			{
