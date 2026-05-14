@@ -14,38 +14,65 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-var journeysCreate = cli.Command{
+var journeysTemplatesCreate = requestflag.WithInnerFlags(cli.Command{
 	Name:    "create",
-	Usage:   "Create a new journey. The journey is created in DRAFT state. Use POST\n/journeys/{templateId}/publish to make it live.",
+	Usage:   "Create a notification template scoped to this journey. The template is created\nin DRAFT state.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "name",
-			Required: true,
-			BodyPath: "name",
+			Name:      "template-id",
+			Required:  true,
+			PathParam: "templateId",
 		},
-		&requestflag.Flag[[]map[string]any]{
-			Name:     "node",
+		&requestflag.Flag[string]{
+			Name:     "channel",
 			Required: true,
-			BodyPath: "nodes",
+			BodyPath: "channel",
 		},
-		&requestflag.Flag[bool]{
-			Name:     "enabled",
-			BodyPath: "enabled",
+		&requestflag.Flag[map[string]any]{
+			Name:     "notification",
+			Required: true,
+			BodyPath: "notification",
+		},
+		&requestflag.Flag[string]{
+			Name:     "provider-key",
+			BodyPath: "providerKey",
 		},
 		&requestflag.Flag[string]{
 			Name:     "state",
-			Usage:    `Allowed values: "DRAFT", "PUBLISHED".`,
 			BodyPath: "state",
 		},
 	},
-	Action:          handleJourneysCreate,
+	Action:          handleJourneysTemplatesCreate,
 	HideHelpCommand: true,
-}
+}, map[string][]requestflag.HasOuterFlag{
+	"notification": {
+		&requestflag.InnerFlag[map[string]any]{
+			Name:       "notification.brand",
+			InnerField: "brand",
+		},
+		&requestflag.InnerFlag[map[string]any]{
+			Name:       "notification.content",
+			InnerField: "content",
+		},
+		&requestflag.InnerFlag[string]{
+			Name:       "notification.name",
+			InnerField: "name",
+		},
+		&requestflag.InnerFlag[map[string]any]{
+			Name:       "notification.subscription",
+			InnerField: "subscription",
+		},
+		&requestflag.InnerFlag[[]string]{
+			Name:       "notification.tags",
+			InnerField: "tags",
+		},
+	},
+})
 
-var journeysRetrieve = cli.Command{
+var journeysTemplatesRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Fetch a journey by id. Pass `?version=draft` (default `published`) to retrieve\nthe working draft, or `?version=vN` to retrieve a historical version.",
+	Usage:   "Fetch a journey-scoped notification template by id. Pass `?version=draft`\n(default `published`) to retrieve the working draft, or `?version=vN` for a\nhistorical version.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -54,38 +81,41 @@ var journeysRetrieve = cli.Command{
 			PathParam: "templateId",
 		},
 		&requestflag.Flag[string]{
-			Name:      "version",
-			QueryPath: "version",
+			Name:      "notification-id",
+			Required:  true,
+			PathParam: "notificationId",
 		},
 	},
-	Action:          handleJourneysRetrieve,
+	Action:          handleJourneysTemplatesRetrieve,
 	HideHelpCommand: true,
 }
 
-var journeysList = cli.Command{
+var journeysTemplatesList = cli.Command{
 	Name:    "list",
-	Usage:   "Get the list of journeys.",
+	Usage:   "List notification templates scoped to this journey. Templates scoped to a\njourney can only be referenced from `send` nodes of the same journey.",
 	Suggest: true,
 	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "template-id",
+			Required:  true,
+			PathParam: "templateId",
+		},
 		&requestflag.Flag[string]{
 			Name:      "cursor",
-			Usage:     "A cursor token for pagination. Use the cursor from the previous response to fetch the next page of results.",
 			QueryPath: "cursor",
 		},
-		&requestflag.Flag[string]{
-			Name:      "version",
-			Usage:     "The version of journeys to retrieve. Accepted values are published (for published journeys) or draft (for draft journeys). Defaults to published.",
-			Default:   "published",
-			QueryPath: "version",
+		&requestflag.Flag[int64]{
+			Name:      "limit",
+			QueryPath: "limit",
 		},
 	},
-	Action:          handleJourneysList,
+	Action:          handleJourneysTemplatesList,
 	HideHelpCommand: true,
 }
 
-var journeysArchive = cli.Command{
+var journeysTemplatesArchive = cli.Command{
 	Name:    "archive",
-	Usage:   "Archive a journey. Archived journeys cannot be invoked. Existing journey runs\ncontinue to completion.",
+	Usage:   "Archive a journey-scoped notification template. Archived templates cannot be\nsent.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -93,44 +123,19 @@ var journeysArchive = cli.Command{
 			Required:  true,
 			PathParam: "templateId",
 		},
-	},
-	Action:          handleJourneysArchive,
-	HideHelpCommand: true,
-}
-
-var journeysInvoke = cli.Command{
-	Name:    "invoke",
-	Usage:   "Invoke a journey run from a journey template.",
-	Suggest: true,
-	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:      "template-id",
+			Name:      "notification-id",
 			Required:  true,
-			PathParam: "templateId",
-		},
-		&requestflag.Flag[map[string]any]{
-			Name:     "data",
-			Usage:    "Data payload passed to the journey. The expected shape can be predefined using the schema builder in the journey editor. This data is available in journey steps for condition evaluation and template variable interpolation. Can also contain user identifiers (user_id, userId, anonymousId) if not provided elsewhere.",
-			BodyPath: "data",
-		},
-		&requestflag.Flag[map[string]any]{
-			Name:     "profile",
-			Usage:    "Profile data for the user. Can contain contact information (email, phone_number), user identifiers (user_id, userId, anonymousId), or any custom profile fields. Profile fields are merged with any existing stored profile for the user. Include context.tenant_id to load a tenant-scoped profile for multi-tenant scenarios.",
-			BodyPath: "profile",
-		},
-		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Usage:    "A unique identifier for the user. If not provided, the system will attempt to resolve the user identifier from profile or data objects.",
-			BodyPath: "user_id",
+			PathParam: "notificationId",
 		},
 	},
-	Action:          handleJourneysInvoke,
+	Action:          handleJourneysTemplatesArchive,
 	HideHelpCommand: true,
 }
 
-var journeysListVersions = cli.Command{
+var journeysTemplatesListVersions = cli.Command{
 	Name:    "list-versions",
-	Usage:   "List published versions of a journey, ordered most recent first.",
+	Usage:   "List published versions of a journey-scoped notification template, ordered most\nrecent first.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -138,33 +143,43 @@ var journeysListVersions = cli.Command{
 			Required:  true,
 			PathParam: "templateId",
 		},
+		&requestflag.Flag[string]{
+			Name:      "notification-id",
+			Required:  true,
+			PathParam: "notificationId",
+		},
 	},
-	Action:          handleJourneysListVersions,
+	Action:          handleJourneysTemplatesListVersions,
 	HideHelpCommand: true,
 }
 
-var journeysPublish = cli.Command{
+var journeysTemplatesPublish = cli.Command{
 	Name:    "publish",
-	Usage:   "Publish the current draft as a new version. Optionally rollback to a prior\nversion by passing `{ version: 'vN' }`.",
+	Usage:   "Publish the current draft of a journey-scoped notification template.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
 			Name:      "template-id",
 			Required:  true,
 			PathParam: "templateId",
+		},
+		&requestflag.Flag[string]{
+			Name:      "notification-id",
+			Required:  true,
+			PathParam: "notificationId",
 		},
 		&requestflag.Flag[string]{
 			Name:     "version",
 			BodyPath: "version",
 		},
 	},
-	Action:          handleJourneysPublish,
+	Action:          handleJourneysTemplatesPublish,
 	HideHelpCommand: true,
 }
 
-var journeysReplace = cli.Command{
+var journeysTemplatesReplace = requestflag.WithInnerFlags(cli.Command{
 	Name:    "replace",
-	Usage:   "Replace the journey draft. Updates the working draft only; call POST\n/journeys/{templateId}/publish to make it live.",
+	Usage:   "Replace a journey-scoped notification template draft.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -173,186 +188,48 @@ var journeysReplace = cli.Command{
 			PathParam: "templateId",
 		},
 		&requestflag.Flag[string]{
-			Name:     "name",
-			Required: true,
-			BodyPath: "name",
+			Name:      "notification-id",
+			Required:  true,
+			PathParam: "notificationId",
 		},
-		&requestflag.Flag[[]map[string]any]{
-			Name:     "node",
+		&requestflag.Flag[map[string]any]{
+			Name:     "notification",
 			Required: true,
-			BodyPath: "nodes",
-		},
-		&requestflag.Flag[bool]{
-			Name:     "enabled",
-			BodyPath: "enabled",
+			BodyPath: "notification",
 		},
 		&requestflag.Flag[string]{
 			Name:     "state",
-			Usage:    `Allowed values: "DRAFT", "PUBLISHED".`,
 			BodyPath: "state",
 		},
 	},
-	Action:          handleJourneysReplace,
+	Action:          handleJourneysTemplatesReplace,
 	HideHelpCommand: true,
-}
+}, map[string][]requestflag.HasOuterFlag{
+	"notification": {
+		&requestflag.InnerFlag[map[string]any]{
+			Name:       "notification.brand",
+			InnerField: "brand",
+		},
+		&requestflag.InnerFlag[map[string]any]{
+			Name:       "notification.content",
+			InnerField: "content",
+		},
+		&requestflag.InnerFlag[string]{
+			Name:       "notification.name",
+			InnerField: "name",
+		},
+		&requestflag.InnerFlag[map[string]any]{
+			Name:       "notification.subscription",
+			InnerField: "subscription",
+		},
+		&requestflag.InnerFlag[[]string]{
+			Name:       "notification.tags",
+			InnerField: "tags",
+		},
+	},
+})
 
-func handleJourneysCreate(ctx context.Context, cmd *cli.Command) error {
-	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
-	unusedArgs := cmd.Args().Slice()
-
-	if len(unusedArgs) > 0 {
-		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
-	}
-
-	options, err := flagOptions(
-		cmd,
-		apiquery.NestedQueryFormatBrackets,
-		apiquery.ArrayQueryFormatComma,
-		ApplicationJSON,
-		false,
-	)
-	if err != nil {
-		return err
-	}
-
-	params := courier.JourneyNewParams{}
-
-	var res []byte
-	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Journeys.New(ctx, params, options...)
-	if err != nil {
-		return err
-	}
-
-	obj := gjson.ParseBytes(res)
-	format := cmd.Root().String("format")
-	explicitFormat := cmd.Root().IsSet("format")
-	transform := cmd.Root().String("transform")
-	return ShowJSON(obj, ShowJSONOpts{
-		ExplicitFormat: explicitFormat,
-		Format:         format,
-		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "journeys create",
-		Transform:      transform,
-	})
-}
-
-func handleJourneysRetrieve(ctx context.Context, cmd *cli.Command) error {
-	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
-	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("template-id") && len(unusedArgs) > 0 {
-		cmd.Set("template-id", unusedArgs[0])
-		unusedArgs = unusedArgs[1:]
-	}
-	if len(unusedArgs) > 0 {
-		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
-	}
-
-	options, err := flagOptions(
-		cmd,
-		apiquery.NestedQueryFormatBrackets,
-		apiquery.ArrayQueryFormatComma,
-		EmptyBody,
-		false,
-	)
-	if err != nil {
-		return err
-	}
-
-	params := courier.JourneyGetParams{}
-
-	var res []byte
-	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Journeys.Get(
-		ctx,
-		cmd.Value("template-id").(string),
-		params,
-		options...,
-	)
-	if err != nil {
-		return err
-	}
-
-	obj := gjson.ParseBytes(res)
-	format := cmd.Root().String("format")
-	explicitFormat := cmd.Root().IsSet("format")
-	transform := cmd.Root().String("transform")
-	return ShowJSON(obj, ShowJSONOpts{
-		ExplicitFormat: explicitFormat,
-		Format:         format,
-		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "journeys retrieve",
-		Transform:      transform,
-	})
-}
-
-func handleJourneysList(ctx context.Context, cmd *cli.Command) error {
-	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
-	unusedArgs := cmd.Args().Slice()
-
-	if len(unusedArgs) > 0 {
-		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
-	}
-
-	options, err := flagOptions(
-		cmd,
-		apiquery.NestedQueryFormatBrackets,
-		apiquery.ArrayQueryFormatComma,
-		EmptyBody,
-		false,
-	)
-	if err != nil {
-		return err
-	}
-
-	params := courier.JourneyListParams{}
-
-	var res []byte
-	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Journeys.List(ctx, params, options...)
-	if err != nil {
-		return err
-	}
-
-	obj := gjson.ParseBytes(res)
-	format := cmd.Root().String("format")
-	explicitFormat := cmd.Root().IsSet("format")
-	transform := cmd.Root().String("transform")
-	return ShowJSON(obj, ShowJSONOpts{
-		ExplicitFormat: explicitFormat,
-		Format:         format,
-		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "journeys list",
-		Transform:      transform,
-	})
-}
-
-func handleJourneysArchive(ctx context.Context, cmd *cli.Command) error {
-	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
-	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("template-id") && len(unusedArgs) > 0 {
-		cmd.Set("template-id", unusedArgs[0])
-		unusedArgs = unusedArgs[1:]
-	}
-	if len(unusedArgs) > 0 {
-		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
-	}
-
-	options, err := flagOptions(
-		cmd,
-		apiquery.NestedQueryFormatBrackets,
-		apiquery.ArrayQueryFormatComma,
-		EmptyBody,
-		false,
-	)
-	if err != nil {
-		return err
-	}
-
-	return client.Journeys.Archive(ctx, cmd.Value("template-id").(string), options...)
-}
-
-func handleJourneysInvoke(ctx context.Context, cmd *cli.Command) error {
+func handleJourneysTemplatesCreate(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
 	if !cmd.IsSet("template-id") && len(unusedArgs) > 0 {
@@ -374,11 +251,11 @@ func handleJourneysInvoke(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	params := courier.JourneyInvokeParams{}
+	params := courier.JourneyTemplateNewParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Journeys.Invoke(
+	_, err = client.Journeys.Templates.New(
 		ctx,
 		cmd.Value("template-id").(string),
 		params,
@@ -396,12 +273,63 @@ func handleJourneysInvoke(ctx context.Context, cmd *cli.Command) error {
 		ExplicitFormat: explicitFormat,
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "journeys invoke",
+		Title:          "journeys:templates create",
 		Transform:      transform,
 	})
 }
 
-func handleJourneysListVersions(ctx context.Context, cmd *cli.Command) error {
+func handleJourneysTemplatesRetrieve(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("notification-id") && len(unusedArgs) > 0 {
+		cmd.Set("notification-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		EmptyBody,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.JourneyTemplateGetParams{
+		TemplateID: cmd.Value("template-id").(string),
+	}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Journeys.Templates.Get(
+		ctx,
+		cmd.Value("notification-id").(string),
+		params,
+		options...,
+	)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "journeys:templates retrieve",
+		Transform:      transform,
+	})
+}
+
+func handleJourneysTemplatesList(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
 	if !cmd.IsSet("template-id") && len(unusedArgs) > 0 {
@@ -423,53 +351,11 @@ func handleJourneysListVersions(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	var res []byte
-	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Journeys.ListVersions(ctx, cmd.Value("template-id").(string), options...)
-	if err != nil {
-		return err
-	}
-
-	obj := gjson.ParseBytes(res)
-	format := cmd.Root().String("format")
-	explicitFormat := cmd.Root().IsSet("format")
-	transform := cmd.Root().String("transform")
-	return ShowJSON(obj, ShowJSONOpts{
-		ExplicitFormat: explicitFormat,
-		Format:         format,
-		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "journeys list-versions",
-		Transform:      transform,
-	})
-}
-
-func handleJourneysPublish(ctx context.Context, cmd *cli.Command) error {
-	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
-	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("template-id") && len(unusedArgs) > 0 {
-		cmd.Set("template-id", unusedArgs[0])
-		unusedArgs = unusedArgs[1:]
-	}
-	if len(unusedArgs) > 0 {
-		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
-	}
-
-	options, err := flagOptions(
-		cmd,
-		apiquery.NestedQueryFormatBrackets,
-		apiquery.ArrayQueryFormatComma,
-		ApplicationJSON,
-		false,
-	)
-	if err != nil {
-		return err
-	}
-
-	params := courier.JourneyPublishParams{}
+	params := courier.JourneyTemplateListParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Journeys.Publish(
+	_, err = client.Journeys.Templates.List(
 		ctx,
 		cmd.Value("template-id").(string),
 		params,
@@ -487,16 +373,101 @@ func handleJourneysPublish(ctx context.Context, cmd *cli.Command) error {
 		ExplicitFormat: explicitFormat,
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "journeys publish",
+		Title:          "journeys:templates list",
 		Transform:      transform,
 	})
 }
 
-func handleJourneysReplace(ctx context.Context, cmd *cli.Command) error {
+func handleJourneysTemplatesArchive(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("template-id") && len(unusedArgs) > 0 {
-		cmd.Set("template-id", unusedArgs[0])
+	if !cmd.IsSet("notification-id") && len(unusedArgs) > 0 {
+		cmd.Set("notification-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		EmptyBody,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.JourneyTemplateArchiveParams{
+		TemplateID: cmd.Value("template-id").(string),
+	}
+
+	return client.Journeys.Templates.Archive(
+		ctx,
+		cmd.Value("notification-id").(string),
+		params,
+		options...,
+	)
+}
+
+func handleJourneysTemplatesListVersions(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("notification-id") && len(unusedArgs) > 0 {
+		cmd.Set("notification-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		EmptyBody,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.JourneyTemplateListVersionsParams{
+		TemplateID: cmd.Value("template-id").(string),
+	}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Journeys.Templates.ListVersions(
+		ctx,
+		cmd.Value("notification-id").(string),
+		params,
+		options...,
+	)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "journeys:templates list-versions",
+		Transform:      transform,
+	})
+}
+
+func handleJourneysTemplatesPublish(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("notification-id") && len(unusedArgs) > 0 {
+		cmd.Set("notification-id", unusedArgs[0])
 		unusedArgs = unusedArgs[1:]
 	}
 	if len(unusedArgs) > 0 {
@@ -514,13 +485,49 @@ func handleJourneysReplace(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	params := courier.JourneyReplaceParams{}
+	params := courier.JourneyTemplatePublishParams{
+		TemplateID: cmd.Value("template-id").(string),
+	}
+
+	return client.Journeys.Templates.Publish(
+		ctx,
+		cmd.Value("notification-id").(string),
+		params,
+		options...,
+	)
+}
+
+func handleJourneysTemplatesReplace(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("notification-id") && len(unusedArgs) > 0 {
+		cmd.Set("notification-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		ApplicationJSON,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.JourneyTemplateReplaceParams{
+		TemplateID: cmd.Value("template-id").(string),
+	}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Journeys.Replace(
+	_, err = client.Journeys.Templates.Replace(
 		ctx,
-		cmd.Value("template-id").(string),
+		cmd.Value("notification-id").(string),
 		params,
 		options...,
 	)
@@ -536,7 +543,7 @@ func handleJourneysReplace(ctx context.Context, cmd *cli.Command) error {
 		ExplicitFormat: explicitFormat,
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "journeys replace",
+		Title:          "journeys:templates replace",
 		Transform:      transform,
 	})
 }
