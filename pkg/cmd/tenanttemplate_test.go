@@ -36,6 +36,19 @@ func TestTenantsTemplatesList(t *testing.T) {
 	})
 }
 
+func TestTenantsTemplatesDelete(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t,
+			"--api-key", "string",
+			"tenants:templates", "delete",
+			"--tenant-id", "tenant_id",
+			"--template-id", "template_id",
+		)
+	})
+}
+
 func TestTenantsTemplatesPublish(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
