@@ -354,6 +354,7 @@ func init() {
 				Commands: []*cli.Command{
 					&tenantsTemplatesRetrieve,
 					&tenantsTemplatesList,
+					&tenantsTemplatesDelete,
 					&tenantsTemplatesPublish,
 					&tenantsTemplatesReplace,
 				},

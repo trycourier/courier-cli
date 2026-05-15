@@ -59,6 +59,26 @@ var tenantsTemplatesList = cli.Command{
 	HideHelpCommand: true,
 }
 
+var tenantsTemplatesDelete = cli.Command{
+	Name:    "delete",
+	Usage:   "Deletes the tenant's notification template with the given `template_id`.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
+		},
+		&requestflag.Flag[string]{
+			Name:      "template-id",
+			Required:  true,
+			PathParam: "template_id",
+		},
+	},
+	Action:          handleTenantsTemplatesDelete,
+	HideHelpCommand: true,
+}
+
 var tenantsTemplatesPublish = cli.Command{
 	Name:    "publish",
 	Usage:   "Publishes a specific version of a notification template for a tenant.",
@@ -234,6 +254,40 @@ func handleTenantsTemplatesList(ctx context.Context, cmd *cli.Command) error {
 		Title:          "tenants:templates list",
 		Transform:      transform,
 	})
+}
+
+func handleTenantsTemplatesDelete(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("template-id") && len(unusedArgs) > 0 {
+		cmd.Set("template-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		EmptyBody,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.TenantTemplateDeleteParams{
+		TenantID: cmd.Value("tenant-id").(string),
+	}
+
+	return client.Tenants.Templates.Delete(
+		ctx,
+		cmd.Value("template-id").(string),
+		params,
+		options...,
+	)
 }
 
 func handleTenantsTemplatesPublish(ctx context.Context, cmd *cli.Command) error {
