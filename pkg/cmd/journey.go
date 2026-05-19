@@ -16,7 +16,7 @@ import (
 
 var journeysCreate = cli.Command{
 	Name:    "create",
-	Usage:   "Create a new journey. The journey is created in DRAFT state. Use POST\n/journeys/{templateId}/publish to make it live.",
+	Usage:   "Create a journey. Defaults to `DRAFT` state; pass `state: \"PUBLISHED\"` to\npublish on create. Send nodes are not allowed on `POST`. The standard flow is:\ncreate the journey shell here, add notification templates with\n`POST /journeys/{templateId}/templates`, then wire them into the journey with\n`PUT /journeys/{templateId}`. Call `POST /journeys/{templateId}/publish` to\npublish a draft after the fact.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -35,7 +35,7 @@ var journeysCreate = cli.Command{
 		},
 		&requestflag.Flag[string]{
 			Name:     "state",
-			Usage:    `Allowed values: "DRAFT", "PUBLISHED".`,
+			Usage:    "Lifecycle state of a journey.",
 			BodyPath: "state",
 		},
 	},
@@ -55,6 +55,7 @@ var journeysRetrieve = cli.Command{
 		},
 		&requestflag.Flag[string]{
 			Name:      "version",
+			Usage:     "Version selector: `draft`, `published` (default), or `vN`.",
 			QueryPath: "version",
 		},
 	},
@@ -100,7 +101,7 @@ var journeysArchive = cli.Command{
 
 var journeysInvoke = cli.Command{
 	Name:    "invoke",
-	Usage:   "Invoke a journey run from a journey template.",
+	Usage:   "Invoke a journey by id or alias to start a new run. The response includes a\n`runId` identifying the run.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -145,7 +146,7 @@ var journeysListVersions = cli.Command{
 
 var journeysPublish = cli.Command{
 	Name:    "publish",
-	Usage:   "Publish the current draft as a new version. Optionally rollback to a prior\nversion by passing `{ version: 'vN' }`.",
+	Usage:   "Publish the current draft as a new version. Body is optional; pass\n`{ \"version\": \"vN\" }` to roll back to a prior version instead. Returns 404 if\nthe journey has no draft to publish.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -164,7 +165,7 @@ var journeysPublish = cli.Command{
 
 var journeysReplace = cli.Command{
 	Name:    "replace",
-	Usage:   "Replace the journey draft. Updates the working draft only; call POST\n/journeys/{templateId}/publish to make it live.",
+	Usage:   "Replace the journey draft. Updates the working draft only; call\n`POST /journeys/{templateId}/publish` to make it live, or pass\n`state: \"PUBLISHED\"` in this request to publish immediately. Send-node\n`template` ids must already exist and be scoped to this journey, and node ids\nmust not be claimed by another journey.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -188,7 +189,7 @@ var journeysReplace = cli.Command{
 		},
 		&requestflag.Flag[string]{
 			Name:     "state",
-			Usage:    `Allowed values: "DRAFT", "PUBLISHED".`,
+			Usage:    "Lifecycle state of a journey.",
 			BodyPath: "state",
 		},
 	},

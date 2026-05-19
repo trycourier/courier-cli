@@ -16,7 +16,7 @@ import (
 
 var journeysTemplatesCreate = requestflag.WithInnerFlags(cli.Command{
 	Name:    "create",
-	Usage:   "Create a notification template scoped to this journey. The template is created\nin DRAFT state.",
+	Usage:   "Create a notification template scoped to this journey. Defaults to `DRAFT`\nstate; pass `state: \"PUBLISHED\"` to publish on create.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -92,7 +92,7 @@ var journeysTemplatesRetrieve = cli.Command{
 
 var journeysTemplatesList = cli.Command{
 	Name:    "list",
-	Usage:   "List notification templates scoped to this journey. Templates scoped to a\njourney can only be referenced from `send` nodes of the same journey.",
+	Usage:   "List notification templates scoped to this journey. Journey-scoped notification\ntemplates can only be referenced from `send` nodes within the same journey.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -102,10 +102,12 @@ var journeysTemplatesList = cli.Command{
 		},
 		&requestflag.Flag[string]{
 			Name:      "cursor",
+			Usage:     "Pagination cursor from a prior response.",
 			QueryPath: "cursor",
 		},
 		&requestflag.Flag[int64]{
 			Name:      "limit",
+			Usage:     "Page size. Minimum 1, maximum 100.",
 			QueryPath: "limit",
 		},
 	},
@@ -115,7 +117,7 @@ var journeysTemplatesList = cli.Command{
 
 var journeysTemplatesArchive = cli.Command{
 	Name:    "archive",
-	Usage:   "Archive a journey-scoped notification template. Archived templates cannot be\nsent.",
+	Usage:   "Archive the journey-scoped notification template. Archived templates cannot be\nsent.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -135,7 +137,7 @@ var journeysTemplatesArchive = cli.Command{
 
 var journeysTemplatesListVersions = cli.Command{
 	Name:    "list-versions",
-	Usage:   "List published versions of a journey-scoped notification template, ordered most\nrecent first.",
+	Usage:   "List published versions of the journey-scoped notification template, ordered\nmost recent first.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -155,7 +157,7 @@ var journeysTemplatesListVersions = cli.Command{
 
 var journeysTemplatesPublish = cli.Command{
 	Name:    "publish",
-	Usage:   "Publish the current draft of a journey-scoped notification template.",
+	Usage:   "Publish the current draft of the journey-scoped notification template as a new\nversion. Optionally roll back to a prior version by passing\n`{ \"version\": \"vN\" }`.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -179,7 +181,7 @@ var journeysTemplatesPublish = cli.Command{
 
 var journeysTemplatesReplace = requestflag.WithInnerFlags(cli.Command{
 	Name:    "replace",
-	Usage:   "Replace a journey-scoped notification template draft.",
+	Usage:   "Replace the journey-scoped notification template draft.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
