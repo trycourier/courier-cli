@@ -16,7 +16,7 @@ import (
 
 var brandsCreate = requestflag.WithInnerFlags(cli.Command{
 	Name:    "create",
-	Usage:   "Create a new brand",
+	Usage:   "Create a new brand. Requires `name` and `settings` (with at least\n`colors.primary` and `colors.secondary`).",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -24,13 +24,14 @@ var brandsCreate = requestflag.WithInnerFlags(cli.Command{
 			Required: true,
 			BodyPath: "name",
 		},
+		&requestflag.Flag[map[string]any]{
+			Name:     "settings",
+			Required: true,
+			BodyPath: "settings",
+		},
 		&requestflag.Flag[*string]{
 			Name:     "id",
 			BodyPath: "id",
-		},
-		&requestflag.Flag[map[string]any]{
-			Name:     "settings",
-			BodyPath: "settings",
 		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "snippets",
