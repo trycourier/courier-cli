@@ -16,9 +16,9 @@ func TestBrandsCreate(t *testing.T) {
 			t,
 			"--api-key", "string",
 			"brands", "create",
-			"--name", "name",
+			"--name", "My Brand",
+			"--settings", "{colors: {primary: '#9D3789', secondary: '#FFFFFF'}, email: {footer: {content: content, inheritDefault: true}, head: {inheritDefault: true, content: content}, header: {logo: {href: href, image: image}, barColor: barColor, inheritDefault: true}, templateOverride: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width, mjml: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width}, footerBackgroundColor: footerBackgroundColor, footerFullWidth: true}}, inapp: {colors: {primary: primary, secondary: secondary}, icons: {bell: bell, message: message}, widgetBackground: {bottomColor: bottomColor, topColor: topColor}, borderRadius: borderRadius, disableMessageIcon: true, fontFamily: fontFamily, placement: top}}",
 			"--id", "id",
-			"--settings", "{colors: {primary: primary, secondary: secondary}, email: {footer: {content: content, inheritDefault: true}, head: {inheritDefault: true, content: content}, header: {logo: {href: href, image: image}, barColor: barColor, inheritDefault: true}, templateOverride: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width, mjml: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width}, footerBackgroundColor: footerBackgroundColor, footerFullWidth: true}}, inapp: {colors: {primary: primary, secondary: secondary}, icons: {bell: bell, message: message}, widgetBackground: {bottomColor: bottomColor, topColor: topColor}, borderRadius: borderRadius, disableMessageIcon: true, fontFamily: fontFamily, placement: top}}",
 			"--snippets", "{items: [{name: name, value: value}]}",
 		)
 	})
@@ -32,11 +32,11 @@ func TestBrandsCreate(t *testing.T) {
 			t,
 			"--api-key", "string",
 			"brands", "create",
-			"--name", "name",
-			"--id", "id",
-			"--settings.colors", "{primary: primary, secondary: secondary}",
+			"--name", "My Brand",
+			"--settings.colors", "{primary: '#9D3789', secondary: '#FFFFFF'}",
 			"--settings.email", "{footer: {content: content, inheritDefault: true}, head: {inheritDefault: true, content: content}, header: {logo: {href: href, image: image}, barColor: barColor, inheritDefault: true}, templateOverride: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width, mjml: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width}, footerBackgroundColor: footerBackgroundColor, footerFullWidth: true}}",
 			"--settings.inapp", "{colors: {primary: primary, secondary: secondary}, icons: {bell: bell, message: message}, widgetBackground: {bottomColor: bottomColor, topColor: topColor}, borderRadius: borderRadius, disableMessageIcon: true, fontFamily: fontFamily, placement: top}",
+			"--id", "id",
 			"--snippets.items", "[{name: name, value: value}]",
 		)
 	})
@@ -44,12 +44,11 @@ func TestBrandsCreate(t *testing.T) {
 	t.Run("piping data", func(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
-			"name: name\n" +
-			"id: id\n" +
+			"name: My Brand\n" +
 			"settings:\n" +
 			"  colors:\n" +
-			"    primary: primary\n" +
-			"    secondary: secondary\n" +
+			"    primary: '#9D3789'\n" +
+			"    secondary: '#FFFFFF'\n" +
 			"  email:\n" +
 			"    footer:\n" +
 			"      content: content\n" +
@@ -95,6 +94,7 @@ func TestBrandsCreate(t *testing.T) {
 			"    disableMessageIcon: true\n" +
 			"    fontFamily: fontFamily\n" +
 			"    placement: top\n" +
+			"id: id\n" +
 			"snippets:\n" +
 			"  items:\n" +
 			"    - name: name\n" +
