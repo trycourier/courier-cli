@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -21,8 +20,9 @@ var audiencesRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "audience-id",
-			Required: true,
+			Name:      "audience-id",
+			Required:  true,
+			PathParam: "audience_id",
 		},
 	},
 	Action:          handleAudiencesRetrieve,
@@ -35,10 +35,11 @@ var audiencesUpdate = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "audience-id",
-			Required: true,
+			Name:      "audience-id",
+			Required:  true,
+			PathParam: "audience_id",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "description",
 			Usage:    "A description of the audience",
 			BodyPath: "description",
@@ -48,12 +49,12 @@ var audiencesUpdate = requestflag.WithInnerFlags(cli.Command{
 			Usage:    "Filter configuration for audience membership containing an array of filter rules",
 			BodyPath: "filter",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "name",
 			Usage:    "The name of the audience",
 			BodyPath: "name",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "operator",
 			Usage:    "The logical operator (AND/OR) for the top-level filter",
 			BodyPath: "operator",
@@ -76,7 +77,7 @@ var audiencesList = cli.Command{
 	Usage:   "Get the audiences associated with the authorization token.",
 	Suggest: true,
 	Flags: []cli.Flag{
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "A unique identifier that allows for fetching the next set of audiences",
 			QueryPath: "cursor",
@@ -92,8 +93,9 @@ var audiencesDelete = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "audience-id",
-			Required: true,
+			Name:      "audience-id",
+			Required:  true,
+			PathParam: "audience_id",
 		},
 	},
 	Action:          handleAudiencesDelete,
@@ -106,10 +108,11 @@ var audiencesListMembers = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "audience-id",
-			Required: true,
+			Name:      "audience-id",
+			Required:  true,
+			PathParam: "audience_id",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "A unique identifier that allows for fetching the next set of members",
 			QueryPath: "cursor",
@@ -150,8 +153,15 @@ func handleAudiencesRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "audiences retrieve", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "audiences retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleAudiencesUpdate(ctx context.Context, cmd *cli.Command) error {
@@ -165,8 +175,6 @@ func handleAudiencesUpdate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.AudienceUpdateParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -177,6 +185,8 @@ func handleAudiencesUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.AudienceUpdateParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -192,8 +202,15 @@ func handleAudiencesUpdate(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "audiences update", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "audiences update",
+		Transform:      transform,
+	})
 }
 
 func handleAudiencesList(ctx context.Context, cmd *cli.Command) error {
@@ -203,8 +220,6 @@ func handleAudiencesList(ctx context.Context, cmd *cli.Command) error {
 	if len(unusedArgs) > 0 {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
-
-	params := courier.AudienceListParams{}
 
 	options, err := flagOptions(
 		cmd,
@@ -217,6 +232,8 @@ func handleAudiencesList(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
+	params := courier.AudienceListParams{}
+
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
 	_, err = client.Audiences.List(ctx, params, options...)
@@ -226,8 +243,15 @@ func handleAudiencesList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "audiences list", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "audiences list",
+		Transform:      transform,
+	})
 }
 
 func handleAudiencesDelete(ctx context.Context, cmd *cli.Command) error {
@@ -266,8 +290,6 @@ func handleAudiencesListMembers(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.AudienceListMembersParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -278,6 +300,8 @@ func handleAudiencesListMembers(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.AudienceListMembersParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -293,6 +317,13 @@ func handleAudiencesListMembers(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "audiences list-members", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "audiences list-members",
+		Transform:      transform,
+	})
 }

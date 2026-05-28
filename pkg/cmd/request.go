@@ -18,8 +18,9 @@ var requestsArchive = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "request-id",
-			Required: true,
+			Name:      "request-id",
+			Required:  true,
+			PathParam: "request_id",
 		},
 	},
 	Action:          handleRequestsArchive,

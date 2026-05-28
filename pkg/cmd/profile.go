@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -21,8 +20,9 @@ var profilesCreate = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "profile",
@@ -40,8 +40,9 @@ var profilesRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 	},
 	Action:          handleProfilesRetrieve,
@@ -54,8 +55,9 @@ var profilesUpdate = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 		&requestflag.Flag[[]map[string]any]{
 			Name:     "patch",
@@ -92,8 +94,9 @@ var profilesDelete = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 	},
 	Action:          handleProfilesDelete,
@@ -106,8 +109,9 @@ var profilesReplace = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "profile",
@@ -130,8 +134,6 @@ func handleProfilesCreate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.ProfileNewParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -142,6 +144,8 @@ func handleProfilesCreate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.ProfileNewParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -157,8 +161,15 @@ func handleProfilesCreate(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "profiles create", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "profiles create",
+		Transform:      transform,
+	})
 }
 
 func handleProfilesRetrieve(ctx context.Context, cmd *cli.Command) error {
@@ -192,8 +203,15 @@ func handleProfilesRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "profiles retrieve", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "profiles retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleProfilesUpdate(ctx context.Context, cmd *cli.Command) error {
@@ -207,8 +225,6 @@ func handleProfilesUpdate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.ProfileUpdateParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -219,6 +235,8 @@ func handleProfilesUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.ProfileUpdateParams{}
 
 	return client.Profiles.Update(
 		ctx,
@@ -264,8 +282,6 @@ func handleProfilesReplace(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.ProfileReplaceParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -276,6 +292,8 @@ func handleProfilesReplace(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.ProfileReplaceParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -291,6 +309,13 @@ func handleProfilesReplace(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "profiles replace", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "profiles replace",
+		Transform:      transform,
+	})
 }

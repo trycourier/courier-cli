@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -31,7 +30,7 @@ var sendMessage = requestflag.WithInnerFlags(cli.Command{
 	HideHelpCommand: true,
 }, map[string][]requestflag.HasOuterFlag{
 	"message": {
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "message.brand-id",
 			InnerField: "brand_id",
 		},
@@ -77,7 +76,7 @@ var sendMessage = requestflag.WithInnerFlags(cli.Command{
 			Usage:      "Customize which channels/providers Courier may deliver the message through.",
 			InnerField: "routing",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "message.template",
 			InnerField: "template",
 		},
@@ -101,8 +100,6 @@ func handleSendMessage(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.SendMessageParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -114,6 +111,8 @@ func handleSendMessage(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
+	params := courier.SendMessageParams{}
+
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
 	_, err = client.Send.Message(ctx, params, options...)
@@ -123,6 +122,13 @@ func handleSendMessage(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "send message", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "send message",
+		Transform:      transform,
+	})
 }

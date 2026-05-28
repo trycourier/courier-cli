@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -21,8 +20,9 @@ var listsRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
+			Name:      "list-id",
+			Required:  true,
+			PathParam: "list_id",
 		},
 	},
 	Action:          handleListsRetrieve,
@@ -35,8 +35,9 @@ var listsUpdate = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
+			Name:      "list-id",
+			Required:  true,
+			PathParam: "list_id",
 		},
 		&requestflag.Flag[string]{
 			Name:     "name",
@@ -68,12 +69,12 @@ var listsList = cli.Command{
 	Usage:   "Returns all of the lists, with the ability to filter based on a pattern.",
 	Suggest: true,
 	Flags: []cli.Flag{
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "A unique identifier that allows for fetching the next page of lists.",
 			QueryPath: "cursor",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "pattern",
 			Usage:     "\"A pattern used to filter the list items returned. Pattern types supported: exact match on `list_id` or a pattern of one or more pattern parts. you may replace a part with either: `*` to match all parts in that position, or `**` to signify a wildcard `endsWith` pattern match.\"",
 			QueryPath: "pattern",
@@ -89,8 +90,9 @@ var listsDelete = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
+			Name:      "list-id",
+			Required:  true,
+			PathParam: "list_id",
 		},
 	},
 	Action:          handleListsDelete,
@@ -103,8 +105,9 @@ var listsRestore = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
+			Name:      "list-id",
+			Required:  true,
+			PathParam: "list_id",
 		},
 	},
 	Action:          handleListsRestore,
@@ -142,8 +145,15 @@ func handleListsRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "lists retrieve", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "lists retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleListsUpdate(ctx context.Context, cmd *cli.Command) error {
@@ -157,8 +167,6 @@ func handleListsUpdate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.ListUpdateParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -169,6 +177,8 @@ func handleListsUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.ListUpdateParams{}
 
 	return client.Lists.Update(
 		ctx,
@@ -186,8 +196,6 @@ func handleListsList(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.ListListParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -199,6 +207,8 @@ func handleListsList(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
+	params := courier.ListListParams{}
+
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
 	_, err = client.Lists.List(ctx, params, options...)
@@ -208,8 +218,15 @@ func handleListsList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "lists list", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "lists list",
+		Transform:      transform,
+	})
 }
 
 func handleListsDelete(ctx context.Context, cmd *cli.Command) error {
@@ -248,8 +265,6 @@ func handleListsRestore(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.ListRestoreParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -260,6 +275,8 @@ func handleListsRestore(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.ListRestoreParams{}
 
 	return client.Lists.Restore(
 		ctx,

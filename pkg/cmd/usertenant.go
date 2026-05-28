@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -21,15 +20,16 @@ var usersTenantsList = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "Continue the pagination with the next cursor",
 			QueryPath: "cursor",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*int64]{
 			Name:      "limit",
 			Usage:     "The number of accounts to return \n(defaults to 20, maximum value of 100)",
 			QueryPath: "limit",
@@ -45,8 +45,9 @@ var usersTenantsAddMultiple = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 		&requestflag.Flag[[]map[string]any]{
 			Name:     "tenant",
@@ -68,12 +69,12 @@ var usersTenantsAddMultiple = requestflag.WithInnerFlags(cli.Command{
 			Usage:      "Additional metadata to be applied to a user profile when used in a tenant context",
 			InnerField: "profile",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "tenant.type",
 			Usage:      `Allowed values: "user".`,
 			InnerField: "type",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "tenant.user-id",
 			Usage:      "User ID for the association between tenant and user",
 			InnerField: "user_id",
@@ -87,12 +88,14 @@ var usersTenantsAddSingle = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "tenant-id",
-			Required: true,
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
 		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "profile",
@@ -109,8 +112,9 @@ var usersTenantsRemoveAll = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 	},
 	Action:          handleUsersTenantsRemoveAll,
@@ -123,12 +127,14 @@ var usersTenantsRemoveSingle = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "tenant-id",
-			Required: true,
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
 		},
 	},
 	Action:          handleUsersTenantsRemoveSingle,
@@ -146,8 +152,6 @@ func handleUsersTenantsList(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.UserTenantListParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -158,6 +162,8 @@ func handleUsersTenantsList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.UserTenantListParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -173,8 +179,15 @@ func handleUsersTenantsList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "users:tenants list", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "users:tenants list",
+		Transform:      transform,
+	})
 }
 
 func handleUsersTenantsAddMultiple(ctx context.Context, cmd *cli.Command) error {
@@ -188,8 +201,6 @@ func handleUsersTenantsAddMultiple(ctx context.Context, cmd *cli.Command) error 
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.UserTenantAddMultipleParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -200,6 +211,8 @@ func handleUsersTenantsAddMultiple(ctx context.Context, cmd *cli.Command) error 
 	if err != nil {
 		return err
 	}
+
+	params := courier.UserTenantAddMultipleParams{}
 
 	return client.Users.Tenants.AddMultiple(
 		ctx,
@@ -220,10 +233,6 @@ func handleUsersTenantsAddSingle(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.UserTenantAddSingleParams{
-		UserID: cmd.Value("user-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -233,6 +242,10 @@ func handleUsersTenantsAddSingle(ctx context.Context, cmd *cli.Command) error {
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.UserTenantAddSingleParams{
+		UserID: cmd.Value("user-id").(string),
 	}
 
 	return client.Users.Tenants.AddSingle(
@@ -279,10 +292,6 @@ func handleUsersTenantsRemoveSingle(ctx context.Context, cmd *cli.Command) error
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.UserTenantRemoveSingleParams{
-		UserID: cmd.Value("user-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -292,6 +301,10 @@ func handleUsersTenantsRemoveSingle(ctx context.Context, cmd *cli.Command) error
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.UserTenantRemoveSingleParams{
+		UserID: cmd.Value("user-id").(string),
 	}
 
 	return client.Users.Tenants.RemoveSingle(

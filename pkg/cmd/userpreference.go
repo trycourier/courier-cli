@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -21,10 +20,11 @@ var usersPreferencesRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "tenant-id",
 			Usage:     "Query the preferences of a user for this specific tenant context.",
 			QueryPath: "tenant_id",
@@ -40,14 +40,16 @@ var usersPreferencesRetrieveTopic = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "topic-id",
-			Required: true,
+			Name:      "topic-id",
+			Required:  true,
+			PathParam: "topic_id",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "tenant-id",
 			Usage:     "Query the preferences of a user for this specific tenant context.",
 			QueryPath: "tenant_id",
@@ -63,19 +65,21 @@ var usersPreferencesUpdateOrCreateTopic = requestflag.WithInnerFlags(cli.Command
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "user-id",
-			Required: true,
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "topic-id",
-			Required: true,
+			Name:      "topic-id",
+			Required:  true,
+			PathParam: "topic_id",
 		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "topic",
 			Required: true,
 			BodyPath: "topic",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "tenant-id",
 			Usage:     "Update the preferences of a user for this specific tenant context.",
 			QueryPath: "tenant_id",
@@ -95,7 +99,7 @@ var usersPreferencesUpdateOrCreateTopic = requestflag.WithInnerFlags(cli.Command
 			Usage:      "The Channels a user has chosen to receive notifications through for this topic",
 			InnerField: "custom_routing",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*bool]{
 			Name:       "topic.has-custom-routing",
 			InnerField: "has_custom_routing",
 		},
@@ -113,8 +117,6 @@ func handleUsersPreferencesRetrieve(ctx context.Context, cmd *cli.Command) error
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.UserPreferenceGetParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -125,6 +127,8 @@ func handleUsersPreferencesRetrieve(ctx context.Context, cmd *cli.Command) error
 	if err != nil {
 		return err
 	}
+
+	params := courier.UserPreferenceGetParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -140,8 +144,15 @@ func handleUsersPreferencesRetrieve(ctx context.Context, cmd *cli.Command) error
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "users:preferences retrieve", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "users:preferences retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleUsersPreferencesRetrieveTopic(ctx context.Context, cmd *cli.Command) error {
@@ -155,10 +166,6 @@ func handleUsersPreferencesRetrieveTopic(ctx context.Context, cmd *cli.Command) 
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.UserPreferenceGetTopicParams{
-		UserID: cmd.Value("user-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -168,6 +175,10 @@ func handleUsersPreferencesRetrieveTopic(ctx context.Context, cmd *cli.Command) 
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.UserPreferenceGetTopicParams{
+		UserID: cmd.Value("user-id").(string),
 	}
 
 	var res []byte
@@ -184,8 +195,15 @@ func handleUsersPreferencesRetrieveTopic(ctx context.Context, cmd *cli.Command) 
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "users:preferences retrieve-topic", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "users:preferences retrieve-topic",
+		Transform:      transform,
+	})
 }
 
 func handleUsersPreferencesUpdateOrCreateTopic(ctx context.Context, cmd *cli.Command) error {
@@ -199,10 +217,6 @@ func handleUsersPreferencesUpdateOrCreateTopic(ctx context.Context, cmd *cli.Com
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.UserPreferenceUpdateOrNewTopicParams{
-		UserID: cmd.Value("user-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -212,6 +226,10 @@ func handleUsersPreferencesUpdateOrCreateTopic(ctx context.Context, cmd *cli.Com
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.UserPreferenceUpdateOrNewTopicParams{
+		UserID: cmd.Value("user-id").(string),
 	}
 
 	var res []byte
@@ -228,6 +246,13 @@ func handleUsersPreferencesUpdateOrCreateTopic(ctx context.Context, cmd *cli.Com
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "users:preferences update-or-create-topic", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "users:preferences update-or-create-topic",
+		Transform:      transform,
+	})
 }

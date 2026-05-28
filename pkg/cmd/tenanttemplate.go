@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -21,12 +20,14 @@ var tenantsTemplatesRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "tenant-id",
-			Required: true,
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "template-id",
-			Required: true,
+			Name:      "template-id",
+			Required:  true,
+			PathParam: "template_id",
 		},
 	},
 	Action:          handleTenantsTemplatesRetrieve,
@@ -39,15 +40,16 @@ var tenantsTemplatesList = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "tenant-id",
-			Required: true,
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "Continue the pagination with the next cursor",
 			QueryPath: "cursor",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*int64]{
 			Name:      "limit",
 			Usage:     "The number of templates to return (defaults to 20, maximum value of 100)",
 			QueryPath: "limit",
@@ -57,18 +59,40 @@ var tenantsTemplatesList = cli.Command{
 	HideHelpCommand: true,
 }
 
+var tenantsTemplatesDelete = cli.Command{
+	Name:    "delete",
+	Usage:   "Deletes the tenant's notification template with the given `template_id`.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
+		},
+		&requestflag.Flag[string]{
+			Name:      "template-id",
+			Required:  true,
+			PathParam: "template_id",
+		},
+	},
+	Action:          handleTenantsTemplatesDelete,
+	HideHelpCommand: true,
+}
+
 var tenantsTemplatesPublish = cli.Command{
 	Name:    "publish",
 	Usage:   "Publishes a specific version of a notification template for a tenant.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "tenant-id",
-			Required: true,
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "template-id",
-			Required: true,
+			Name:      "template-id",
+			Required:  true,
+			PathParam: "template_id",
 		},
 		&requestflag.Flag[string]{
 			Name:     "version",
@@ -87,12 +111,14 @@ var tenantsTemplatesReplace = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "tenant-id",
-			Required: true,
+			Name:      "tenant-id",
+			Required:  true,
+			PathParam: "tenant_id",
 		},
 		&requestflag.Flag[string]{
-			Name:     "template-id",
-			Required: true,
+			Name:      "template-id",
+			Required:  true,
+			PathParam: "template_id",
 		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "template",
@@ -141,10 +167,6 @@ func handleTenantsTemplatesRetrieve(ctx context.Context, cmd *cli.Command) error
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.TenantTemplateGetParams{
-		TenantID: cmd.Value("tenant-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -154,6 +176,10 @@ func handleTenantsTemplatesRetrieve(ctx context.Context, cmd *cli.Command) error
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.TenantTemplateGetParams{
+		TenantID: cmd.Value("tenant-id").(string),
 	}
 
 	var res []byte
@@ -170,8 +196,15 @@ func handleTenantsTemplatesRetrieve(ctx context.Context, cmd *cli.Command) error
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "tenants:templates retrieve", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "tenants:templates retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleTenantsTemplatesList(ctx context.Context, cmd *cli.Command) error {
@@ -185,8 +218,6 @@ func handleTenantsTemplatesList(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.TenantTemplateListParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -197,6 +228,8 @@ func handleTenantsTemplatesList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.TenantTemplateListParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -212,8 +245,49 @@ func handleTenantsTemplatesList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "tenants:templates list", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "tenants:templates list",
+		Transform:      transform,
+	})
+}
+
+func handleTenantsTemplatesDelete(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("template-id") && len(unusedArgs) > 0 {
+		cmd.Set("template-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		EmptyBody,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.TenantTemplateDeleteParams{
+		TenantID: cmd.Value("tenant-id").(string),
+	}
+
+	return client.Tenants.Templates.Delete(
+		ctx,
+		cmd.Value("template-id").(string),
+		params,
+		options...,
+	)
 }
 
 func handleTenantsTemplatesPublish(ctx context.Context, cmd *cli.Command) error {
@@ -227,10 +301,6 @@ func handleTenantsTemplatesPublish(ctx context.Context, cmd *cli.Command) error 
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.TenantTemplatePublishParams{
-		TenantID: cmd.Value("tenant-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -240,6 +310,10 @@ func handleTenantsTemplatesPublish(ctx context.Context, cmd *cli.Command) error 
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.TenantTemplatePublishParams{
+		TenantID: cmd.Value("tenant-id").(string),
 	}
 
 	var res []byte
@@ -256,8 +330,15 @@ func handleTenantsTemplatesPublish(ctx context.Context, cmd *cli.Command) error 
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "tenants:templates publish", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "tenants:templates publish",
+		Transform:      transform,
+	})
 }
 
 func handleTenantsTemplatesReplace(ctx context.Context, cmd *cli.Command) error {
@@ -271,10 +352,6 @@ func handleTenantsTemplatesReplace(ctx context.Context, cmd *cli.Command) error 
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.TenantTemplateReplaceParams{
-		TenantID: cmd.Value("tenant-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -284,6 +361,10 @@ func handleTenantsTemplatesReplace(ctx context.Context, cmd *cli.Command) error 
 	)
 	if err != nil {
 		return err
+	}
+
+	params := courier.TenantTemplateReplaceParams{
+		TenantID: cmd.Value("tenant-id").(string),
 	}
 
 	var res []byte
@@ -300,6 +381,13 @@ func handleTenantsTemplatesReplace(ctx context.Context, cmd *cli.Command) error 
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "tenants:templates replace", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "tenants:templates replace",
+		Transform:      transform,
+	})
 }

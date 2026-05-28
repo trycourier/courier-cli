@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -25,7 +24,7 @@ var automationsInvokeInvokeAdHoc = requestflag.WithInnerFlags(cli.Command{
 			Required: true,
 			BodyPath: "automation",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "brand",
 			BodyPath: "brand",
 		},
@@ -37,11 +36,11 @@ var automationsInvokeInvokeAdHoc = requestflag.WithInnerFlags(cli.Command{
 			Name:     "profile",
 			BodyPath: "profile",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "recipient",
 			BodyPath: "recipient",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "template",
 			BodyPath: "template",
 		},
@@ -54,7 +53,7 @@ var automationsInvokeInvokeAdHoc = requestflag.WithInnerFlags(cli.Command{
 			Name:       "automation.steps",
 			InnerField: "steps",
 		},
-		&requestflag.InnerFlag[any]{
+		&requestflag.InnerFlag[*string]{
 			Name:       "automation.cancelation-token",
 			InnerField: "cancelation_token",
 		},
@@ -67,15 +66,16 @@ var automationsInvokeInvokeByTemplate = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "template-id",
-			Required: true,
+			Name:      "template-id",
+			Required:  true,
+			PathParam: "templateId",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "recipient",
 			Required: true,
 			BodyPath: "recipient",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "brand",
 			BodyPath: "brand",
 		},
@@ -87,7 +87,7 @@ var automationsInvokeInvokeByTemplate = cli.Command{
 			Name:     "profile",
 			BodyPath: "profile",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "template",
 			BodyPath: "template",
 		},
@@ -104,8 +104,6 @@ func handleAutomationsInvokeInvokeAdHoc(ctx context.Context, cmd *cli.Command) e
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.AutomationInvokeInvokeAdHocParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -117,6 +115,8 @@ func handleAutomationsInvokeInvokeAdHoc(ctx context.Context, cmd *cli.Command) e
 		return err
 	}
 
+	params := courier.AutomationInvokeInvokeAdHocParams{}
+
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
 	_, err = client.Automations.Invoke.InvokeAdHoc(ctx, params, options...)
@@ -126,8 +126,15 @@ func handleAutomationsInvokeInvokeAdHoc(ctx context.Context, cmd *cli.Command) e
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "automations:invoke invoke-ad-hoc", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "automations:invoke invoke-ad-hoc",
+		Transform:      transform,
+	})
 }
 
 func handleAutomationsInvokeInvokeByTemplate(ctx context.Context, cmd *cli.Command) error {
@@ -141,8 +148,6 @@ func handleAutomationsInvokeInvokeByTemplate(ctx context.Context, cmd *cli.Comma
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.AutomationInvokeInvokeByTemplateParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -153,6 +158,8 @@ func handleAutomationsInvokeInvokeByTemplate(ctx context.Context, cmd *cli.Comma
 	if err != nil {
 		return err
 	}
+
+	params := courier.AutomationInvokeInvokeByTemplateParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -168,6 +175,13 @@ func handleAutomationsInvokeInvokeByTemplate(ctx context.Context, cmd *cli.Comma
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "automations:invoke invoke-by-template", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "automations:invoke invoke-by-template",
+		Transform:      transform,
+	})
 }

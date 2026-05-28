@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -17,7 +16,7 @@ import (
 
 var brandsCreate = requestflag.WithInnerFlags(cli.Command{
 	Name:    "create",
-	Usage:   "Create a new brand",
+	Usage:   "Create a new brand. Requires `name` and `settings` (with at least\n`colors.primary` and `colors.secondary`).",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -25,13 +24,14 @@ var brandsCreate = requestflag.WithInnerFlags(cli.Command{
 			Required: true,
 			BodyPath: "name",
 		},
-		&requestflag.Flag[any]{
-			Name:     "id",
-			BodyPath: "id",
-		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "settings",
+			Required: true,
 			BodyPath: "settings",
+		},
+		&requestflag.Flag[*string]{
+			Name:     "id",
+			BodyPath: "id",
 		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "snippets",
@@ -69,8 +69,9 @@ var brandsRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "brand-id",
-			Required: true,
+			Name:      "brand-id",
+			Required:  true,
+			PathParam: "brand_id",
 		},
 	},
 	Action:          handleBrandsRetrieve,
@@ -83,8 +84,9 @@ var brandsUpdate = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "brand-id",
-			Required: true,
+			Name:      "brand-id",
+			Required:  true,
+			PathParam: "brand_id",
 		},
 		&requestflag.Flag[string]{
 			Name:     "name",
@@ -131,7 +133,7 @@ var brandsList = cli.Command{
 	Usage:   "Get the list of brands.",
 	Suggest: true,
 	Flags: []cli.Flag{
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "A unique identifier that allows for fetching the next set of brands.",
 			QueryPath: "cursor",
@@ -147,8 +149,9 @@ var brandsDelete = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "brand-id",
-			Required: true,
+			Name:      "brand-id",
+			Required:  true,
+			PathParam: "brand_id",
 		},
 	},
 	Action:          handleBrandsDelete,
@@ -163,8 +166,6 @@ func handleBrandsCreate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.BrandNewParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -176,6 +177,8 @@ func handleBrandsCreate(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
+	params := courier.BrandNewParams{}
+
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
 	_, err = client.Brands.New(ctx, params, options...)
@@ -185,8 +188,15 @@ func handleBrandsCreate(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "brands create", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "brands create",
+		Transform:      transform,
+	})
 }
 
 func handleBrandsRetrieve(ctx context.Context, cmd *cli.Command) error {
@@ -220,8 +230,15 @@ func handleBrandsRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "brands retrieve", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "brands retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleBrandsUpdate(ctx context.Context, cmd *cli.Command) error {
@@ -235,8 +252,6 @@ func handleBrandsUpdate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.BrandUpdateParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -247,6 +262,8 @@ func handleBrandsUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := courier.BrandUpdateParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -262,8 +279,15 @@ func handleBrandsUpdate(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "brands update", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "brands update",
+		Transform:      transform,
+	})
 }
 
 func handleBrandsList(ctx context.Context, cmd *cli.Command) error {
@@ -273,8 +297,6 @@ func handleBrandsList(ctx context.Context, cmd *cli.Command) error {
 	if len(unusedArgs) > 0 {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
-
-	params := courier.BrandListParams{}
 
 	options, err := flagOptions(
 		cmd,
@@ -287,6 +309,8 @@ func handleBrandsList(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
+	params := courier.BrandListParams{}
+
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
 	_, err = client.Brands.List(ctx, params, options...)
@@ -296,8 +320,15 @@ func handleBrandsList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "brands list", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "brands list",
+		Transform:      transform,
+	})
 }
 
 func handleBrandsDelete(ctx context.Context, cmd *cli.Command) error {

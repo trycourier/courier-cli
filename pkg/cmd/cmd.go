@@ -73,6 +73,11 @@ func init() {
 				Name:  "transform-error",
 				Usage: "The GJSON transformation for errors.",
 			},
+			&cli.BoolFlag{
+				Name:    "raw-output",
+				Aliases: []string{"r"},
+				Usage:   "If the result is a string, print it without JSON quotes. This can be useful for making output transforms talk to non-JSON-based systems.",
+			},
 			&requestflag.Flag[string]{
 				Name:    "api-key",
 				Sources: cli.EnvVars("COURIER_API_KEY"),
@@ -158,8 +163,28 @@ func init() {
 				Category: "API RESOURCE",
 				Suggest:  true,
 				Commands: []*cli.Command{
+					&journeysCreate,
+					&journeysRetrieve,
 					&journeysList,
+					&journeysArchive,
 					&journeysInvoke,
+					&journeysListVersions,
+					&journeysPublish,
+					&journeysReplace,
+				},
+			},
+			{
+				Name:     "journeys:templates",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&journeysTemplatesCreate,
+					&journeysTemplatesRetrieve,
+					&journeysTemplatesList,
+					&journeysTemplatesArchive,
+					&journeysTemplatesListVersions,
+					&journeysTemplatesPublish,
+					&journeysTemplatesReplace,
 				},
 			},
 			{
@@ -329,6 +354,7 @@ func init() {
 				Commands: []*cli.Command{
 					&tenantsTemplatesRetrieve,
 					&tenantsTemplatesList,
+					&tenantsTemplatesDelete,
 					&tenantsTemplatesPublish,
 					&tenantsTemplatesReplace,
 				},

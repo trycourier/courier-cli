@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/tidwall/gjson"
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
@@ -35,7 +34,7 @@ var routingStrategiesCreate = requestflag.WithInnerFlags(cli.Command{
 			Name:     "channels",
 			BodyPath: "channels",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "description",
 			Usage:    "Optional description of the routing strategy.",
 			BodyPath: "description",
@@ -72,8 +71,9 @@ var routingStrategiesRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
 	},
 	Action:          handleRoutingStrategiesRetrieve,
@@ -85,7 +85,7 @@ var routingStrategiesList = cli.Command{
 	Usage:   "List routing strategies in your workspace. Returns metadata only (no\nrouting/channels/providers content). Use GET /routing-strategies/{id} for full\ndetails.",
 	Suggest: true,
 	Flags: []cli.Flag{
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "Opaque pagination cursor from a previous response. Omit for the first page.",
 			QueryPath: "cursor",
@@ -107,8 +107,9 @@ var routingStrategiesArchive = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
 	},
 	Action:          handleRoutingStrategiesArchive,
@@ -121,10 +122,11 @@ var routingStrategiesListNotifications = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:      "cursor",
 			Usage:     "Opaque pagination cursor from a previous response. Omit for the first page.",
 			QueryPath: "cursor",
@@ -146,8 +148,9 @@ var routingStrategiesReplace = requestflag.WithInnerFlags(cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "id",
-			Required: true,
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
 		},
 		&requestflag.Flag[string]{
 			Name:     "name",
@@ -164,7 +167,7 @@ var routingStrategiesReplace = requestflag.WithInnerFlags(cli.Command{
 			Name:     "channels",
 			BodyPath: "channels",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "description",
 			Usage:    "Optional description. Omit or null to clear.",
 			BodyPath: "description",
@@ -203,8 +206,6 @@ func handleRoutingStrategiesCreate(ctx context.Context, cmd *cli.Command) error 
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.RoutingStrategyNewParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -216,6 +217,8 @@ func handleRoutingStrategiesCreate(ctx context.Context, cmd *cli.Command) error 
 		return err
 	}
 
+	params := courier.RoutingStrategyNewParams{}
+
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
 	_, err = client.RoutingStrategies.New(ctx, params, options...)
@@ -225,8 +228,15 @@ func handleRoutingStrategiesCreate(ctx context.Context, cmd *cli.Command) error 
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "routing-strategies create", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "routing-strategies create",
+		Transform:      transform,
+	})
 }
 
 func handleRoutingStrategiesRetrieve(ctx context.Context, cmd *cli.Command) error {
@@ -260,8 +270,15 @@ func handleRoutingStrategiesRetrieve(ctx context.Context, cmd *cli.Command) erro
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "routing-strategies retrieve", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "routing-strategies retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleRoutingStrategiesList(ctx context.Context, cmd *cli.Command) error {
@@ -271,8 +288,6 @@ func handleRoutingStrategiesList(ctx context.Context, cmd *cli.Command) error {
 	if len(unusedArgs) > 0 {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
-
-	params := courier.RoutingStrategyListParams{}
 
 	options, err := flagOptions(
 		cmd,
@@ -285,6 +300,8 @@ func handleRoutingStrategiesList(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
+	params := courier.RoutingStrategyListParams{}
+
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
 	_, err = client.RoutingStrategies.List(ctx, params, options...)
@@ -294,8 +311,15 @@ func handleRoutingStrategiesList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "routing-strategies list", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "routing-strategies list",
+		Transform:      transform,
+	})
 }
 
 func handleRoutingStrategiesArchive(ctx context.Context, cmd *cli.Command) error {
@@ -334,8 +358,6 @@ func handleRoutingStrategiesListNotifications(ctx context.Context, cmd *cli.Comm
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.RoutingStrategyListNotificationsParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -346,6 +368,8 @@ func handleRoutingStrategiesListNotifications(ctx context.Context, cmd *cli.Comm
 	if err != nil {
 		return err
 	}
+
+	params := courier.RoutingStrategyListNotificationsParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -361,8 +385,15 @@ func handleRoutingStrategiesListNotifications(ctx context.Context, cmd *cli.Comm
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "routing-strategies list-notifications", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "routing-strategies list-notifications",
+		Transform:      transform,
+	})
 }
 
 func handleRoutingStrategiesReplace(ctx context.Context, cmd *cli.Command) error {
@@ -376,8 +407,6 @@ func handleRoutingStrategiesReplace(ctx context.Context, cmd *cli.Command) error
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := courier.RoutingStrategyReplaceParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -388,6 +417,8 @@ func handleRoutingStrategiesReplace(ctx context.Context, cmd *cli.Command) error
 	if err != nil {
 		return err
 	}
+
+	params := courier.RoutingStrategyReplaceParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -403,6 +434,13 @@ func handleRoutingStrategiesReplace(ctx context.Context, cmd *cli.Command) error
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "routing-strategies replace", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "routing-strategies replace",
+		Transform:      transform,
+	})
 }
