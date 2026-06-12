@@ -212,6 +212,15 @@ func init() {
 				},
 			},
 			{
+				Name:     "digests:schedules",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&digestsSchedulesListInstances,
+					&digestsSchedulesRelease,
+				},
+			},
+			{
 				Name:     "inbound",
 				Category: "API RESOURCE",
 				Suggest:  true,
