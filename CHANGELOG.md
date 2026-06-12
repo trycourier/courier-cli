@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.6.0 (2026-06-12)
+
+Full Changelog: [v3.5.0...v3.6.0](https://github.com/trycourier/courier-cli/compare/v3.5.0...v3.6.0)
+
+### Features
+
+* **digests:** document digest REST endpoints in OpenAPI spec ([7919535](https://github.com/trycourier/courier-cli/commit/79195351cc9157f274403a61c7bd35f44c4b0ef0))
+
 ## 3.5.0 (2026-05-28)
 
 Full Changelog: [v3.4.2...v3.5.0](https://github.com/trycourier/courier-cli/compare/v3.4.2...v3.5.0)
