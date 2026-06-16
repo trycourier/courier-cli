@@ -34,6 +34,31 @@ var usersPreferencesRetrieve = cli.Command{
 	HideHelpCommand: true,
 }
 
+var usersPreferencesDeleteTopic = cli.Command{
+	Name:    "delete-topic",
+	Usage:   "Remove a user's preferences for a specific subscription topic, resetting the\ntopic to its effective default. This operation is idempotent: deleting a\npreference that does not exist succeeds with no error.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
+		},
+		&requestflag.Flag[string]{
+			Name:      "topic-id",
+			Required:  true,
+			PathParam: "topic_id",
+		},
+		&requestflag.Flag[*string]{
+			Name:      "tenant-id",
+			Usage:     "Delete the preferences of a user for this specific tenant context.",
+			QueryPath: "tenant_id",
+		},
+	},
+	Action:          handleUsersPreferencesDeleteTopic,
+	HideHelpCommand: true,
+}
+
 var usersPreferencesRetrieveTopic = cli.Command{
 	Name:    "retrieve-topic",
 	Usage:   "Fetch user preferences for a specific subscription topic.",
@@ -153,6 +178,40 @@ func handleUsersPreferencesRetrieve(ctx context.Context, cmd *cli.Command) error
 		Title:          "users:preferences retrieve",
 		Transform:      transform,
 	})
+}
+
+func handleUsersPreferencesDeleteTopic(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("topic-id") && len(unusedArgs) > 0 {
+		cmd.Set("topic-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		EmptyBody,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.UserPreferenceDeleteTopicParams{
+		UserID: cmd.Value("user-id").(string),
+	}
+
+	return client.Users.Preferences.DeleteTopic(
+		ctx,
+		cmd.Value("topic-id").(string),
+		params,
+		options...,
+	)
 }
 
 func handleUsersPreferencesRetrieveTopic(ctx context.Context, cmd *cli.Command) error {
