@@ -391,6 +391,7 @@ func init() {
 				Suggest:  true,
 				Commands: []*cli.Command{
 					&usersPreferencesRetrieve,
+					&usersPreferencesDeleteTopic,
 					&usersPreferencesRetrieveTopic,
 					&usersPreferencesUpdateOrCreateTopic,
 				},

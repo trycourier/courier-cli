@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.7.0 (2026-06-17)
+
+Full Changelog: [v3.6.0...v3.7.0](https://github.com/trycourier/courier-cli/compare/v3.6.0...v3.7.0)
+
+### Features
+
+* **openapi:** add DELETE /users/{id}/preferences/{topicId} ([5c640b2](https://github.com/trycourier/courier-cli/commit/5c640b2e62acd5703d14c0bdd67bb0dd9455cef7))
+
+
+### Chores
+
+* **internal:** codegen related update ([8c3f9cf](https://github.com/trycourier/courier-cli/commit/8c3f9cfea5e5f593bc32ceb6f7885d918c1e9d88))
+
 ## 3.6.0 (2026-06-12)
 
 Full Changelog: [v3.5.0...v3.6.0](https://github.com/trycourier/courier-cli/compare/v3.5.0...v3.6.0)
