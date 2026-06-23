@@ -184,7 +184,10 @@ func init() {
 					&journeysTemplatesArchive,
 					&journeysTemplatesListVersions,
 					&journeysTemplatesPublish,
+					&journeysTemplatesPutContent,
+					&journeysTemplatesPutLocale,
 					&journeysTemplatesReplace,
+					&journeysTemplatesRetrieveContent,
 				},
 			},
 			{

@@ -157,6 +157,115 @@ func TestJourneysTemplatesPublish(t *testing.T) {
 	})
 }
 
+func TestJourneysTemplatesPutContent(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t,
+			"--api-key", "string",
+			"journeys:templates", "put-content",
+			"--template-id", "x",
+			"--notification-id", "x",
+			"--content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, raw: {foo: bar}, type: channel}], version: '2022-01-01'}",
+			"--state", "DRAFT",
+		)
+	})
+
+	t.Run("inner flags", func(t *testing.T) {
+		// Check that inner flags have been set up correctly
+		requestflag.CheckInnerFlags(journeysTemplatesPutContent)
+
+		// Alternative argument passing style using inner flags
+		mocktest.TestRunMockTestWithFlags(
+			t,
+			"--api-key", "string",
+			"journeys:templates", "put-content",
+			"--template-id", "x",
+			"--notification-id", "x",
+			"--content.elements", "[{channels: [string], if: if, loop: loop, ref: ref, channel: email, raw: {foo: bar}, type: channel}]",
+			"--content.version", "2022-01-01",
+			"--state", "DRAFT",
+		)
+	})
+
+	t.Run("piping data", func(t *testing.T) {
+		// Test piping YAML data over stdin
+		pipeData := []byte("" +
+			"content:\n" +
+			"  elements:\n" +
+			"    - channels:\n" +
+			"        - string\n" +
+			"      if: if\n" +
+			"      loop: loop\n" +
+			"      ref: ref\n" +
+			"      channel: email\n" +
+			"      raw:\n" +
+			"        foo: bar\n" +
+			"      type: channel\n" +
+			"  version: '2022-01-01'\n" +
+			"state: DRAFT\n")
+		mocktest.TestRunMockTestWithPipeAndFlags(
+			t, pipeData,
+			"--api-key", "string",
+			"journeys:templates", "put-content",
+			"--template-id", "x",
+			"--notification-id", "x",
+		)
+	})
+}
+
+func TestJourneysTemplatesPutLocale(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t,
+			"--api-key", "string",
+			"journeys:templates", "put-locale",
+			"--template-id", "x",
+			"--notification-id", "x",
+			"--locale-id", "x",
+			"--element", "{id: elem_1}",
+			"--element", "{id: elem_2}",
+			"--state", "DRAFT",
+		)
+	})
+
+	t.Run("inner flags", func(t *testing.T) {
+		// Check that inner flags have been set up correctly
+		requestflag.CheckInnerFlags(journeysTemplatesPutLocale)
+
+		// Alternative argument passing style using inner flags
+		mocktest.TestRunMockTestWithFlags(
+			t,
+			"--api-key", "string",
+			"journeys:templates", "put-locale",
+			"--template-id", "x",
+			"--notification-id", "x",
+			"--locale-id", "x",
+			"--element.id", "elem_1",
+			"--element.id", "elem_2",
+			"--state", "DRAFT",
+		)
+	})
+
+	t.Run("piping data", func(t *testing.T) {
+		// Test piping YAML data over stdin
+		pipeData := []byte("" +
+			"elements:\n" +
+			"  - id: elem_1\n" +
+			"  - id: elem_2\n" +
+			"state: DRAFT\n")
+		mocktest.TestRunMockTestWithPipeAndFlags(
+			t, pipeData,
+			"--api-key", "string",
+			"journeys:templates", "put-locale",
+			"--template-id", "x",
+			"--notification-id", "x",
+			"--locale-id", "x",
+		)
+	})
+}
+
 func TestJourneysTemplatesReplace(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
@@ -219,6 +328,20 @@ func TestJourneysTemplatesReplace(t *testing.T) {
 			"journeys:templates", "replace",
 			"--template-id", "x",
 			"--notification-id", "x",
+		)
+	})
+}
+
+func TestJourneysTemplatesRetrieveContent(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t,
+			"--api-key", "string",
+			"journeys:templates", "retrieve-content",
+			"--template-id", "x",
+			"--notification-id", "x",
+			"--version", "version",
 		)
 	})
 }
