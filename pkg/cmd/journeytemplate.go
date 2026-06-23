@@ -322,7 +322,7 @@ var journeysTemplatesReplace = requestflag.WithInnerFlags(cli.Command{
 
 var journeysTemplatesRetrieveContent = cli.Command{
 	Name:    "retrieve-content",
-	Usage:   "Retrieve the elemental content of a journey-scoped notification template. The\nresponse contains the versioned elements with their content checksums. Pass\n`?version=draft` (default `published`) to retrieve the working draft, or\n`?version=vN` for a historical version.",
+	Usage:   "Retrieve the elemental content of a journey-scoped notification template. The\nresponse contains the versioned elements along with their content checksums,\nwhich can be used to detect changes between versions. Pass `?version=draft`\n(default `published`) to retrieve the working draft, or `?version=vN` for a\nhistorical version.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
