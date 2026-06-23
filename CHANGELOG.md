@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.8.0 (2026-06-23)
+
+Full Changelog: [v3.7.0...v3.8.0](https://github.com/trycourier/courier-cli/compare/v3.7.0...v3.8.0)
+
+### Features
+
+* **csharp:** enable NuGet publishing as TryCourier ([f15694c](https://github.com/trycourier/courier-cli/commit/f15694cfcab5788c9e82125d1531dc17cdab062b))
+* **journeys:** add content + locale endpoints to journey-scoped templates ([5d18f43](https://github.com/trycourier/courier-cli/commit/5d18f43c9cd13ecfb2eb6bd4a0660e6ed0c97ec2))
+
+
+### Documentation
+
+* **journeys:** clarify checksum usage + re-trigger docs sync for journey content endpoints ([f9884e8](https://github.com/trycourier/courier-cli/commit/f9884e8a2182948eb7a08168078ceb9795b2c1c2))
+
 ## 3.7.0 (2026-06-17)
 
 Full Changelog: [v3.6.0...v3.7.0](https://github.com/trycourier/courier-cli/compare/v3.6.0...v3.7.0)

@@ -179,6 +179,95 @@ var journeysTemplatesPublish = cli.Command{
 	HideHelpCommand: true,
 }
 
+var journeysTemplatesPutContent = requestflag.WithInnerFlags(cli.Command{
+	Name:    "put-content",
+	Usage:   "Replace the elemental content of a journey-scoped notification template.\nOverwrites all elements in the template draft with the provided content.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "template-id",
+			Required:  true,
+			PathParam: "templateId",
+		},
+		&requestflag.Flag[string]{
+			Name:      "notification-id",
+			Required:  true,
+			PathParam: "notificationId",
+		},
+		&requestflag.Flag[map[string]any]{
+			Name:     "content",
+			Usage:    "Elemental content payload. The server defaults `version` when omitted.",
+			Required: true,
+			BodyPath: "content",
+		},
+		&requestflag.Flag[string]{
+			Name:     "state",
+			Usage:    "Template state. Defaults to `DRAFT`.",
+			Default:  "DRAFT",
+			BodyPath: "state",
+		},
+	},
+	Action:          handleJourneysTemplatesPutContent,
+	HideHelpCommand: true,
+}, map[string][]requestflag.HasOuterFlag{
+	"content": {
+		&requestflag.InnerFlag[[]map[string]any]{
+			Name:       "content.elements",
+			InnerField: "elements",
+		},
+		&requestflag.InnerFlag[string]{
+			Name:       "content.version",
+			Usage:      "Content version identifier (e.g., `2022-01-01`). Optional; server defaults when omitted.",
+			InnerField: "version",
+		},
+	},
+})
+
+var journeysTemplatesPutLocale = requestflag.WithInnerFlags(cli.Command{
+	Name:    "put-locale",
+	Usage:   "Set locale-specific content overrides for a journey-scoped notification\ntemplate. Each element override must reference an existing element by ID.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "template-id",
+			Required:  true,
+			PathParam: "templateId",
+		},
+		&requestflag.Flag[string]{
+			Name:      "notification-id",
+			Required:  true,
+			PathParam: "notificationId",
+		},
+		&requestflag.Flag[string]{
+			Name:      "locale-id",
+			Required:  true,
+			PathParam: "localeId",
+		},
+		&requestflag.Flag[[]map[string]any]{
+			Name:     "element",
+			Usage:    "Elements with locale-specific content overrides.",
+			Required: true,
+			BodyPath: "elements",
+		},
+		&requestflag.Flag[string]{
+			Name:     "state",
+			Usage:    "Template state. Defaults to `DRAFT`.",
+			Default:  "DRAFT",
+			BodyPath: "state",
+		},
+	},
+	Action:          handleJourneysTemplatesPutLocale,
+	HideHelpCommand: true,
+}, map[string][]requestflag.HasOuterFlag{
+	"element": {
+		&requestflag.InnerFlag[string]{
+			Name:       "element.id",
+			Usage:      "Target element ID.",
+			InnerField: "id",
+		},
+	},
+})
+
 var journeysTemplatesReplace = requestflag.WithInnerFlags(cli.Command{
 	Name:    "replace",
 	Usage:   "Replace the journey-scoped notification template draft.",
@@ -230,6 +319,31 @@ var journeysTemplatesReplace = requestflag.WithInnerFlags(cli.Command{
 		},
 	},
 })
+
+var journeysTemplatesRetrieveContent = cli.Command{
+	Name:    "retrieve-content",
+	Usage:   "Retrieve the elemental content of a journey-scoped notification template. The\nresponse contains the versioned elements along with their content checksums,\nwhich can be used to detect changes between versions. Pass `?version=draft`\n(default `published`) to retrieve the working draft, or `?version=vN` for a\nhistorical version.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "template-id",
+			Required:  true,
+			PathParam: "templateId",
+		},
+		&requestflag.Flag[string]{
+			Name:      "notification-id",
+			Required:  true,
+			PathParam: "notificationId",
+		},
+		&requestflag.Flag[string]{
+			Name:      "version",
+			Usage:     "Accepts `draft`, `published`, or a version string (e.g., `v001`). Defaults to `published`.",
+			QueryPath: "version",
+		},
+	},
+	Action:          handleJourneysTemplatesRetrieveContent,
+	HideHelpCommand: true,
+}
 
 func handleJourneysTemplatesCreate(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
@@ -499,6 +613,109 @@ func handleJourneysTemplatesPublish(ctx context.Context, cmd *cli.Command) error
 	)
 }
 
+func handleJourneysTemplatesPutContent(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("notification-id") && len(unusedArgs) > 0 {
+		cmd.Set("notification-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		ApplicationJSON,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.JourneyTemplatePutContentParams{
+		TemplateID: cmd.Value("template-id").(string),
+	}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Journeys.Templates.PutContent(
+		ctx,
+		cmd.Value("notification-id").(string),
+		params,
+		options...,
+	)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "journeys:templates put-content",
+		Transform:      transform,
+	})
+}
+
+func handleJourneysTemplatesPutLocale(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("locale-id") && len(unusedArgs) > 0 {
+		cmd.Set("locale-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		ApplicationJSON,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.JourneyTemplatePutLocaleParams{
+		TemplateID:     cmd.Value("template-id").(string),
+		NotificationID: cmd.Value("notification-id").(string),
+	}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Journeys.Templates.PutLocale(
+		ctx,
+		cmd.Value("locale-id").(string),
+		params,
+		options...,
+	)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "journeys:templates put-locale",
+		Transform:      transform,
+	})
+}
+
 func handleJourneysTemplatesReplace(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
@@ -546,6 +763,57 @@ func handleJourneysTemplatesReplace(ctx context.Context, cmd *cli.Command) error
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "journeys:templates replace",
+		Transform:      transform,
+	})
+}
+
+func handleJourneysTemplatesRetrieveContent(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("notification-id") && len(unusedArgs) > 0 {
+		cmd.Set("notification-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		EmptyBody,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.JourneyTemplateGetContentParams{
+		TemplateID: cmd.Value("template-id").(string),
+	}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Journeys.Templates.GetContent(
+		ctx,
+		cmd.Value("notification-id").(string),
+		params,
+		options...,
+	)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "journeys:templates retrieve-content",
 		Transform:      transform,
 	})
 }
