@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.9.0 (2026-06-24)
+
+Full Changelog: [v3.8.0...v3.9.0](https://github.com/trycourier/courier-cli/compare/v3.8.0...v3.9.0)
+
+### Features
+
+* **preferences:** workspace preference sections & nested topics endpoints ([ced78ac](https://github.com/trycourier/courier-cli/commit/ced78acb5d924aaed2936342c581e13422a88e66))
+
 ## 3.8.0 (2026-06-23)
 
 Full Changelog: [v3.7.0...v3.8.0](https://github.com/trycourier/courier-cli/compare/v3.7.0...v3.8.0)

@@ -317,6 +317,31 @@ func init() {
 				},
 			},
 			{
+				Name:     "preference-sections",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&preferenceSectionsCreate,
+					&preferenceSectionsRetrieve,
+					&preferenceSectionsList,
+					&preferenceSectionsArchive,
+					&preferenceSectionsPublish,
+					&preferenceSectionsReplace,
+				},
+			},
+			{
+				Name:     "preference-sections:topics",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&preferenceSectionsTopicsCreate,
+					&preferenceSectionsTopicsRetrieve,
+					&preferenceSectionsTopicsList,
+					&preferenceSectionsTopicsArchive,
+					&preferenceSectionsTopicsReplace,
+				},
+			},
+			{
 				Name:     "profiles",
 				Category: "API RESOURCE",
 				Suggest:  true,
