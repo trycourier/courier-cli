@@ -78,7 +78,7 @@ var notificationsChecksList = cli.Command{
 
 var notificationsChecksDelete = cli.Command{
 	Name:    "delete",
-	Usage:   "Cancel a notification template submission.",
+	Usage:   "Cancel a submission for a notification template.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
