@@ -14,9 +14,9 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-var preferenceSectionsTopicsCreate = cli.Command{
+var workspacePreferencesTopicsCreate = cli.Command{
 	Name:    "create",
-	Usage:   "Create a subscription preference topic inside a section. Fails with 404 if the\nsection does not exist. The topic id is generated and returned.",
+	Usage:   "Create a subscription preference topic inside a workspace preference. Fails with\n404 if the workspace preference does not exist. The topic id is generated and\nreturned.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -57,13 +57,13 @@ var preferenceSectionsTopicsCreate = cli.Command{
 			BodyPath: "topic_data",
 		},
 	},
-	Action:          handlePreferenceSectionsTopicsCreate,
+	Action:          handleWorkspacePreferencesTopicsCreate,
 	HideHelpCommand: true,
 }
 
-var preferenceSectionsTopicsRetrieve = cli.Command{
+var workspacePreferencesTopicsRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Retrieve a topic within a section. Returns 404 if the section does not exist,\nthe topic does not exist, or the topic belongs to a different section.",
+	Usage:   "Retrieve a topic within a workspace preference. Returns 404 if the workspace\npreference does not exist, the topic does not exist, or the topic belongs to a\ndifferent workspace preference.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -77,13 +77,13 @@ var preferenceSectionsTopicsRetrieve = cli.Command{
 			PathParam: "topic_id",
 		},
 	},
-	Action:          handlePreferenceSectionsTopicsRetrieve,
+	Action:          handleWorkspacePreferencesTopicsRetrieve,
 	HideHelpCommand: true,
 }
 
-var preferenceSectionsTopicsList = cli.Command{
+var workspacePreferencesTopicsList = cli.Command{
 	Name:    "list",
-	Usage:   "List the topics in a preference section.",
+	Usage:   "List the topics in a workspace preference.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -92,13 +92,13 @@ var preferenceSectionsTopicsList = cli.Command{
 			PathParam: "section_id",
 		},
 	},
-	Action:          handlePreferenceSectionsTopicsList,
+	Action:          handleWorkspacePreferencesTopicsList,
 	HideHelpCommand: true,
 }
 
-var preferenceSectionsTopicsArchive = cli.Command{
+var workspacePreferencesTopicsArchive = cli.Command{
 	Name:    "archive",
-	Usage:   "Archive a topic and remove it from its section. Same 404 rules as GET.",
+	Usage:   "Archive a topic and remove it from its workspace preference. Same 404 rules as\nGET.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -112,13 +112,13 @@ var preferenceSectionsTopicsArchive = cli.Command{
 			PathParam: "topic_id",
 		},
 	},
-	Action:          handlePreferenceSectionsTopicsArchive,
+	Action:          handleWorkspacePreferencesTopicsArchive,
 	HideHelpCommand: true,
 }
 
-var preferenceSectionsTopicsReplace = cli.Command{
+var workspacePreferencesTopicsReplace = cli.Command{
 	Name:    "replace",
-	Usage:   "Replace a topic within a section. Full document replacement; missing optional\nfields are cleared. Same 404 rules as GET.",
+	Usage:   "Replace a topic within a workspace preference. Full document replacement;\nmissing optional fields are cleared. Same 404 rules as GET.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -164,11 +164,11 @@ var preferenceSectionsTopicsReplace = cli.Command{
 			BodyPath: "topic_data",
 		},
 	},
-	Action:          handlePreferenceSectionsTopicsReplace,
+	Action:          handleWorkspacePreferencesTopicsReplace,
 	HideHelpCommand: true,
 }
 
-func handlePreferenceSectionsTopicsCreate(ctx context.Context, cmd *cli.Command) error {
+func handleWorkspacePreferencesTopicsCreate(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
 	if !cmd.IsSet("section-id") && len(unusedArgs) > 0 {
@@ -190,11 +190,11 @@ func handlePreferenceSectionsTopicsCreate(ctx context.Context, cmd *cli.Command)
 		return err
 	}
 
-	params := courier.PreferenceSectionTopicNewParams{}
+	params := courier.WorkspacePreferenceTopicNewParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.PreferenceSections.Topics.New(
+	_, err = client.WorkspacePreferences.Topics.New(
 		ctx,
 		cmd.Value("section-id").(string),
 		params,
@@ -212,12 +212,12 @@ func handlePreferenceSectionsTopicsCreate(ctx context.Context, cmd *cli.Command)
 		ExplicitFormat: explicitFormat,
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "preference-sections:topics create",
+		Title:          "workspace-preferences:topics create",
 		Transform:      transform,
 	})
 }
 
-func handlePreferenceSectionsTopicsRetrieve(ctx context.Context, cmd *cli.Command) error {
+func handleWorkspacePreferencesTopicsRetrieve(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
 	if !cmd.IsSet("topic-id") && len(unusedArgs) > 0 {
@@ -239,13 +239,13 @@ func handlePreferenceSectionsTopicsRetrieve(ctx context.Context, cmd *cli.Comman
 		return err
 	}
 
-	params := courier.PreferenceSectionTopicGetParams{
+	params := courier.WorkspacePreferenceTopicGetParams{
 		SectionID: cmd.Value("section-id").(string),
 	}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.PreferenceSections.Topics.Get(
+	_, err = client.WorkspacePreferences.Topics.Get(
 		ctx,
 		cmd.Value("topic-id").(string),
 		params,
@@ -263,12 +263,12 @@ func handlePreferenceSectionsTopicsRetrieve(ctx context.Context, cmd *cli.Comman
 		ExplicitFormat: explicitFormat,
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "preference-sections:topics retrieve",
+		Title:          "workspace-preferences:topics retrieve",
 		Transform:      transform,
 	})
 }
 
-func handlePreferenceSectionsTopicsList(ctx context.Context, cmd *cli.Command) error {
+func handleWorkspacePreferencesTopicsList(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
 	if !cmd.IsSet("section-id") && len(unusedArgs) > 0 {
@@ -292,7 +292,7 @@ func handlePreferenceSectionsTopicsList(ctx context.Context, cmd *cli.Command) e
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.PreferenceSections.Topics.List(ctx, cmd.Value("section-id").(string), options...)
+	_, err = client.WorkspacePreferences.Topics.List(ctx, cmd.Value("section-id").(string), options...)
 	if err != nil {
 		return err
 	}
@@ -305,12 +305,12 @@ func handlePreferenceSectionsTopicsList(ctx context.Context, cmd *cli.Command) e
 		ExplicitFormat: explicitFormat,
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "preference-sections:topics list",
+		Title:          "workspace-preferences:topics list",
 		Transform:      transform,
 	})
 }
 
-func handlePreferenceSectionsTopicsArchive(ctx context.Context, cmd *cli.Command) error {
+func handleWorkspacePreferencesTopicsArchive(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
 	if !cmd.IsSet("topic-id") && len(unusedArgs) > 0 {
@@ -332,11 +332,11 @@ func handlePreferenceSectionsTopicsArchive(ctx context.Context, cmd *cli.Command
 		return err
 	}
 
-	params := courier.PreferenceSectionTopicArchiveParams{
+	params := courier.WorkspacePreferenceTopicArchiveParams{
 		SectionID: cmd.Value("section-id").(string),
 	}
 
-	return client.PreferenceSections.Topics.Archive(
+	return client.WorkspacePreferences.Topics.Archive(
 		ctx,
 		cmd.Value("topic-id").(string),
 		params,
@@ -344,7 +344,7 @@ func handlePreferenceSectionsTopicsArchive(ctx context.Context, cmd *cli.Command
 	)
 }
 
-func handlePreferenceSectionsTopicsReplace(ctx context.Context, cmd *cli.Command) error {
+func handleWorkspacePreferencesTopicsReplace(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
 	if !cmd.IsSet("topic-id") && len(unusedArgs) > 0 {
@@ -366,13 +366,13 @@ func handlePreferenceSectionsTopicsReplace(ctx context.Context, cmd *cli.Command
 		return err
 	}
 
-	params := courier.PreferenceSectionTopicReplaceParams{
+	params := courier.WorkspacePreferenceTopicReplaceParams{
 		SectionID: cmd.Value("section-id").(string),
 	}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.PreferenceSections.Topics.Replace(
+	_, err = client.WorkspacePreferences.Topics.Replace(
 		ctx,
 		cmd.Value("topic-id").(string),
 		params,
@@ -390,7 +390,7 @@ func handlePreferenceSectionsTopicsReplace(ctx context.Context, cmd *cli.Command
 		ExplicitFormat: explicitFormat,
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "preference-sections:topics replace",
+		Title:          "workspace-preferences:topics replace",
 		Transform:      transform,
 	})
 }
