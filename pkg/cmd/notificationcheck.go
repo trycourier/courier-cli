@@ -16,7 +16,7 @@ import (
 
 var notificationsChecksUpdate = requestflag.WithInnerFlags(cli.Command{
 	Name:    "update",
-	Usage:   "Replace the checks for a notification template submission.",
+	Usage:   "Replace the submission checks for a notification template.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
