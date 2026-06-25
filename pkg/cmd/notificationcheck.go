@@ -58,7 +58,7 @@ var notificationsChecksUpdate = requestflag.WithInnerFlags(cli.Command{
 
 var notificationsChecksList = cli.Command{
 	Name:    "list",
-	Usage:   "Retrieve the checks for a notification template submission.",
+	Usage:   "Retrieve the submission checks for a notification template.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
