@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.9.2 (2026-06-25)
+
+Full Changelog: [v3.9.1...v3.9.2](https://github.com/trycourier/courier-cli/compare/v3.9.1...v3.9.2)
+
+### Documentation
+
+* **openapi:** add full response examples to every endpoint ([0ade4bb](https://github.com/trycourier/courier-cli/commit/0ade4bb6898626832d74b46589df25a100790a92))
+* **openapi:** reword Cancel Submission description ([d8545ae](https://github.com/trycourier/courier-cli/commit/d8545ae21ef4e49634c1e3a836deec36e7c6ef49))
+* **openapi:** reword Get Submission Checks description ([f4fd52f](https://github.com/trycourier/courier-cli/commit/f4fd52f8fe349dfc7c712168c31b28c43321bd9e))
+* **openapi:** reword Replace Submission Checks description ([9a01913](https://github.com/trycourier/courier-cli/commit/9a01913f76d1d98673c190f46b7ab1ded6f342e3))
+
 ## 3.9.1 (2026-06-24)
 
 Full Changelog: [v3.9.0...v3.9.1](https://github.com/trycourier/courier-cli/compare/v3.9.0...v3.9.1)

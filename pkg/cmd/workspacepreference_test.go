@@ -8,118 +8,106 @@ import (
 	"github.com/trycourier/courier-cli/v3/internal/mocktest"
 )
 
-func TestPreferenceSectionsTopicsCreate(t *testing.T) {
+func TestWorkspacePreferencesCreate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
 			t,
 			"--api-key", "string",
-			"preference-sections:topics", "create",
-			"--section-id", "section_id",
-			"--default-status", "OPTED_OUT",
-			"--name", "Marketing",
-			"--allowed-preference", "[snooze]",
-			"--include-unsubscribe-header=true",
+			"workspace-preferences", "create",
+			"--name", "Account Notifications",
+			"--has-custom-routing=true",
 			"--routing-option", "[direct_message]",
-			"--topic-data", "{foo: bar}",
 		)
 	})
 
 	t.Run("piping data", func(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
-			"default_status: OPTED_OUT\n" +
-			"name: Marketing\n" +
-			"allowed_preferences:\n" +
-			"  - snooze\n" +
-			"include_unsubscribe_header: true\n" +
+			"name: Account Notifications\n" +
+			"has_custom_routing: true\n" +
 			"routing_options:\n" +
-			"  - direct_message\n" +
-			"topic_data:\n" +
-			"  foo: bar\n")
+			"  - direct_message\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
 			t, pipeData,
 			"--api-key", "string",
-			"preference-sections:topics", "create",
-			"--section-id", "section_id",
+			"workspace-preferences", "create",
 		)
 	})
 }
 
-func TestPreferenceSectionsTopicsRetrieve(t *testing.T) {
+func TestWorkspacePreferencesRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
 			t,
 			"--api-key", "string",
-			"preference-sections:topics", "retrieve",
-			"--section-id", "section_id",
-			"--topic-id", "topic_id",
-		)
-	})
-}
-
-func TestPreferenceSectionsTopicsList(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
-	t.Run("regular flags", func(t *testing.T) {
-		mocktest.TestRunMockTestWithFlags(
-			t,
-			"--api-key", "string",
-			"preference-sections:topics", "list",
+			"workspace-preferences", "retrieve",
 			"--section-id", "section_id",
 		)
 	})
 }
 
-func TestPreferenceSectionsTopicsArchive(t *testing.T) {
+func TestWorkspacePreferencesList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
 			t,
 			"--api-key", "string",
-			"preference-sections:topics", "archive",
-			"--section-id", "section_id",
-			"--topic-id", "topic_id",
+			"workspace-preferences", "list",
 		)
 	})
 }
 
-func TestPreferenceSectionsTopicsReplace(t *testing.T) {
+func TestWorkspacePreferencesArchive(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
 			t,
 			"--api-key", "string",
-			"preference-sections:topics", "replace",
+			"workspace-preferences", "archive",
 			"--section-id", "section_id",
-			"--topic-id", "topic_id",
-			"--default-status", "OPTED_OUT",
+		)
+	})
+}
+
+func TestWorkspacePreferencesPublish(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t,
+			"--api-key", "string",
+			"workspace-preferences", "publish",
+		)
+	})
+}
+
+func TestWorkspacePreferencesReplace(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t,
+			"--api-key", "string",
+			"workspace-preferences", "replace",
+			"--section-id", "section_id",
 			"--name", "name",
-			"--allowed-preference", "[snooze]",
-			"--include-unsubscribe-header=true",
+			"--has-custom-routing=true",
 			"--routing-option", "[direct_message]",
-			"--topic-data", "{foo: bar}",
 		)
 	})
 
 	t.Run("piping data", func(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
-			"default_status: OPTED_OUT\n" +
 			"name: name\n" +
-			"allowed_preferences:\n" +
-			"  - snooze\n" +
-			"include_unsubscribe_header: true\n" +
+			"has_custom_routing: true\n" +
 			"routing_options:\n" +
-			"  - direct_message\n" +
-			"topic_data:\n" +
-			"  foo: bar\n")
+			"  - direct_message\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
 			t, pipeData,
 			"--api-key", "string",
-			"preference-sections:topics", "replace",
+			"workspace-preferences", "replace",
 			"--section-id", "section_id",
-			"--topic-id", "topic_id",
 		)
 	})
 }
