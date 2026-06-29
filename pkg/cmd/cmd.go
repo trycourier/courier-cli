@@ -167,6 +167,7 @@ func init() {
 					&journeysRetrieve,
 					&journeysList,
 					&journeysArchive,
+					&journeysCancel,
 					&journeysInvoke,
 					&journeysListVersions,
 					&journeysPublish,
