@@ -99,6 +99,24 @@ var journeysArchive = cli.Command{
 	HideHelpCommand: true,
 }
 
+var journeysCancel = cli.Command{
+	Name:    "cancel",
+	Usage:   "Cancel journey runs. The request body must contain EXACTLY ONE of\n`cancelation_token` (cancels every run associated with the token) or `run_id`\n(cancels a single tenant-scoped run). Supplying both or neither is a `400`. A\n`run_id` that does not exist for the caller's tenant returns `404`. Cancelation\nis idempotent and non-clobbering: a run that has already finished\n(`PROCESSED`/`ERROR`) or was already `CANCELED` is left untouched and its\ncurrent status is echoed back.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:     "cancelation-token",
+			BodyPath: "cancelation_token",
+		},
+		&requestflag.Flag[string]{
+			Name:     "run-id",
+			BodyPath: "run_id",
+		},
+	},
+	Action:          handleJourneysCancel,
+	HideHelpCommand: true,
+}
+
 var journeysInvoke = cli.Command{
 	Name:    "invoke",
 	Usage:   "Invoke a journey by id or alias to start a new run. The response includes a\n`runId` identifying the run.",
@@ -351,6 +369,47 @@ func handleJourneysArchive(ctx context.Context, cmd *cli.Command) error {
 	}
 
 	return client.Journeys.Archive(ctx, cmd.Value("template-id").(string), options...)
+}
+
+func handleJourneysCancel(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		ApplicationJSON,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.JourneyCancelParams{}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Journeys.Cancel(ctx, params, options...)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "journeys cancel",
+		Transform:      transform,
+	})
 }
 
 func handleJourneysInvoke(ctx context.Context, cmd *cli.Command) error {
