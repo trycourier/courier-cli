@@ -1,5 +1,20 @@
 # Changelog
 
+## 3.10.0 (2026-07-06)
+
+Full Changelog: [v3.9.2...v3.10.0](https://github.com/trycourier/courier-cli/compare/v3.9.2...v3.10.0)
+
+### Features
+
+* **openapi:** Journeys cancel-by-token endpoint + send-node experiments (C-18986) ([7f6b9d7](https://github.com/trycourier/courier-cli/commit/7f6b9d725dd3d89cc4fa1a84d4e06bed445dca15))
+
+
+### Documentation
+
+* **openapi:** reword Cancel journey runs 400 description (re-trigger deploy) ([107488f](https://github.com/trycourier/courier-cli/commit/107488f23713758a0a16b2e2db9aa8843fd235c4))
+* **openapi:** reword Cancel journey runs description (re-trigger deploy) ([84cc226](https://github.com/trycourier/courier-cli/commit/84cc226e012f17b45021be64b7e9b5caf06cea74))
+* **openapi:** tighten Journeys cancel/experiment copy (C-19177) ([05719a4](https://github.com/trycourier/courier-cli/commit/05719a4195b46eb8efacced080c4cfba9e30e087))
+
 ## 3.9.2 (2026-06-25)
 
 Full Changelog: [v3.9.1...v3.9.2](https://github.com/trycourier/courier-cli/compare/v3.9.1...v3.9.2)
