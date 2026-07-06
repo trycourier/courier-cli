@@ -101,7 +101,7 @@ var journeysArchive = cli.Command{
 
 var journeysCancel = cli.Command{
 	Name:    "cancel",
-	Usage:   "Cancel journey runs. The request body must contain EXACTLY ONE of\n`cancelation_token` (cancels every run associated with the token) or `run_id`\n(cancels a single tenant-scoped run). Supplying both or neither is a `400`. A\n`run_id` that does not match a run for the tenant returns `404`. Cancelation is\nidempotent: a run that has already finished (`PROCESSED`/`ERROR`) or was already\n`CANCELED` is left unchanged and its current status is returned.",
+	Usage:   "Cancel journey runs. The request body must include EXACTLY ONE of\n`cancelation_token` (cancels every run associated with the token) or `run_id`\n(cancels a single tenant-scoped run). Supplying both or neither is a `400`. A\n`run_id` that does not match a run for the tenant returns `404`. Cancelation is\nidempotent: a run that has already finished (`PROCESSED`/`ERROR`) or was already\n`CANCELED` is left unchanged and its current status is returned.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
