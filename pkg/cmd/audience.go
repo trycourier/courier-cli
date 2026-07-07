@@ -56,7 +56,7 @@ var audiencesUpdate = requestflag.WithInnerFlags(cli.Command{
 		},
 		&requestflag.Flag[*string]{
 			Name:     "operator",
-			Usage:    "The logical operator (AND/OR) for the top-level filter",
+			Usage:    "The logical operator (AND/OR) combining the top-level `filter.filters`. Convenience alias for `filter.operator`: if set, it is applied to the top-level filter group. Prefer setting `operator` directly inside `filter`.",
 			BodyPath: "operator",
 		},
 	},
@@ -68,6 +68,11 @@ var audiencesUpdate = requestflag.WithInnerFlags(cli.Command{
 			Name:       "filter.filters",
 			Usage:      "Array of filter rules (single conditions or nested groups)",
 			InnerField: "filters",
+		},
+		&requestflag.InnerFlag[string]{
+			Name:       "filter.operator",
+			Usage:      "The logical operator (AND/OR) combining the rules in `filters`. Required when `filters` contains more than one rule. If omitted, the top-level `operator` field on the request is used instead.",
+			InnerField: "operator",
 		},
 	},
 })
