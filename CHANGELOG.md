@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.10.1 (2026-07-07)
+
+Full Changelog: [v3.10.0...v3.10.1](https://github.com/trycourier/courier-cli/compare/v3.10.0...v3.10.1)
+
+### Documentation
+
+* **openapi:** document audiences filter combinator (SUP-686) ([2e309d9](https://github.com/trycourier/courier-cli/commit/2e309d9374f0411a277bd6b26e93b04eba9f7224))
+
 ## 3.10.0 (2026-07-06)
 
 Full Changelog: [v3.9.2...v3.10.0](https://github.com/trycourier/courier-cli/compare/v3.9.2...v3.10.0)
