@@ -30,7 +30,7 @@ func TestAudiencesUpdate(t *testing.T) {
 			"audiences", "update",
 			"--audience-id", "audience_id",
 			"--description", "description",
-			"--filter", "{filters: [{operator: operator, filters: [], path: path, value: value}]}",
+			"--filter", "{filters: [{operator: operator, filters: [], path: path, value: value}], operator: AND}",
 			"--name", "name",
 			"--operator", "AND",
 		)
@@ -48,6 +48,7 @@ func TestAudiencesUpdate(t *testing.T) {
 			"--audience-id", "audience_id",
 			"--description", "description",
 			"--filter.filters", "[{operator: operator, filters: [], path: path, value: value}]",
+			"--filter.operator", "AND",
 			"--name", "name",
 			"--operator", "AND",
 		)
@@ -63,6 +64,7 @@ func TestAudiencesUpdate(t *testing.T) {
 			"      filters: []\n" +
 			"      path: path\n" +
 			"      value: value\n" +
+			"  operator: AND\n" +
 			"name: name\n" +
 			"operator: AND\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
