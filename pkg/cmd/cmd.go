@@ -266,6 +266,7 @@ func init() {
 					&messagesCancel,
 					&messagesContent,
 					&messagesHistory,
+					&messagesResend,
 				},
 			},
 			{
