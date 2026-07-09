@@ -16,7 +16,7 @@ func TestNotificationsCreate(t *testing.T) {
 			t,
 			"--api-key", "string",
 			"notifications", "create",
-			"--notification", "{brand: {id: brand_abc}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, raw: {foo: bar}, type: channel}], version: '2022-01-01'}, name: Welcome Email, routing: {strategy_id: rs_123}, subscription: {topic_id: marketing}, tags: [onboarding, welcome]}",
+			"--notification", "{brand: {id: brand_abc}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, raw: {foo: bar}, type: channel}], version: '2022-01-01'}, name: Welcome Email, routing: {strategy_id: rs_123}, subscription: {topic_id: pt_01kx4h2jdafq8bk9a26x0kvd1t}, tags: [onboarding, welcome]}",
 			"--state", "DRAFT",
 		)
 	})
@@ -34,7 +34,7 @@ func TestNotificationsCreate(t *testing.T) {
 			"--notification.content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, raw: {foo: bar}, type: channel}], version: '2022-01-01'}",
 			"--notification.name", "Welcome Email",
 			"--notification.routing", "{strategy_id: rs_123}",
-			"--notification.subscription", "{topic_id: marketing}",
+			"--notification.subscription", "{topic_id: pt_01kx4h2jdafq8bk9a26x0kvd1t}",
 			"--notification.tags", "[onboarding, welcome]",
 			"--state", "DRAFT",
 		)
@@ -62,7 +62,7 @@ func TestNotificationsCreate(t *testing.T) {
 			"  routing:\n" +
 			"    strategy_id: rs_123\n" +
 			"  subscription:\n" +
-			"    topic_id: marketing\n" +
+			"    topic_id: pt_01kx4h2jdafq8bk9a26x0kvd1t\n" +
 			"  tags:\n" +
 			"    - onboarding\n" +
 			"    - welcome\n" +
