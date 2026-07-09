@@ -159,6 +159,21 @@ var messagesHistory = cli.Command{
 	HideHelpCommand: true,
 }
 
+var messagesResend = cli.Command{
+	Name:    "resend",
+	Usage:   "Resend a previously sent message. The original send request is loaded from\nstorage and a brand-new send is enqueued for the same recipient and content,\nproducing a **new** `messageId` — the original message is not modified.\nThrottled by a per-message rate limit; a repeat inside the limit window returns\n`429 Too Many Requests`.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "message-id",
+			Required:  true,
+			PathParam: "message_id",
+		},
+	},
+	Action:          handleMessagesResend,
+	HideHelpCommand: true,
+}
+
 func handleMessagesRetrieve(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
@@ -371,6 +386,48 @@ func handleMessagesHistory(ctx context.Context, cmd *cli.Command) error {
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "messages history",
+		Transform:      transform,
+	})
+}
+
+func handleMessagesResend(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("message-id") && len(unusedArgs) > 0 {
+		cmd.Set("message-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		EmptyBody,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Messages.Resend(ctx, cmd.Value("message-id").(string), options...)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "messages resend",
 		Transform:      transform,
 	})
 }
