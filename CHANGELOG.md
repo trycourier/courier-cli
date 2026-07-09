@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.10.2 (2026-07-09)
+
+Full Changelog: [v3.10.1...v3.10.2](https://github.com/trycourier/courier-cli/compare/v3.10.1...v3.10.2)
+
+### Chores
+
+* **internal:** codegen related update ([89c3feb](https://github.com/trycourier/courier-cli/commit/89c3febabe1faa4dd9fb21067c757e8421101923))
+* update api-spec with new message resend endpoint ([8cb681b](https://github.com/trycourier/courier-cli/commit/8cb681bbbe87ef86c5e37a4c04015a6630c459f9))
+
+
+### Documentation
+
+* **openapi:** add 202 response description for resend endpoint ([8416433](https://github.com/trycourier/courier-cli/commit/8416433b3532415e9bdb6c36c73256b78d9aac82))
+
 ## 3.10.1 (2026-07-07)
 
 Full Changelog: [v3.10.0...v3.10.1](https://github.com/trycourier/courier-cli/compare/v3.10.0...v3.10.1)
