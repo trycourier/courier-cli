@@ -19,6 +19,7 @@ func TestWorkspacePreferencesTopicsCreate(t *testing.T) {
 			"--default-status", "OPTED_OUT",
 			"--name", "Marketing",
 			"--allowed-preference", "[snooze]",
+			"--description", "description",
 			"--include-unsubscribe-header=true",
 			"--routing-option", "[direct_message]",
 			"--topic-data", "{foo: bar}",
@@ -32,6 +33,7 @@ func TestWorkspacePreferencesTopicsCreate(t *testing.T) {
 			"name: Marketing\n" +
 			"allowed_preferences:\n" +
 			"  - snooze\n" +
+			"description: description\n" +
 			"include_unsubscribe_header: true\n" +
 			"routing_options:\n" +
 			"  - direct_message\n" +
@@ -96,6 +98,7 @@ func TestWorkspacePreferencesTopicsReplace(t *testing.T) {
 			"--default-status", "OPTED_OUT",
 			"--name", "name",
 			"--allowed-preference", "[snooze]",
+			"--description", "description",
 			"--include-unsubscribe-header=true",
 			"--routing-option", "[direct_message]",
 			"--topic-data", "{foo: bar}",
@@ -109,6 +112,7 @@ func TestWorkspacePreferencesTopicsReplace(t *testing.T) {
 			"name: name\n" +
 			"allowed_preferences:\n" +
 			"  - snooze\n" +
+			"description: description\n" +
 			"include_unsubscribe_header: true\n" +
 			"routing_options:\n" +
 			"  - direct_message\n" +

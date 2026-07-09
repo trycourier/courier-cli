@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.11.0 (2026-07-09)
+
+Full Changelog: [v3.10.2...v3.11.0](https://github.com/trycourier/courier-cli/compare/v3.10.2...v3.11.0)
+
+### Features
+
+* Add bulk user preference upsert and replace endpoints ([35dc84e](https://github.com/trycourier/courier-cli/commit/35dc84ec3bdfa8a4754435c535c3a3baac974979))
+* Preferences v3 REST fields: section/topic description + publish body ([723c055](https://github.com/trycourier/courier-cli/commit/723c05574571f98dacd7a27b6955fafb92d2398d))
+
+
+### Bug Fixes
+
+* **openapi:** drop invalid empty required:[] on PublishPreferencesRequest ([79f7197](https://github.com/trycourier/courier-cli/commit/79f71971fa882184848dea73857bae41b2242725))
+
 ## 3.10.2 (2026-07-09)
 
 Full Changelog: [v3.10.1...v3.10.2](https://github.com/trycourier/courier-cli/compare/v3.10.1...v3.10.2)

@@ -34,6 +34,104 @@ var usersPreferencesRetrieve = cli.Command{
 	HideHelpCommand: true,
 }
 
+var usersPreferencesBulkReplace = requestflag.WithInnerFlags(cli.Command{
+	Name:    "bulk-replace",
+	Usage:   "Replace a user's complete set of preference overrides in a single request. The\ntopics in the request body become the recipient's entire set of overrides:\nlisted topics are created or updated, and every existing override that is not\nincluded in the body is reset to its topic default. Submitting an empty `topics`\narray is a valid clear-all that resets every existing override.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
+		},
+		&requestflag.Flag[[]map[string]any]{
+			Name:     "topic",
+			Usage:    "The complete set of topic overrides for the user. Up to 50 topics may be provided. Any existing override not listed here is reset to its topic default; an empty array resets every existing override.",
+			Required: true,
+			BodyPath: "topics",
+		},
+		&requestflag.Flag[*string]{
+			Name:      "tenant-id",
+			Usage:     "Replace the preferences of a user for this specific tenant context.",
+			QueryPath: "tenant_id",
+		},
+	},
+	Action:          handleUsersPreferencesBulkReplace,
+	HideHelpCommand: true,
+}, map[string][]requestflag.HasOuterFlag{
+	"topic": {
+		&requestflag.InnerFlag[string]{
+			Name:       "topic.status",
+			Usage:      "The subscription status to apply for this topic.",
+			InnerField: "status",
+		},
+		&requestflag.InnerFlag[string]{
+			Name:       "topic.topic-id",
+			Usage:      "A unique identifier associated with a subscription topic.",
+			InnerField: "topic_id",
+		},
+		&requestflag.InnerFlag[[]string]{
+			Name:       "topic.custom-routing",
+			Usage:      "The channels a user has chosen to receive notifications through for this topic.",
+			InnerField: "custom_routing",
+		},
+		&requestflag.InnerFlag[bool]{
+			Name:       "topic.has-custom-routing",
+			Usage:      "Whether the recipient has chosen specific delivery channels for this topic.",
+			InnerField: "has_custom_routing",
+		},
+	},
+})
+
+var usersPreferencesBulkUpdate = requestflag.WithInnerFlags(cli.Command{
+	Name:    "bulk-update",
+	Usage:   "Additively create or update a user's preferences for one or more subscription\ntopics in a single request. Only the topics included in the request body are\ncreated or updated; any existing overrides for topics not listed are left\nuntouched.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "user-id",
+			Required:  true,
+			PathParam: "user_id",
+		},
+		&requestflag.Flag[[]map[string]any]{
+			Name:     "topic",
+			Usage:    "The topics to create or update. Between 1 and 50 topics may be provided in a single request.",
+			Required: true,
+			BodyPath: "topics",
+		},
+		&requestflag.Flag[*string]{
+			Name:      "tenant-id",
+			Usage:     "Update the preferences of a user for this specific tenant context.",
+			QueryPath: "tenant_id",
+		},
+	},
+	Action:          handleUsersPreferencesBulkUpdate,
+	HideHelpCommand: true,
+}, map[string][]requestflag.HasOuterFlag{
+	"topic": {
+		&requestflag.InnerFlag[string]{
+			Name:       "topic.status",
+			Usage:      "The subscription status to apply for this topic.",
+			InnerField: "status",
+		},
+		&requestflag.InnerFlag[string]{
+			Name:       "topic.topic-id",
+			Usage:      "A unique identifier associated with a subscription topic.",
+			InnerField: "topic_id",
+		},
+		&requestflag.InnerFlag[[]string]{
+			Name:       "topic.custom-routing",
+			Usage:      "The channels a user has chosen to receive notifications through for this topic.",
+			InnerField: "custom_routing",
+		},
+		&requestflag.InnerFlag[bool]{
+			Name:       "topic.has-custom-routing",
+			Usage:      "Whether the recipient has chosen specific delivery channels for this topic.",
+			InnerField: "has_custom_routing",
+		},
+	},
+})
+
 var usersPreferencesDeleteTopic = cli.Command{
 	Name:    "delete-topic",
 	Usage:   "Remove a user's preferences for a specific subscription topic, resetting the\ntopic to its effective default. This operation is idempotent: deleting a\npreference that does not exist succeeds with no error.",
@@ -176,6 +274,104 @@ func handleUsersPreferencesRetrieve(ctx context.Context, cmd *cli.Command) error
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "users:preferences retrieve",
+		Transform:      transform,
+	})
+}
+
+func handleUsersPreferencesBulkReplace(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("user-id") && len(unusedArgs) > 0 {
+		cmd.Set("user-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		ApplicationJSON,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.UserPreferenceBulkReplaceParams{}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Users.Preferences.BulkReplace(
+		ctx,
+		cmd.Value("user-id").(string),
+		params,
+		options...,
+	)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "users:preferences bulk-replace",
+		Transform:      transform,
+	})
+}
+
+func handleUsersPreferencesBulkUpdate(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("user-id") && len(unusedArgs) > 0 {
+		cmd.Set("user-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		ApplicationJSON,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.UserPreferenceBulkUpdateParams{}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Users.Preferences.BulkUpdate(
+		ctx,
+		cmd.Value("user-id").(string),
+		params,
+		options...,
+	)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "users:preferences bulk-update",
 		Transform:      transform,
 	})
 }

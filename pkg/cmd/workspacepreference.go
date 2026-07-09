@@ -25,6 +25,11 @@ var workspacePreferencesCreate = cli.Command{
 			Required: true,
 			BodyPath: "name",
 		},
+		&requestflag.Flag[*string]{
+			Name:     "description",
+			Usage:    "Optional description shown under the section on the hosted preferences page.",
+			BodyPath: "description",
+		},
 		&requestflag.Flag[*bool]{
 			Name:     "has-custom-routing",
 			Usage:    "Whether the workspace preference defines custom routing for its topics.",
@@ -80,10 +85,26 @@ var workspacePreferencesArchive = cli.Command{
 }
 
 var workspacePreferencesPublish = cli.Command{
-	Name:            "publish",
-	Usage:           "Publish the workspace's preferences page. Takes a snapshot of every workspace\npreference with its topics under a new published version, making the current\nstate visible on the hosted preferences page (non-draft).",
-	Suggest:         true,
-	Flags:           []cli.Flag{},
+	Name:    "publish",
+	Usage:   "Publish the workspace's preferences page. Takes a snapshot of every workspace\npreference with its topics under a new published version, making the current\nstate visible on the hosted preferences page (non-draft).",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[*string]{
+			Name:     "brand-id",
+			Usage:    `Brand for the hosted page - "default" (workspace default brand), "none" (no brand), or a specific brand id. Defaults to "default".`,
+			BodyPath: "brand_id",
+		},
+		&requestflag.Flag[*string]{
+			Name:     "description",
+			Usage:    "Description shown under the heading on the hosted preferences page.",
+			BodyPath: "description",
+		},
+		&requestflag.Flag[*string]{
+			Name:     "heading",
+			Usage:    "Heading shown at the top of the hosted preferences page.",
+			BodyPath: "heading",
+		},
+	},
 	Action:          handleWorkspacePreferencesPublish,
 	HideHelpCommand: true,
 }
@@ -103,6 +124,11 @@ var workspacePreferencesReplace = cli.Command{
 			Usage:    "Human-readable name for the workspace preference.",
 			Required: true,
 			BodyPath: "name",
+		},
+		&requestflag.Flag[*string]{
+			Name:     "description",
+			Usage:    "Optional description shown under the section on the hosted preferences page. Omit to clear.",
+			BodyPath: "description",
 		},
 		&requestflag.Flag[*bool]{
 			Name:     "has-custom-routing",
@@ -278,16 +304,18 @@ func handleWorkspacePreferencesPublish(ctx context.Context, cmd *cli.Command) er
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
 		apiquery.ArrayQueryFormatComma,
-		EmptyBody,
+		ApplicationJSON,
 		false,
 	)
 	if err != nil {
 		return err
 	}
 
+	params := courier.WorkspacePreferencePublishParams{}
+
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.WorkspacePreferences.Publish(ctx, options...)
+	_, err = client.WorkspacePreferences.Publish(ctx, params, options...)
 	if err != nil {
 		return err
 	}
