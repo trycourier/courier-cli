@@ -52,7 +52,7 @@ var usersPreferencesBulkReplace = requestflag.WithInnerFlags(cli.Command{
 		},
 		&requestflag.Flag[*string]{
 			Name:      "tenant-id",
-			Usage:     "Update the preferences of a user for this specific tenant context.",
+			Usage:     "Replace the preferences of a user for this specific tenant context.",
 			QueryPath: "tenant_id",
 		},
 	},
