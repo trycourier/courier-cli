@@ -41,6 +41,11 @@ var workspacePreferencesTopicsCreate = cli.Command{
 			Usage:    "Preference controls a recipient may customize for this topic. Defaults to empty if omitted.",
 			BodyPath: "allowed_preferences",
 		},
+		&requestflag.Flag[*string]{
+			Name:     "description",
+			Usage:    "Optional description shown under the topic on the hosted preferences page.",
+			BodyPath: "description",
+		},
 		&requestflag.Flag[*bool]{
 			Name:     "include-unsubscribe-header",
 			Usage:    "Whether to include a list-unsubscribe header on emails for this topic.",
@@ -147,6 +152,11 @@ var workspacePreferencesTopicsReplace = cli.Command{
 			Name:     "allowed-preference",
 			Usage:    "Preference controls a recipient may customize. Omit to clear.",
 			BodyPath: "allowed_preferences",
+		},
+		&requestflag.Flag[*string]{
+			Name:     "description",
+			Usage:    "Optional description shown under the topic on the hosted preferences page. Omit to clear.",
+			BodyPath: "description",
 		},
 		&requestflag.Flag[*bool]{
 			Name:     "include-unsubscribe-header",

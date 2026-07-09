@@ -16,6 +16,7 @@ func TestWorkspacePreferencesCreate(t *testing.T) {
 			"--api-key", "string",
 			"workspace-preferences", "create",
 			"--name", "Account Notifications",
+			"--description", "description",
 			"--has-custom-routing=true",
 			"--routing-option", "[direct_message]",
 		)
@@ -25,6 +26,7 @@ func TestWorkspacePreferencesCreate(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
 			"name: Account Notifications\n" +
+			"description: description\n" +
 			"has_custom_routing: true\n" +
 			"routing_options:\n" +
 			"  - direct_message\n")
@@ -78,6 +80,22 @@ func TestWorkspacePreferencesPublish(t *testing.T) {
 			t,
 			"--api-key", "string",
 			"workspace-preferences", "publish",
+			"--brand-id", "brand_id",
+			"--description", "description",
+			"--heading", "heading",
+		)
+	})
+
+	t.Run("piping data", func(t *testing.T) {
+		// Test piping YAML data over stdin
+		pipeData := []byte("" +
+			"brand_id: brand_id\n" +
+			"description: description\n" +
+			"heading: heading\n")
+		mocktest.TestRunMockTestWithPipeAndFlags(
+			t, pipeData,
+			"--api-key", "string",
+			"workspace-preferences", "publish",
 		)
 	})
 }
@@ -91,6 +109,7 @@ func TestWorkspacePreferencesReplace(t *testing.T) {
 			"workspace-preferences", "replace",
 			"--section-id", "section_id",
 			"--name", "name",
+			"--description", "description",
 			"--has-custom-routing=true",
 			"--routing-option", "[direct_message]",
 		)
@@ -100,6 +119,7 @@ func TestWorkspacePreferencesReplace(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
 			"name: name\n" +
+			"description: description\n" +
 			"has_custom_routing: true\n" +
 			"routing_options:\n" +
 			"  - direct_message\n")
