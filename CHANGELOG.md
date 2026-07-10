@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.11.2 (2026-07-10)
+
+Full Changelog: [v3.11.1...v3.11.2](https://github.com/trycourier/courier-cli/compare/v3.11.1...v3.11.2)
+
+### Bug Fixes
+
+* **ci:** pin npm to 11.6.2 so publish-npm runs on Node 20 ([#70](https://github.com/trycourier/courier-cli/issues/70)) ([42dd6b1](https://github.com/trycourier/courier-cli/commit/42dd6b1ad8f6c2b4468409ab22ad146dd1972556))
+
 ## 3.11.1 (2026-07-10)
 
 Full Changelog: [v3.11.0...v3.11.1](https://github.com/trycourier/courier-cli/compare/v3.11.0...v3.11.1)
