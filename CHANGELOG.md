@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.11.1 (2026-07-10)
+
+Full Changelog: [v3.11.0...v3.11.1](https://github.com/trycourier/courier-cli/compare/v3.11.0...v3.11.1)
+
+### Documentation
+
+* **openapi:** canonical type-id prefixes across all examples ([#162](https://github.com/trycourier/courier-cli/issues/162)) ([3bc3acc](https://github.com/trycourier/courier-cli/commit/3bc3acca33818f5b9a77dcddcd8e811ebaf5e5ed))
+* **openapi:** use canonical type-id prefixes in id examples ([#160](https://github.com/trycourier/courier-cli/issues/160)) ([ed8cfff](https://github.com/trycourier/courier-cli/commit/ed8cfffbf0b33f1b5226dd2a75c4d6ab938f5284))
+
 ## 3.11.0 (2026-07-09)
 
 Full Changelog: [v3.10.2...v3.11.0](https://github.com/trycourier/courier-cli/compare/v3.10.2...v3.11.0)
