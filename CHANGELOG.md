@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.12.0 (2026-07-20)
+
+Full Changelog: [v3.11.2...v3.12.0](https://github.com/trycourier/courier-cli/compare/v3.11.2...v3.12.0)
+
+### Features
+
+* Document POST /notifications/{id}/duplicate [C-18607] ([#165](https://github.com/trycourier/courier-cli/issues/165)) ([3e1c7f9](https://github.com/trycourier/courier-cli/commit/3e1c7f937cdef899737f99a5b3d5563ce2314ebf))
+* **stlc:** configurable CI runner and private-production-repo support in workflow templates ([7cd231c](https://github.com/trycourier/courier-cli/commit/7cd231c7cb4917b51abdc1d2f7d4851a280d8116))
+
 ## 3.11.2 (2026-07-10)
 
 Full Changelog: [v3.11.1...v3.11.2](https://github.com/trycourier/courier-cli/compare/v3.11.1...v3.11.2)
