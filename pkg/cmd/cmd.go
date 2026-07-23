@@ -204,18 +204,6 @@ func init() {
 				},
 			},
 			{
-				Name:     "bulk",
-				Category: "API RESOURCE",
-				Suggest:  true,
-				Commands: []*cli.Command{
-					&bulkAddUsers,
-					&bulkCreateJob,
-					&bulkListUsers,
-					&bulkRetrieveJob,
-					&bulkRunJob,
-				},
-			},
-			{
 				Name:     "digests:schedules",
 				Category: "API RESOURCE",
 				Suggest:  true,
