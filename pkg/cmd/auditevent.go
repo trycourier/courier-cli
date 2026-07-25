@@ -16,7 +16,7 @@ import (
 
 var auditEventsRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Fetch a specific audit event by ID.",
+	Usage:   "Returns one audit event by id, including the actor who performed it, the target\nthey changed, the source, the event type, and a timestamp.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -31,7 +31,7 @@ var auditEventsRetrieve = cli.Command{
 
 var auditEventsList = cli.Command{
 	Name:    "list",
-	Usage:   "Fetch the list of audit events",
+	Usage:   "Returns the workspace's audit event log with cursor paging. Each event records\nthe actor, target, source, type, and timestamp of a change.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[*string]{

@@ -16,7 +16,7 @@ import (
 
 var workspacePreferencesCreate = cli.Command{
 	Name:    "create",
-	Usage:   "Create a workspace preference. The workspace preference id is generated and\nreturned. Topics are created inside a workspace preference via POST\n/preferences/sections/{section_id}/topics.",
+	Usage:   "Creates a workspace preference and returns its generated id. Add subscription\ntopics to it afterwards with the topics endpoint.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -47,7 +47,7 @@ var workspacePreferencesCreate = cli.Command{
 
 var workspacePreferencesRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Retrieve a workspace preference by id, including its topics.",
+	Usage:   "Returns one workspace preference by id, including its subscription topics,\nrouting options, and custom routing flag.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -62,7 +62,7 @@ var workspacePreferencesRetrieve = cli.Command{
 
 var workspacePreferencesList = cli.Command{
 	Name:            "list",
-	Usage:           "List the workspace's preferences. Each workspace preference embeds its topics.\nScoped to the workspace of the API key.",
+	Usage:           "Returns the workspace's preferences, each embedding its subscription topics,\nrouting options, and whether custom routing is allowed.",
 	Suggest:         true,
 	Flags:           []cli.Flag{},
 	Action:          handleWorkspacePreferencesList,
@@ -86,7 +86,7 @@ var workspacePreferencesArchive = cli.Command{
 
 var workspacePreferencesPublish = cli.Command{
 	Name:    "publish",
-	Usage:   "Publish the workspace's preferences page. Takes a snapshot of every workspace\npreference with its topics under a new published version, making the current\nstate visible on the hosted preferences page (non-draft).",
+	Usage:   "Publishes the workspace preference page, snapshotting every preference and\ntopic, and returns the page id and a preview URL.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[*string]{

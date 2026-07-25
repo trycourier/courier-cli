@@ -16,7 +16,7 @@ import (
 
 var usersTenantsList = cli.Command{
 	Name:    "list",
-	Usage:   "Returns a paginated list of user tenant associations.",
+	Usage:   "Returns the tenants a user belongs to, with cursor paging. A user can belong to\nmany tenants, each with its own profile and preferences.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -41,7 +41,7 @@ var usersTenantsList = cli.Command{
 
 var usersTenantsAddMultiple = requestflag.WithInnerFlags(cli.Command{
 	Name:    "add-multiple",
-	Usage:   "This endpoint is used to add a user to multiple tenants in one call. A custom\nprofile can also be supplied for each tenant. This profile will be merged with\nthe user's main profile when sending to the user with that tenant.",
+	Usage:   "Adds a user to several tenants in one call, each optionally with a per-tenant\nprofile that overrides their workspace profile.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -84,7 +84,7 @@ var usersTenantsAddMultiple = requestflag.WithInnerFlags(cli.Command{
 
 var usersTenantsAddSingle = cli.Command{
 	Name:    "add-single",
-	Usage:   "This endpoint is used to add a single tenant.",
+	Usage:   "Adds a user to one tenant, optionally with a tenant-specific profile that\noverrides their workspace profile for sends in that tenant.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -108,7 +108,7 @@ var usersTenantsAddSingle = cli.Command{
 
 var usersTenantsRemoveAll = cli.Command{
 	Name:    "remove-all",
-	Usage:   "Removes a user from any tenants they may have been associated with.",
+	Usage:   "Removes a user from every tenant they belong to in one call. Their\nworkspace-level profile is a separate resource.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -123,7 +123,7 @@ var usersTenantsRemoveAll = cli.Command{
 
 var usersTenantsRemoveSingle = cli.Command{
 	Name:    "remove-single",
-	Usage:   "Removes a user from the supplied tenant.",
+	Usage:   "Removes a user from one tenant. Their other tenant memberships and workspace\nprofile are managed through separate endpoints.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
