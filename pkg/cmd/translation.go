@@ -16,7 +16,7 @@ import (
 
 var translationsRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Get translations by locale",
+	Usage:   "Returns the translation strings stored for one domain and locale, for use in\nlocalized notification content.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -36,7 +36,7 @@ var translationsRetrieve = cli.Command{
 
 var translationsUpdate = cli.Command{
 	Name:    "update",
-	Usage:   "Update a translation",
+	Usage:   "Uploads the translation strings for one domain and locale. Courier uses them to\nrender localized content for recipients in that locale.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

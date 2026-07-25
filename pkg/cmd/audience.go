@@ -16,7 +16,7 @@ import (
 
 var audiencesRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Returns the specified audience by id.",
+	Usage:   "Returns one audience with its name, description, and the filter and AND or OR\noperator that decide which users belong to it.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -31,7 +31,7 @@ var audiencesRetrieve = cli.Command{
 
 var audiencesUpdate = requestflag.WithInnerFlags(cli.Command{
 	Name:    "update",
-	Usage:   "Creates or updates audience.",
+	Usage:   "Creates or replaces an audience from a filter and an AND or OR operator.\nMembership recalculates automatically as profiles change.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -79,7 +79,7 @@ var audiencesUpdate = requestflag.WithInnerFlags(cli.Command{
 
 var audiencesList = cli.Command{
 	Name:    "list",
-	Usage:   "Get the audiences associated with the authorization token.",
+	Usage:   "Returns the audiences in the workspace with paging. Audiences are filter-based\ngroups that recalculate as user profiles change.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[*string]{
@@ -94,7 +94,7 @@ var audiencesList = cli.Command{
 
 var audiencesDelete = cli.Command{
 	Name:    "delete",
-	Usage:   "Deletes the specified audience.",
+	Usage:   "Deletes an audience permanently, so update any caller sending to it by audience\nid first. Those sends fail once the audience is gone.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -109,7 +109,7 @@ var audiencesDelete = cli.Command{
 
 var audiencesListMembers = cli.Command{
 	Name:    "list-members",
-	Usage:   "Get list of members of an audience.",
+	Usage:   "Returns the users currently matching an audience filter, with paging. Membership\nis recalculated, so results shift as profiles change.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

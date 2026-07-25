@@ -16,7 +16,7 @@ import (
 
 var digestsSchedulesListInstances = cli.Command{
 	Name:    "list-instances",
-	Usage:   "List the digest instances for a schedule. Each instance represents the events\naccumulated for a single user against the schedule, and can be used to monitor\ndigest accumulation before the digest is released.",
+	Usage:   "Returns the digest instances for a schedule, one per user, with cursor paging.\nUse it to see what has accumulated before a digest releases.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
