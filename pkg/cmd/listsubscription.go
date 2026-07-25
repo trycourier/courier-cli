@@ -16,7 +16,7 @@ import (
 
 var listsSubscriptionsList = cli.Command{
 	Name:    "list",
-	Usage:   "Get the list's subscriptions.",
+	Usage:   "Returns the users subscribed to a list with paging, each with the preferences\nrecorded for that subscription.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -98,7 +98,7 @@ var listsSubscriptionsSubscribe = requestflag.WithInnerFlags(cli.Command{
 
 var listsSubscriptionsSubscribeUser = requestflag.WithInnerFlags(cli.Command{
 	Name:    "subscribe-user",
-	Usage:   "Subscribe a user to an existing list (note: if the List does not exist, it will\nbe automatically created).",
+	Usage:   "Subscribes one user to a list, creating the list if it does not yet exist.\nOptional preferences apply to this subscription only.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -133,7 +133,7 @@ var listsSubscriptionsSubscribeUser = requestflag.WithInnerFlags(cli.Command{
 
 var listsSubscriptionsUnsubscribeUser = cli.Command{
 	Name:    "unsubscribe-user",
-	Usage:   "Delete a subscription to a list by list ID and user ID.",
+	Usage:   "Removes one user's subscription to a list, addressed by list id and user id. The\nuser's profile and other subscriptions are separate resources.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

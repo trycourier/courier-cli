@@ -16,7 +16,7 @@ import (
 
 var workspacePreferencesTopicsCreate = cli.Command{
 	Name:    "create",
-	Usage:   "Create a subscription preference topic inside a workspace preference. Fails with\n404 if the workspace preference does not exist. The topic id is generated and\nreturned.",
+	Usage:   "Creates a subscription topic inside a workspace preference. The default status\nsets whether users start opted in, opted out, or required.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -68,7 +68,7 @@ var workspacePreferencesTopicsCreate = cli.Command{
 
 var workspacePreferencesTopicsRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Retrieve a topic within a workspace preference. Returns 404 if the workspace\npreference does not exist, the topic does not exist, or the topic belongs to a\ndifferent workspace preference.",
+	Usage:   "Returns one subscription topic with its default status, routing options, allowed\npreferences, and unsubscribe header setting.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -88,7 +88,7 @@ var workspacePreferencesTopicsRetrieve = cli.Command{
 
 var workspacePreferencesTopicsList = cli.Command{
 	Name:    "list",
-	Usage:   "List the topics in a workspace preference.",
+	Usage:   "Returns the subscription topics inside a workspace preference, each with its\ndefault status and routing options.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -103,7 +103,7 @@ var workspacePreferencesTopicsList = cli.Command{
 
 var workspacePreferencesTopicsArchive = cli.Command{
 	Name:    "archive",
-	Usage:   "Archive a topic and remove it from its workspace preference. Same 404 rules as\nGET.",
+	Usage:   "Archives a subscription topic and removes it from its workspace preference,\naddressed by section id and topic id.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

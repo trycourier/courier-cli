@@ -67,7 +67,7 @@ var routingStrategiesCreate = requestflag.WithInnerFlags(cli.Command{
 
 var routingStrategiesRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Retrieve a routing strategy by ID. Returns the full entity including routing\ncontent and metadata.",
+	Usage:   "Returns one routing strategy by id with its name, tags, channels, and the\nrouting rules that decide provider order and fallback.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -118,7 +118,7 @@ var routingStrategiesArchive = cli.Command{
 
 var routingStrategiesListNotifications = cli.Command{
 	Name:    "list-notifications",
-	Usage:   "List notification templates associated with a routing strategy. Includes\ntemplate metadata only, not full content.",
+	Usage:   "Returns the notification templates using a routing strategy, with paging. Check\nthis before changing a strategy that templates depend on.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

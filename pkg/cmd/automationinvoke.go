@@ -16,7 +16,7 @@ import (
 
 var automationsInvokeInvokeAdHoc = requestflag.WithInnerFlags(cli.Command{
 	Name:    "invoke-ad-hoc",
-	Usage:   "Invoke an ad hoc automation run. This endpoint accepts a JSON payload with a\nseries of automation steps. For information about what steps are available,\ncheckout the ad hoc automation guide\n[here](https://www.courier.com/docs/automations/steps/).",
+	Usage:   "Runs a series of automation steps supplied inline, without a saved template, and\nreturns a runId.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[map[string]any]{
@@ -62,7 +62,7 @@ var automationsInvokeInvokeAdHoc = requestflag.WithInnerFlags(cli.Command{
 
 var automationsInvokeInvokeByTemplate = cli.Command{
 	Name:    "invoke-by-template",
-	Usage:   "Invoke an automation run from an automation template.",
+	Usage:   "Starts an automation run from a saved template for one recipient, with optional\ndata and profile, and returns a runId.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

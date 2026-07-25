@@ -16,7 +16,7 @@ import (
 
 var inboundTrackEvent = cli.Command{
 	Name:    "track-event",
-	Usage:   "Courier Track Event",
+	Usage:   "Records an inbound event that can trigger a journey. Requires an event name, a\nmessageId you generate, a type, and a properties object.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

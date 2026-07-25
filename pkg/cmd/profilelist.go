@@ -16,7 +16,7 @@ import (
 
 var profilesListsRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Returns the subscribed lists for a specified user.",
+	Usage:   "Returns the lists a user is subscribed to, with paging. Use it to check what a\nrecipient will receive before sending to a list.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -36,7 +36,7 @@ var profilesListsRetrieve = cli.Command{
 
 var profilesListsDelete = cli.Command{
 	Name:    "delete",
-	Usage:   "Removes all list subscriptions for given user.",
+	Usage:   "Removes every list subscription for a user at once. Their profile and\npreferences are untouched, so this only affects list-targeted sends.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -51,7 +51,7 @@ var profilesListsDelete = cli.Command{
 
 var profilesListsSubscribe = requestflag.WithInnerFlags(cli.Command{
 	Name:    "subscribe",
-	Usage:   "Subscribes the given user to one or more lists. If the list does not exist, it\nwill be created.",
+	Usage:   "Subscribes a user to one or more lists, creating any list that does not yet\nexist. Optional preferences apply to each subscription.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

@@ -16,7 +16,7 @@ import (
 
 var providersCatalogList = cli.Command{
 	Name:    "list",
-	Usage:   "Returns the catalog of available provider types with their display names,\ndescriptions, and configuration schema fields (snake_case, with `type` and\n`required`). Providers with no configurable schema return only `provider`,\n`name`, and `description`.",
+	Usage:   "Returns the provider types Courier supports, each with a display name,\ndescription, and the configuration fields it requires.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
