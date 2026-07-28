@@ -31,6 +31,14 @@ var notificationsCreate = requestflag.WithInnerFlags(cli.Command{
 			Default:  "DRAFT",
 			BodyPath: "state",
 		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
+		},
 	},
 	Action:          handleNotificationsCreate,
 	HideHelpCommand: true,
@@ -183,6 +191,14 @@ var notificationsPublish = cli.Command{
 			Name:     "version",
 			Usage:    `Historical version to publish (e.g. "v001"). Omit to publish the current draft.`,
 			BodyPath: "version",
+		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
 		},
 	},
 	Action:          handleNotificationsPublish,

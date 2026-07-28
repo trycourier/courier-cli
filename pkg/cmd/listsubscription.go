@@ -49,6 +49,14 @@ var listsSubscriptionsAdd = requestflag.WithInnerFlags(cli.Command{
 			Required: true,
 			BodyPath: "recipients",
 		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
+		},
 	},
 	Action:          handleListsSubscriptionsAdd,
 	HideHelpCommand: true,

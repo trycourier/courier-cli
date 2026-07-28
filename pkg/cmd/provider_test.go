@@ -19,6 +19,8 @@ func TestProvidersCreate(t *testing.T) {
 			"--alias", "alias",
 			"--settings", "{foo: bar}",
 			"--title", "title",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -34,6 +36,8 @@ func TestProvidersCreate(t *testing.T) {
 			t, pipeData,
 			"--api-key", "string",
 			"providers", "create",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }

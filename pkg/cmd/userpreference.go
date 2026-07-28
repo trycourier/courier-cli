@@ -104,6 +104,14 @@ var usersPreferencesBulkUpdate = requestflag.WithInnerFlags(cli.Command{
 			Usage:     "Update the preferences of a user for this specific tenant context.",
 			QueryPath: "tenant_id",
 		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
+		},
 	},
 	Action:          handleUsersPreferencesBulkUpdate,
 	HideHelpCommand: true,

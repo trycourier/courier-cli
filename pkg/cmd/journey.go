@@ -38,6 +38,14 @@ var journeysCreate = cli.Command{
 			Usage:    "Lifecycle state of a journey.",
 			BodyPath: "state",
 		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
+		},
 	},
 	Action:          handleJourneysCreate,
 	HideHelpCommand: true,
@@ -109,6 +117,14 @@ var journeysCancel = cli.Command{
 			BodyPath: "cancelation_token",
 		},
 		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
+		},
+		&requestflag.Flag[string]{
 			Name:     "run-id",
 			BodyPath: "run_id",
 		},
@@ -141,6 +157,14 @@ var journeysInvoke = cli.Command{
 			Name:     "user-id",
 			Usage:    "A unique identifier for the user. If not provided, the system will attempt to resolve the user identifier from profile or data objects.",
 			BodyPath: "user_id",
+		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
 		},
 	},
 	Action:          handleJourneysInvoke,
@@ -175,6 +199,14 @@ var journeysPublish = cli.Command{
 		&requestflag.Flag[string]{
 			Name:     "version",
 			BodyPath: "version",
+		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
 		},
 	},
 	Action:          handleJourneysPublish,

@@ -43,6 +43,8 @@ func TestProfilesListsSubscribe(t *testing.T) {
 			"profiles:lists", "subscribe",
 			"--user-id", "user_id",
 			"--list", "{listId: listId, preferences: {categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}}",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -58,6 +60,8 @@ func TestProfilesListsSubscribe(t *testing.T) {
 			"--user-id", "user_id",
 			"--list.list-id", "listId",
 			"--list.preferences", "{categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -88,6 +92,8 @@ func TestProfilesListsSubscribe(t *testing.T) {
 			"--api-key", "string",
 			"profiles:lists", "subscribe",
 			"--user-id", "user_id",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }
