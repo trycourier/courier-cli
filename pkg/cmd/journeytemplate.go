@@ -42,6 +42,14 @@ var journeysTemplatesCreate = requestflag.WithInnerFlags(cli.Command{
 			Name:     "state",
 			BodyPath: "state",
 		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
+		},
 	},
 	Action:          handleJourneysTemplatesCreate,
 	HideHelpCommand: true,
@@ -173,6 +181,14 @@ var journeysTemplatesPublish = cli.Command{
 		&requestflag.Flag[string]{
 			Name:     "version",
 			BodyPath: "version",
+		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
 		},
 	},
 	Action:          handleJourneysTemplatesPublish,

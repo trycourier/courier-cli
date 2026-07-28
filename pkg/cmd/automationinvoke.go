@@ -44,6 +44,14 @@ var automationsInvokeInvokeAdHoc = requestflag.WithInnerFlags(cli.Command{
 			Name:     "template",
 			BodyPath: "template",
 		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
+		},
 	},
 	Action:          handleAutomationsInvokeInvokeAdHoc,
 	HideHelpCommand: true,
@@ -90,6 +98,14 @@ var automationsInvokeInvokeByTemplate = cli.Command{
 		&requestflag.Flag[*string]{
 			Name:     "template",
 			BodyPath: "template",
+		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
 		},
 	},
 	Action:          handleAutomationsInvokeInvokeByTemplate,

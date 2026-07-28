@@ -20,6 +20,8 @@ func TestJourneysCreate(t *testing.T) {
 			"--node", "{trigger_type: api-invoke, type: trigger, id: send-1, conditions: [string, string], schema: {foo: bar}}",
 			"--enabled=true",
 			"--state", "DRAFT",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -50,6 +52,8 @@ func TestJourneysCreate(t *testing.T) {
 			t, pipeData,
 			"--api-key", "string",
 			"journeys", "create",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }
@@ -100,6 +104,8 @@ func TestJourneysCancel(t *testing.T) {
 			"--api-key", "string",
 			"journeys", "cancel",
 			"--cancelation-token", "x",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -110,6 +116,8 @@ func TestJourneysCancel(t *testing.T) {
 			t, pipeData,
 			"--api-key", "string",
 			"journeys", "cancel",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }
@@ -125,6 +133,8 @@ func TestJourneysInvoke(t *testing.T) {
 			"--data", "{order_id: bar, amount: bar}",
 			"--profile", "{foo: bar}",
 			"--user-id", "user-123",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -142,6 +152,8 @@ func TestJourneysInvoke(t *testing.T) {
 			"--api-key", "string",
 			"journeys", "invoke",
 			"--template-id", "templateId",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }
@@ -167,6 +179,8 @@ func TestJourneysPublish(t *testing.T) {
 			"journeys", "publish",
 			"--template-id", "x",
 			"--version", "v321669910225",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -178,6 +192,8 @@ func TestJourneysPublish(t *testing.T) {
 			"--api-key", "string",
 			"journeys", "publish",
 			"--template-id", "x",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }

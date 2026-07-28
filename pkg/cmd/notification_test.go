@@ -18,6 +18,8 @@ func TestNotificationsCreate(t *testing.T) {
 			"notifications", "create",
 			"--notification", "{brand: {id: bnd_01kx4mrd0pfzw8wt7pn7p2fzag}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, raw: {foo: bar}, type: channel}], version: '2022-01-01'}, name: Welcome Email, routing: {strategy_id: rs_01kx4h2jdafq8bk9amzvy6hbv0}, subscription: {topic_id: pt_01kx4h2jdafq8bk9a26x0kvd1t}, tags: [onboarding, welcome]}",
 			"--state", "DRAFT",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -37,6 +39,8 @@ func TestNotificationsCreate(t *testing.T) {
 			"--notification.subscription", "{topic_id: pt_01kx4h2jdafq8bk9a26x0kvd1t}",
 			"--notification.tags", "[onboarding, welcome]",
 			"--state", "DRAFT",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -71,6 +75,8 @@ func TestNotificationsCreate(t *testing.T) {
 			t, pipeData,
 			"--api-key", "string",
 			"notifications", "create",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }
@@ -149,6 +155,8 @@ func TestNotificationsPublish(t *testing.T) {
 			"notifications", "publish",
 			"--id", "id",
 			"--version", "v321669910225",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -160,6 +168,8 @@ func TestNotificationsPublish(t *testing.T) {
 			"--api-key", "string",
 			"notifications", "publish",
 			"--id", "id",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }

@@ -48,6 +48,14 @@ var routingStrategiesCreate = requestflag.WithInnerFlags(cli.Command{
 			Usage:    "Optional tags for categorization.",
 			BodyPath: "tags",
 		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
+		},
 	},
 	Action:          handleRoutingStrategiesCreate,
 	HideHelpCommand: true,
