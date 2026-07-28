@@ -245,6 +245,15 @@ func init() {
 				},
 			},
 			{
+				Name:     "inbox:messages",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&inboxMessagesDelete,
+					&inboxMessagesRestore,
+				},
+			},
+			{
 				Name:     "messages",
 				Category: "API RESOURCE",
 				Suggest:  true,
