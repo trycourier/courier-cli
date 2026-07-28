@@ -40,6 +40,14 @@ var providersCreate = cli.Command{
 			Usage:    `Optional display title. Omit to use "Default Configuration".`,
 			BodyPath: "title",
 		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
+		},
 	},
 	Action:          handleProvidersCreate,
 	HideHelpCommand: true,

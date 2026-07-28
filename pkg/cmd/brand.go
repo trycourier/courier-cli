@@ -37,6 +37,14 @@ var brandsCreate = requestflag.WithInnerFlags(cli.Command{
 			Name:     "snippets",
 			BodyPath: "snippets",
 		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
+		},
 	},
 	Action:          handleBrandsCreate,
 	HideHelpCommand: true,

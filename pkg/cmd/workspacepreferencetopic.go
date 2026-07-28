@@ -61,6 +61,14 @@ var workspacePreferencesTopicsCreate = cli.Command{
 			Usage:    "Arbitrary metadata associated with the topic.",
 			BodyPath: "topic_data",
 		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
+		},
 	},
 	Action:          handleWorkspacePreferencesTopicsCreate,
 	HideHelpCommand: true,

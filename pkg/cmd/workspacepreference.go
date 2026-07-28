@@ -40,6 +40,14 @@ var workspacePreferencesCreate = cli.Command{
 			Usage:    "Default channels for the workspace preference. Defaults to empty if omitted.",
 			BodyPath: "routing_options",
 		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
+		},
 	},
 	Action:          handleWorkspacePreferencesCreate,
 	HideHelpCommand: true,
@@ -103,6 +111,14 @@ var workspacePreferencesPublish = cli.Command{
 			Name:     "heading",
 			Usage:    "Heading shown at the top of the hosted preferences page.",
 			BodyPath: "heading",
+		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
 		},
 	},
 	Action:          handleWorkspacePreferencesPublish,
