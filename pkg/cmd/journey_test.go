@@ -17,7 +17,8 @@ func TestJourneysCreate(t *testing.T) {
 			"journeys", "create",
 			"--name", "Welcome Journey",
 			"--node", "{trigger_type: api-invoke, type: trigger, id: trigger-1, conditions: [string, string], schema: {foo: bar}}",
-			"--node", "{trigger_type: api-invoke, type: trigger, id: send-1, conditions: [string, string], schema: {foo: bar}}",
+			"--node", "{message: {context: {tenant_id: x}, data: {foo: bar}, delay: {until: x, timezone: x}, template: nt_01kx4h2jdafq8bk9aftxak4b40, to: {email_override: x, phone_number_override: x, user_id_override: x}}, type: send, id: send-1, conditions: [string, string], experiment: {bucketingKey: x, variants: [{id: x, templateId: x, weight: 0, name: name}, {id: x, templateId: x, weight: 0, name: name}], id: x, name: name}}",
+			"--node", "{type: exit, id: exit-1}",
 			"--enabled=true",
 			"--state", "DRAFT",
 			"--idempotency-key", "order-ORD-456-user-123",
@@ -38,14 +39,39 @@ func TestJourneysCreate(t *testing.T) {
 			"      - string\n" +
 			"    schema:\n" +
 			"      foo: bar\n" +
-			"  - trigger_type: api-invoke\n" +
-			"    type: trigger\n" +
+			"  - message:\n" +
+			"      context:\n" +
+			"        tenant_id: x\n" +
+			"      data:\n" +
+			"        foo: bar\n" +
+			"      delay:\n" +
+			"        until: x\n" +
+			"        timezone: x\n" +
+			"      template: nt_01kx4h2jdafq8bk9aftxak4b40\n" +
+			"      to:\n" +
+			"        email_override: x\n" +
+			"        phone_number_override: x\n" +
+			"        user_id_override: x\n" +
+			"    type: send\n" +
 			"    id: send-1\n" +
 			"    conditions:\n" +
 			"      - string\n" +
 			"      - string\n" +
-			"    schema:\n" +
-			"      foo: bar\n" +
+			"    experiment:\n" +
+			"      bucketingKey: x\n" +
+			"      variants:\n" +
+			"        - id: x\n" +
+			"          templateId: x\n" +
+			"          weight: 0\n" +
+			"          name: name\n" +
+			"        - id: x\n" +
+			"          templateId: x\n" +
+			"          weight: 0\n" +
+			"          name: name\n" +
+			"      id: x\n" +
+			"      name: name\n" +
+			"  - type: exit\n" +
+			"    id: exit-1\n" +
 			"enabled: true\n" +
 			"state: DRAFT\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
