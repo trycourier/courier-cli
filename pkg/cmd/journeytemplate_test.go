@@ -176,7 +176,7 @@ func TestJourneysTemplatesPutContent(t *testing.T) {
 			"journeys:templates", "put-content",
 			"--template-id", "x",
 			"--notification-id", "x",
-			"--content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, raw: {foo: bar}, type: channel}], version: '2022-01-01'}",
+			"--content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}], version: '2022-01-01'}",
 			"--state", "DRAFT",
 		)
 	})
@@ -192,7 +192,7 @@ func TestJourneysTemplatesPutContent(t *testing.T) {
 			"journeys:templates", "put-content",
 			"--template-id", "x",
 			"--notification-id", "x",
-			"--content.elements", "[{channels: [string], if: if, loop: loop, ref: ref, channel: email, raw: {foo: bar}, type: channel}]",
+			"--content.elements", "[{channels: [string], if: if, loop: loop, ref: ref, channel: email, font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}]",
 			"--content.version", "2022-01-01",
 			"--state", "DRAFT",
 		)
@@ -209,6 +209,9 @@ func TestJourneysTemplatesPutContent(t *testing.T) {
 			"      loop: loop\n" +
 			"      ref: ref\n" +
 			"      channel: email\n" +
+			"      font_size: font_size\n" +
+			"      line_height: line_height\n" +
+			"      padding: padding\n" +
 			"      raw:\n" +
 			"        foo: bar\n" +
 			"      type: channel\n" +
