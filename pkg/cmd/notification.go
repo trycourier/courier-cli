@@ -14,14 +14,14 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-var notificationsCreate = requestflag.WithInnerFlags(cli.Command{
+var notificationsCreate = cli.Command{
 	Name:    "create",
 	Usage:   "Create a notification template. Requires all fields in the notification object.\nTemplates are created in draft state by default.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[map[string]any]{
 			Name:     "notification",
-			Usage:    "Core template fields used in POST and PUT request bodies (nested under a `notification` key) and returned at the top level in responses.",
+			Usage:    "Template fields accepted in POST and PUT request bodies, nested under a `notification` key.",
 			Required: true,
 			BodyPath: "notification",
 		},
@@ -42,39 +42,7 @@ var notificationsCreate = requestflag.WithInnerFlags(cli.Command{
 	},
 	Action:          handleNotificationsCreate,
 	HideHelpCommand: true,
-}, map[string][]requestflag.HasOuterFlag{
-	"notification": {
-		&requestflag.InnerFlag[map[string]any]{
-			Name:       "notification.brand",
-			Usage:      "Brand reference, or null for no brand.",
-			InnerField: "brand",
-		},
-		&requestflag.InnerFlag[map[string]any]{
-			Name:       "notification.content",
-			InnerField: "content",
-		},
-		&requestflag.InnerFlag[string]{
-			Name:       "notification.name",
-			Usage:      "Display name for the template.",
-			InnerField: "name",
-		},
-		&requestflag.InnerFlag[map[string]any]{
-			Name:       "notification.routing",
-			Usage:      "Routing strategy reference, or null for none.",
-			InnerField: "routing",
-		},
-		&requestflag.InnerFlag[map[string]any]{
-			Name:       "notification.subscription",
-			Usage:      "Subscription topic reference, or null for none.",
-			InnerField: "subscription",
-		},
-		&requestflag.InnerFlag[[]string]{
-			Name:       "notification.tags",
-			Usage:      "Tags for categorization. Send empty array for none.",
-			InnerField: "tags",
-		},
-	},
-})
+}
 
 var notificationsRetrieve = cli.Command{
 	Name:    "retrieve",
@@ -336,7 +304,7 @@ var notificationsPutLocale = requestflag.WithInnerFlags(cli.Command{
 	},
 })
 
-var notificationsReplace = requestflag.WithInnerFlags(cli.Command{
+var notificationsReplace = cli.Command{
 	Name:    "replace",
 	Usage:   "Replaces a notification template in full, so send every field rather than only\nthe ones you want changed. Publish separately to make it live.",
 	Suggest: true,
@@ -348,7 +316,7 @@ var notificationsReplace = requestflag.WithInnerFlags(cli.Command{
 		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "notification",
-			Usage:    "Core template fields used in POST and PUT request bodies (nested under a `notification` key) and returned at the top level in responses.",
+			Usage:    "Template fields accepted in POST and PUT request bodies, nested under a `notification` key.",
 			Required: true,
 			BodyPath: "notification",
 		},
@@ -361,39 +329,7 @@ var notificationsReplace = requestflag.WithInnerFlags(cli.Command{
 	},
 	Action:          handleNotificationsReplace,
 	HideHelpCommand: true,
-}, map[string][]requestflag.HasOuterFlag{
-	"notification": {
-		&requestflag.InnerFlag[map[string]any]{
-			Name:       "notification.brand",
-			Usage:      "Brand reference, or null for no brand.",
-			InnerField: "brand",
-		},
-		&requestflag.InnerFlag[map[string]any]{
-			Name:       "notification.content",
-			InnerField: "content",
-		},
-		&requestflag.InnerFlag[string]{
-			Name:       "notification.name",
-			Usage:      "Display name for the template.",
-			InnerField: "name",
-		},
-		&requestflag.InnerFlag[map[string]any]{
-			Name:       "notification.routing",
-			Usage:      "Routing strategy reference, or null for none.",
-			InnerField: "routing",
-		},
-		&requestflag.InnerFlag[map[string]any]{
-			Name:       "notification.subscription",
-			Usage:      "Subscription topic reference, or null for none.",
-			InnerField: "subscription",
-		},
-		&requestflag.InnerFlag[[]string]{
-			Name:       "notification.tags",
-			Usage:      "Tags for categorization. Send empty array for none.",
-			InnerField: "tags",
-		},
-	},
-})
+}
 
 var notificationsRetrieveContent = cli.Command{
 	Name:    "retrieve-content",
