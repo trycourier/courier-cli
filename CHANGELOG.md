@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.12.2 (2026-07-29)
+
+Full Changelog: [v3.12.1...v3.12.2](https://github.com/trycourier/courier-cli/compare/v3.12.1...v3.12.2)
+
+### Chores
+
+* **deps:** bump courier-go to v4.22.0 ([#75](https://github.com/trycourier/courier-cli/issues/75)) ([0374cba](https://github.com/trycourier/courier-cli/commit/0374cba725ca3cd426ab105946308e4b5defcab8))
+
 ## 3.12.1 (2026-07-23)
 
 Full Changelog: [v3.12.0...v3.12.1](https://github.com/trycourier/courier-cli/compare/v3.12.0...v3.12.1)
