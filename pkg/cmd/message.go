@@ -16,7 +16,7 @@ import (
 
 var messagesRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Fetch the status of a message you've previously sent.",
+	Usage:   "Returns a sent message's status, recipient, event, and per-provider delivery\ndetail, with timestamps for enqueued, sent, delivered, opened, and clicked.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -31,7 +31,7 @@ var messagesRetrieve = cli.Command{
 
 var messagesList = cli.Command{
 	Name:    "list",
-	Usage:   "Fetch the statuses of messages you've previously sent.",
+	Usage:   "Returns previously sent messages, most recent first, each carrying its status,\nrecipient, channel, and provider. Paged by cursor.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[*bool]{
@@ -111,7 +111,7 @@ var messagesList = cli.Command{
 
 var messagesCancel = cli.Command{
 	Name:    "cancel",
-	Usage:   "Cancel a message that is currently in the process of being delivered. A\nwell-formatted API call to the cancel message API will return either `200`\nstatus code for a successful cancellation or `409` status code for an\nunsuccessful cancellation. Both cases will include the actual message record in\nthe response body (see details below).",
+	Usage:   "Cancels a message that is still in the delivery pipeline and returns the message\nrecord with its resulting canceled or failed status.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -126,7 +126,7 @@ var messagesCancel = cli.Command{
 
 var messagesContent = cli.Command{
 	Name:    "content",
-	Usage:   "Get message content",
+	Usage:   "Returns the rendered content Courier delivered for a message, broken out per\nchannel, to confirm what the recipient received.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -141,7 +141,7 @@ var messagesContent = cli.Command{
 
 var messagesHistory = cli.Command{
 	Name:    "history",
-	Usage:   "Fetch the array of events of a message you've previously sent.",
+	Usage:   "Returns the ordered event history for a sent message, one entry per status\ntransition with its timestamp.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -161,7 +161,7 @@ var messagesHistory = cli.Command{
 
 var messagesResend = cli.Command{
 	Name:    "resend",
-	Usage:   "Resend a previously sent message. The original send request is loaded from\nstorage and a brand-new send is enqueued for the same recipient and content,\nproducing a **new** `messageId` — the original message is not modified.\nThrottled by a per-message rate limit; a repeat inside the limit window returns\n`429 Too Many Requests`.",
+	Usage:   "Resends a previously sent message to the same recipient and content, returning a\nnew messageId. The original send request is not modified.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

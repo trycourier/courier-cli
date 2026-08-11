@@ -18,6 +18,8 @@ func TestProfilesCreate(t *testing.T) {
 			"profiles", "create",
 			"--user-id", "user_id",
 			"--profile", "{foo: bar}",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -31,6 +33,8 @@ func TestProfilesCreate(t *testing.T) {
 			"--api-key", "string",
 			"profiles", "create",
 			"--user-id", "user_id",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }
