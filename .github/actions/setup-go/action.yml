@@ -13,7 +13,7 @@ runs:
     - name: Verify Go SDK module is accessible
       shell: bash
       env:
-        GO_MODULE_REPO: ${{ github.repository == 'stainless-sdks/courier-cli-staging' && 'stainless-sdks/courier-go-staging' || 'trycourier/courier-go' }}
+        GO_MODULE_REPO: trycourier/courier-go
       run: |
         if ! git ls-remote --exit-code "https://github.com/${GO_MODULE_REPO}" >/dev/null 2>&1; then
           echo "::error::Cannot access the Go SDK module at https://github.com/${GO_MODULE_REPO}."
