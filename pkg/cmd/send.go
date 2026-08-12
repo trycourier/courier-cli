@@ -16,7 +16,7 @@ import (
 
 var sendMessage = requestflag.WithInnerFlags(cli.Command{
 	Name:    "message",
-	Usage:   "Sends a message to one or more recipients and returns a requestId. Courier\nroutes it to email, SMS, push, chat, or in-app based on your rules.",
+	Usage:   "Sends a message to one or more recipients and returns a requestId. Courier\nroutes it to email, SMS, push, chat, or in-app based on your rules. Use the\nreturned requestId to look up delivery status via the Messages API.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[map[string]any]{
