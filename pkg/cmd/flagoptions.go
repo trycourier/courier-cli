@@ -20,7 +20,7 @@ import (
 	"github.com/trycourier/courier-cli/v3/internal/apiquery"
 	"github.com/trycourier/courier-cli/v3/internal/debugmiddleware"
 	"github.com/trycourier/courier-cli/v3/internal/requestflag"
-	"github.com/trycourier/courier-go/option"
+	"github.com/trycourier/courier-go/v4/option"
 
 	"github.com/goccy/go-yaml"
 	"github.com/urfave/cli/v3"
