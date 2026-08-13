@@ -14,14 +14,14 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-var notificationsCreate = requestflag.WithInnerFlags(cli.Command{
+var notificationsCreate = cli.Command{
 	Name:    "create",
 	Usage:   "Create a notification template. Requires all fields in the notification object.\nTemplates are created in draft state by default.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[map[string]any]{
 			Name:     "notification",
-			Usage:    "Core template fields used in POST and PUT request bodies (nested under a `notification` key) and returned at the top level in responses.",
+			Usage:    "Template fields accepted in POST and PUT request bodies, nested under a `notification` key.",
 			Required: true,
 			BodyPath: "notification",
 		},
@@ -31,42 +31,18 @@ var notificationsCreate = requestflag.WithInnerFlags(cli.Command{
 			Default:  "DRAFT",
 			BodyPath: "state",
 		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
+		},
 	},
 	Action:          handleNotificationsCreate,
 	HideHelpCommand: true,
-}, map[string][]requestflag.HasOuterFlag{
-	"notification": {
-		&requestflag.InnerFlag[map[string]any]{
-			Name:       "notification.brand",
-			Usage:      "Brand reference, or null for no brand.",
-			InnerField: "brand",
-		},
-		&requestflag.InnerFlag[map[string]any]{
-			Name:       "notification.content",
-			InnerField: "content",
-		},
-		&requestflag.InnerFlag[string]{
-			Name:       "notification.name",
-			Usage:      "Display name for the template.",
-			InnerField: "name",
-		},
-		&requestflag.InnerFlag[map[string]any]{
-			Name:       "notification.routing",
-			Usage:      "Routing strategy reference, or null for none.",
-			InnerField: "routing",
-		},
-		&requestflag.InnerFlag[map[string]any]{
-			Name:       "notification.subscription",
-			Usage:      "Subscription topic reference, or null for none.",
-			InnerField: "subscription",
-		},
-		&requestflag.InnerFlag[[]string]{
-			Name:       "notification.tags",
-			Usage:      "Tags for categorization. Send empty array for none.",
-			InnerField: "tags",
-		},
-	},
-})
+}
 
 var notificationsRetrieve = cli.Command{
 	Name:    "retrieve",
@@ -90,7 +66,7 @@ var notificationsRetrieve = cli.Command{
 
 var notificationsList = cli.Command{
 	Name:    "list",
-	Usage:   "List notification templates in your workspace.",
+	Usage:   "Lists the workspace's notification templates. Each carries a name, tags, brand,\nrouting, and its draft or published state.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[*string]{
@@ -115,7 +91,7 @@ var notificationsList = cli.Command{
 
 var notificationsArchive = cli.Command{
 	Name:    "archive",
-	Usage:   "Archive a notification template.",
+	Usage:   "Archives a notification template, preventing new sends from referencing it. The\ntemplate stays retrievable for its version history.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -130,7 +106,7 @@ var notificationsArchive = cli.Command{
 
 var notificationsDuplicate = cli.Command{
 	Name:    "duplicate",
-	Usage:   "Duplicate a notification template. Creates a standalone copy within the same\nworkspace and environment, with \" COPY\" appended to the title. The copy clones\nthe source draft's tags, brand, subscription topic, routing strategy, channels,\nand content, and is always created as a standalone template (it is not linked to\nany journey or broadcast, even if the source was). Templates that are scoped to\na journey or a broadcast cannot be duplicated through this endpoint.",
+	Usage:   "Copies a notification template within the same workspace and environment,\nappending \" COPY\" to the title. The copy is standalone and independently\neditable.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -145,7 +121,7 @@ var notificationsDuplicate = cli.Command{
 
 var notificationsListVersions = cli.Command{
 	Name:    "list-versions",
-	Usage:   "List versions of a notification template.",
+	Usage:   "Returns a notification template's published versions, most recent first, for\ncomparison or rollback. Paged.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -184,6 +160,14 @@ var notificationsPublish = cli.Command{
 			Usage:    `Historical version to publish (e.g. "v001"). Omit to publish the current draft.`,
 			BodyPath: "version",
 		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
+		},
 	},
 	Action:          handleNotificationsPublish,
 	HideHelpCommand: true,
@@ -191,7 +175,7 @@ var notificationsPublish = cli.Command{
 
 var notificationsPutContent = requestflag.WithInnerFlags(cli.Command{
 	Name:    "put-content",
-	Usage:   "Replace the elemental content of a notification template. Overwrites all\nelements in the template with the provided content. Only supported for V2\n(elemental) templates.",
+	Usage:   "Replaces all Elemental content in a template, overwriting every existing\nelement. Supported for V2 templates only, not V1 blocks and channels.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -230,7 +214,7 @@ var notificationsPutContent = requestflag.WithInnerFlags(cli.Command{
 
 var notificationsPutElement = cli.Command{
 	Name:    "put-element",
-	Usage:   "Update a single element within a notification template. Only supported for V2\n(elemental) templates.",
+	Usage:   "Replaces one Elemental element in a template, addressed by its element id.\nSupported for V2 templates only, not V1 blocks and channels.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -282,7 +266,7 @@ var notificationsPutElement = cli.Command{
 
 var notificationsPutLocale = requestflag.WithInnerFlags(cli.Command{
 	Name:    "put-locale",
-	Usage:   "Set locale-specific content overrides for a notification template. Each element\noverride must reference an existing element by ID. Only supported for V2\n(elemental) templates.",
+	Usage:   "Sets locale-specific content overrides for a template. Each override must\nreference an element that already exists in the default content.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -320,9 +304,9 @@ var notificationsPutLocale = requestflag.WithInnerFlags(cli.Command{
 	},
 })
 
-var notificationsReplace = requestflag.WithInnerFlags(cli.Command{
+var notificationsReplace = cli.Command{
 	Name:    "replace",
-	Usage:   "Replace a notification template. All fields are required.",
+	Usage:   "Replaces a notification template in full, so send every field rather than only\nthe ones you want changed. Publish separately to make it live.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -332,7 +316,7 @@ var notificationsReplace = requestflag.WithInnerFlags(cli.Command{
 		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "notification",
-			Usage:    "Core template fields used in POST and PUT request bodies (nested under a `notification` key) and returned at the top level in responses.",
+			Usage:    "Template fields accepted in POST and PUT request bodies, nested under a `notification` key.",
 			Required: true,
 			BodyPath: "notification",
 		},
@@ -345,43 +329,11 @@ var notificationsReplace = requestflag.WithInnerFlags(cli.Command{
 	},
 	Action:          handleNotificationsReplace,
 	HideHelpCommand: true,
-}, map[string][]requestflag.HasOuterFlag{
-	"notification": {
-		&requestflag.InnerFlag[map[string]any]{
-			Name:       "notification.brand",
-			Usage:      "Brand reference, or null for no brand.",
-			InnerField: "brand",
-		},
-		&requestflag.InnerFlag[map[string]any]{
-			Name:       "notification.content",
-			InnerField: "content",
-		},
-		&requestflag.InnerFlag[string]{
-			Name:       "notification.name",
-			Usage:      "Display name for the template.",
-			InnerField: "name",
-		},
-		&requestflag.InnerFlag[map[string]any]{
-			Name:       "notification.routing",
-			Usage:      "Routing strategy reference, or null for none.",
-			InnerField: "routing",
-		},
-		&requestflag.InnerFlag[map[string]any]{
-			Name:       "notification.subscription",
-			Usage:      "Subscription topic reference, or null for none.",
-			InnerField: "subscription",
-		},
-		&requestflag.InnerFlag[[]string]{
-			Name:       "notification.tags",
-			Usage:      "Tags for categorization. Send empty array for none.",
-			InnerField: "tags",
-		},
-	},
-})
+}
 
 var notificationsRetrieveContent = cli.Command{
 	Name:    "retrieve-content",
-	Usage:   "Retrieve the content of a notification template. The response shape depends on\nwhether the template uses V1 (blocks/channels) or V2 (elemental) content. Use\nthe `version` query parameter to select draft, published, or a specific\nhistorical version.",
+	Usage:   "Returns a template's content and checksum. V2 templates return Elemental\nelements, while V1 templates return blocks and channels instead.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

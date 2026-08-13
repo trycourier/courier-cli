@@ -22,6 +22,8 @@ func TestAutomationsInvokeInvokeAdHoc(t *testing.T) {
 			"--profile", "{tenant_id: bar}",
 			"--recipient", "user-yes",
 			"--template", "template",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -41,6 +43,8 @@ func TestAutomationsInvokeInvokeAdHoc(t *testing.T) {
 			"--profile", "{tenant_id: bar}",
 			"--recipient", "user-yes",
 			"--template", "template",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -72,6 +76,8 @@ func TestAutomationsInvokeInvokeAdHoc(t *testing.T) {
 			t, pipeData,
 			"--api-key", "string",
 			"automations:invoke", "invoke-ad-hoc",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }
@@ -89,6 +95,8 @@ func TestAutomationsInvokeInvokeByTemplate(t *testing.T) {
 			"--data", "{foo: bar}",
 			"--profile", "{foo: bar}",
 			"--template", "template",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -107,6 +115,8 @@ func TestAutomationsInvokeInvokeByTemplate(t *testing.T) {
 			"--api-key", "string",
 			"automations:invoke", "invoke-by-template",
 			"--template-id", "templateId",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }

@@ -16,7 +16,7 @@ import (
 
 var providersCreate = cli.Command{
 	Name:    "create",
-	Usage:   "Create a new provider configuration. The `provider` field must be a known\nCourier provider key (see catalog).",
+	Usage:   "Configures a provider integration from a Courier provider key and its settings.\nCheck the catalog endpoint for the schema each provider expects.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -40,6 +40,14 @@ var providersCreate = cli.Command{
 			Usage:    `Optional display title. Omit to use "Default Configuration".`,
 			BodyPath: "title",
 		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
+		},
 	},
 	Action:          handleProvidersCreate,
 	HideHelpCommand: true,
@@ -47,7 +55,7 @@ var providersCreate = cli.Command{
 
 var providersRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Fetch a single provider configuration by ID.",
+	Usage:   "Returns one configured provider by id, including its channel, provider key,\nalias, title, and current settings.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -62,7 +70,7 @@ var providersRetrieve = cli.Command{
 
 var providersUpdate = cli.Command{
 	Name:    "update",
-	Usage:   "Replace an existing provider configuration. The `provider` key is required and\ndetermines which provider-specific settings schema is applied. All other fields\nare optional — omitted fields are cleared from the stored configuration (this is\na full replacement, not a partial merge). Changing the provider type for an\nexisting configuration is not supported.",
+	Usage:   "Replaces a provider's configuration in full, clearing any field you omit rather\nthan merging it. Send the complete settings object.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -98,7 +106,7 @@ var providersUpdate = cli.Command{
 
 var providersList = cli.Command{
 	Name:    "list",
-	Usage:   "List configured provider integrations for the current workspace. Supports\ncursor-based pagination.",
+	Usage:   "Lists the provider integrations configured in the workspace, one entry per\nchannel and provider key with its alias and settings.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -113,7 +121,7 @@ var providersList = cli.Command{
 
 var providersDelete = cli.Command{
 	Name:    "delete",
-	Usage:   "Delete a provider configuration. Returns 409 if the provider is still referenced\nby routing or notifications.",
+	Usage:   "Deletes a provider configuration, which fails while routing strategies or\ntemplates still reference it. Update those references first.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

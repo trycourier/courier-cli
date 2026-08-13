@@ -1,0 +1,139 @@
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+package courier
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"net/http"
+	"net/url"
+	"slices"
+
+	"github.com/trycourier/courier-go/v4/internal/apijson"
+	"github.com/trycourier/courier-go/v4/internal/apiquery"
+	"github.com/trycourier/courier-go/v4/internal/requestconfig"
+	"github.com/trycourier/courier-go/v4/option"
+	"github.com/trycourier/courier-go/v4/packages/param"
+	"github.com/trycourier/courier-go/v4/packages/respjson"
+	"github.com/trycourier/courier-go/v4/shared"
+)
+
+// Read the audit trail of configuration and access changes in your workspace.
+//
+// AuditEventService contains methods and other services that help with interacting
+// with the Courier API.
+//
+// Note, unlike clients, this service does not read variables from the environment
+// automatically. You should not instantiate this service directly, and instead use
+// the [NewAuditEventService] method instead.
+type AuditEventService struct {
+	Options []option.RequestOption
+}
+
+// NewAuditEventService generates a new service that applies the given options to
+// each request. These options are applied after the parent client's options (if
+// there is one), and before any request-specific options.
+func NewAuditEventService(opts ...option.RequestOption) (r AuditEventService) {
+	r = AuditEventService{}
+	r.Options = opts
+	return
+}
+
+// Returns one audit event by id, including the actor who performed it, the target
+// they changed, the source, the event type, and a timestamp.
+func (r *AuditEventService) Get(ctx context.Context, auditEventID string, opts ...option.RequestOption) (res *AuditEvent, err error) {
+	opts = slices.Concat(r.Options, opts)
+	if auditEventID == "" {
+		err = errors.New("missing required audit-event-id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("audit-events/%s", auditEventID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	return res, err
+}
+
+// Returns the workspace's audit event log with cursor paging. Each event records
+// the actor, target, source, type, and timestamp of a change.
+func (r *AuditEventService) List(ctx context.Context, query AuditEventListParams, opts ...option.RequestOption) (res *AuditEventListResponse, err error) {
+	opts = slices.Concat(r.Options, opts)
+	path := "audit-events"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	return res, err
+}
+
+type AuditEvent struct {
+	Actor        AuditEventActor `json:"actor" api:"required"`
+	AuditEventID string          `json:"auditEventId" api:"required"`
+	Source       string          `json:"source" api:"required"`
+	Target       string          `json:"target" api:"required"`
+	Timestamp    string          `json:"timestamp" api:"required"`
+	Type         string          `json:"type" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Actor        respjson.Field
+		AuditEventID respjson.Field
+		Source       respjson.Field
+		Target       respjson.Field
+		Timestamp    respjson.Field
+		Type         respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r AuditEvent) RawJSON() string { return r.JSON.raw }
+func (r *AuditEvent) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type AuditEventActor struct {
+	ID    string `json:"id" api:"required"`
+	Email string `json:"email" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ID          respjson.Field
+		Email       respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r AuditEventActor) RawJSON() string { return r.JSON.raw }
+func (r *AuditEventActor) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type AuditEventListResponse struct {
+	Paging  shared.Paging `json:"paging" api:"required"`
+	Results []AuditEvent  `json:"results" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Paging      respjson.Field
+		Results     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r AuditEventListResponse) RawJSON() string { return r.JSON.raw }
+func (r *AuditEventListResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type AuditEventListParams struct {
+	// A unique identifier that allows for fetching the next set of audit events.
+	Cursor param.Opt[string] `query:"cursor,omitzero" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [AuditEventListParams]'s query parameters as `url.Values`.
+func (r AuditEventListParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatComma,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}

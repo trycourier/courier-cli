@@ -1,0 +1,721 @@
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+package courier
+
+import (
+	"context"
+	"fmt"
+	"net/http"
+	"slices"
+
+	"github.com/trycourier/courier-go/v4/internal/apijson"
+	"github.com/trycourier/courier-go/v4/internal/requestconfig"
+	"github.com/trycourier/courier-go/v4/option"
+	"github.com/trycourier/courier-go/v4/packages/param"
+	"github.com/trycourier/courier-go/v4/packages/respjson"
+	"github.com/trycourier/courier-go/v4/shared"
+)
+
+// Send a message to one or more recipients — users, lists, audiences, or tenants —
+// across every channel you have configured.
+//
+// SendService contains methods and other services that help with interacting with
+// the Courier API.
+//
+// Note, unlike clients, this service does not read variables from the environment
+// automatically. You should not instantiate this service directly, and instead use
+// the [NewSendService] method instead.
+type SendService struct {
+	Options []option.RequestOption
+}
+
+// NewSendService generates a new service that applies the given options to each
+// request. These options are applied after the parent client's options (if there
+// is one), and before any request-specific options.
+func NewSendService(opts ...option.RequestOption) (r SendService) {
+	r = SendService{}
+	r.Options = opts
+	return
+}
+
+// Sends a message to one or more recipients and returns a requestId. Courier
+// routes it to email, SMS, push, chat, or in-app based on your rules. Use the
+// returned requestId to look up delivery status via the Messages API.
+func (r *SendService) Message(ctx context.Context, params SendMessageParams, opts ...option.RequestOption) (res *SendMessageResponse, err error) {
+	if !param.IsOmitted(params.IdempotencyKey) {
+		opts = append(opts, option.WithHeader("Idempotency-Key", fmt.Sprintf("%v", params.IdempotencyKey.Value)))
+	}
+	if !param.IsOmitted(params.XIdempotencyExpiration) {
+		opts = append(opts, option.WithHeader("x-idempotency-expiration", fmt.Sprintf("%v", params.XIdempotencyExpiration.Value)))
+	}
+	opts = slices.Concat(r.Options, opts)
+	path := "send"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	return res, err
+}
+
+type SendMessageResponse struct {
+	// A successful call to `POST /send` returns a `202` status code along with a
+	// `requestId` in the response body. For single-recipient requests, the `requestId`
+	// is the derived message_id. For multiple recipients, Courier assigns a unique
+	// message_id to each derived message.
+	RequestID string `json:"requestId" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		RequestID   respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SendMessageResponse) RawJSON() string { return r.JSON.raw }
+func (r *SendMessageResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type SendMessageParams struct {
+	// The message property has the following primary top-level properties. They define
+	// the destination and content of the message.
+	Message                SendMessageParamsMessage `json:"message,omitzero" api:"required"`
+	IdempotencyKey         param.Opt[string]        `header:"Idempotency-Key,omitzero" json:"-"`
+	XIdempotencyExpiration param.Opt[string]        `header:"x-idempotency-expiration,omitzero" json:"-"`
+	paramObj
+}
+
+func (r SendMessageParams) MarshalJSON() (data []byte, err error) {
+	type shadow SendMessageParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SendMessageParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The message property has the following primary top-level properties. They define
+// the destination and content of the message.
+type SendMessageParamsMessage struct {
+	BrandID     param.Opt[string]                   `json:"brand_id,omitzero"`
+	Template    param.Opt[string]                   `json:"template,omitzero"`
+	Data        map[string]any                      `json:"data,omitzero"`
+	Delay       SendMessageParamsMessageDelay       `json:"delay,omitzero"`
+	Expiry      SendMessageParamsMessageExpiry      `json:"expiry,omitzero"`
+	Metadata    SendMessageParamsMessageMetadata    `json:"metadata,omitzero"`
+	Preferences SendMessageParamsMessagePreferences `json:"preferences,omitzero"`
+	// Customize which channels/providers Courier may deliver the message through.
+	Routing SendMessageParamsMessageRouting `json:"routing,omitzero"`
+	Timeout SendMessageParamsMessageTimeout `json:"timeout,omitzero"`
+	// The recipient or a list of recipients of the message
+	To SendMessageParamsMessageToUnion `json:"to,omitzero"`
+	// Define run-time configuration for channels. Valid ChannelId's: email, sms, push,
+	// inbox, direct_message, banner, webhook.
+	Channels shared.MessageChannelsParam `json:"channels,omitzero"`
+	// Describes content that will work for email, inbox, push, chat, or any channel
+	// id.
+	Content   SendMessageParamsMessageContentUnion `json:"content,omitzero"`
+	Context   shared.MessageContextParam           `json:"context,omitzero"`
+	Providers shared.MessageProvidersParam         `json:"providers,omitzero"`
+	paramObj
+}
+
+func (r SendMessageParamsMessage) MarshalJSON() (data []byte, err error) {
+	type shadow SendMessageParamsMessage
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SendMessageParamsMessage) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SendMessageParamsMessageContentUnion struct {
+	OfElementalContentSugar *shared.ElementalContentSugarParam `json:",omitzero,inline"`
+	OfElementalContent      *shared.ElementalContentParam      `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SendMessageParamsMessageContentUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfElementalContentSugar, u.OfElementalContent)
+}
+func (u *SendMessageParamsMessageContentUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SendMessageParamsMessageContentUnion) asAny() any {
+	if !param.IsOmitted(u.OfElementalContentSugar) {
+		return u.OfElementalContentSugar
+	} else if !param.IsOmitted(u.OfElementalContent) {
+		return u.OfElementalContent
+	}
+	return nil
+}
+
+type SendMessageParamsMessageDelay struct {
+	// The duration of the delay in milliseconds.
+	Duration param.Opt[int64] `json:"duration,omitzero"`
+	// IANA timezone identifier (e.g., "America/Los_Angeles", "UTC"). Used when
+	// resolving opening hours expressions. Takes precedence over user profile timezone
+	// settings.
+	Timezone param.Opt[string] `json:"timezone,omitzero"`
+	// ISO 8601 timestamp or opening_hours-like format.
+	Until param.Opt[string] `json:"until,omitzero"`
+	paramObj
+}
+
+func (r SendMessageParamsMessageDelay) MarshalJSON() (data []byte, err error) {
+	type shadow SendMessageParamsMessageDelay
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SendMessageParamsMessageDelay) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The property ExpiresIn is required.
+type SendMessageParamsMessageExpiry struct {
+	// Duration in ms or ISO8601 duration (e.g. P1DT4H).
+	ExpiresIn SendMessageParamsMessageExpiryExpiresInUnion `json:"expires_in,omitzero" api:"required"`
+	// Epoch or ISO8601 timestamp with timezone.
+	ExpiresAt param.Opt[string] `json:"expires_at,omitzero"`
+	paramObj
+}
+
+func (r SendMessageParamsMessageExpiry) MarshalJSON() (data []byte, err error) {
+	type shadow SendMessageParamsMessageExpiry
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SendMessageParamsMessageExpiry) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SendMessageParamsMessageExpiryExpiresInUnion struct {
+	OfString param.Opt[string] `json:",omitzero,inline"`
+	OfInt    param.Opt[int64]  `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SendMessageParamsMessageExpiryExpiresInUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfString, u.OfInt)
+}
+func (u *SendMessageParamsMessageExpiryExpiresInUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SendMessageParamsMessageExpiryExpiresInUnion) asAny() any {
+	if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	} else if !param.IsOmitted(u.OfInt) {
+		return &u.OfInt.Value
+	}
+	return nil
+}
+
+type SendMessageParamsMessageMetadata struct {
+	Event   param.Opt[string] `json:"event,omitzero"`
+	TraceID param.Opt[string] `json:"trace_id,omitzero"`
+	Tags    []string          `json:"tags,omitzero"`
+	Utm     shared.UtmParam   `json:"utm,omitzero"`
+	paramObj
+}
+
+func (r SendMessageParamsMessageMetadata) MarshalJSON() (data []byte, err error) {
+	type shadow SendMessageParamsMessageMetadata
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SendMessageParamsMessageMetadata) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The property SubscriptionTopicID is required.
+type SendMessageParamsMessagePreferences struct {
+	// The subscription topic to apply to the message.
+	SubscriptionTopicID string `json:"subscription_topic_id" api:"required"`
+	paramObj
+}
+
+func (r SendMessageParamsMessagePreferences) MarshalJSON() (data []byte, err error) {
+	type shadow SendMessageParamsMessagePreferences
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SendMessageParamsMessagePreferences) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Customize which channels/providers Courier may deliver the message through.
+//
+// The properties Channels, Method are required.
+type SendMessageParamsMessageRouting struct {
+	// A list of channels or providers (or nested routing rules).
+	Channels []shared.MessageRoutingChannelUnionParam `json:"channels,omitzero" api:"required"`
+	// Any of "all", "single".
+	Method string `json:"method,omitzero" api:"required"`
+	paramObj
+}
+
+func (r SendMessageParamsMessageRouting) MarshalJSON() (data []byte, err error) {
+	type shadow SendMessageParamsMessageRouting
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SendMessageParamsMessageRouting) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SendMessageParamsMessageRouting](
+		"method", "all", "single",
+	)
+}
+
+type SendMessageParamsMessageTimeout struct {
+	Escalation param.Opt[int64] `json:"escalation,omitzero"`
+	Message    param.Opt[int64] `json:"message,omitzero"`
+	Channel    map[string]int64 `json:"channel,omitzero"`
+	// Any of "no-escalation", "delivered", "viewed", "engaged".
+	Criteria string           `json:"criteria,omitzero"`
+	Provider map[string]int64 `json:"provider,omitzero"`
+	paramObj
+}
+
+func (r SendMessageParamsMessageTimeout) MarshalJSON() (data []byte, err error) {
+	type shadow SendMessageParamsMessageTimeout
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SendMessageParamsMessageTimeout) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SendMessageParamsMessageTimeout](
+		"criteria", "no-escalation", "delivered", "viewed", "engaged",
+	)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SendMessageParamsMessageToUnion struct {
+	OfUserRecipient              *shared.UserRecipientParam                 `json:",omitzero,inline"`
+	OfAudienceRecipient          *shared.AudienceRecipientParam             `json:",omitzero,inline"`
+	OfListRecipient              *shared.ListRecipientParam                 `json:",omitzero,inline"`
+	OfListPatternRecipient       *shared.ListPatternRecipientParam          `json:",omitzero,inline"`
+	OfSlackRecipient             *shared.SlackRecipientParam                `json:",omitzero,inline"`
+	OfMsTeamsRecipient           *shared.MsTeamsRecipientParam              `json:",omitzero,inline"`
+	OfPagerDutyRecipient         *shared.PagerdutyRecipientParam            `json:",omitzero,inline"`
+	OfWebhookRecipient           *shared.WebhookRecipientParam              `json:",omitzero,inline"`
+	OfSendMessagesMessageToArray []SendMessageParamsMessageToArrayItemUnion `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SendMessageParamsMessageToUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfUserRecipient,
+		u.OfAudienceRecipient,
+		u.OfListRecipient,
+		u.OfListPatternRecipient,
+		u.OfSlackRecipient,
+		u.OfMsTeamsRecipient,
+		u.OfPagerDutyRecipient,
+		u.OfWebhookRecipient,
+		u.OfSendMessagesMessageToArray)
+}
+func (u *SendMessageParamsMessageToUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SendMessageParamsMessageToUnion) asAny() any {
+	if !param.IsOmitted(u.OfUserRecipient) {
+		return u.OfUserRecipient
+	} else if !param.IsOmitted(u.OfAudienceRecipient) {
+		return u.OfAudienceRecipient
+	} else if !param.IsOmitted(u.OfListRecipient) {
+		return u.OfListRecipient
+	} else if !param.IsOmitted(u.OfListPatternRecipient) {
+		return u.OfListPatternRecipient
+	} else if !param.IsOmitted(u.OfSlackRecipient) {
+		return u.OfSlackRecipient
+	} else if !param.IsOmitted(u.OfMsTeamsRecipient) {
+		return u.OfMsTeamsRecipient
+	} else if !param.IsOmitted(u.OfPagerDutyRecipient) {
+		return u.OfPagerDutyRecipient
+	} else if !param.IsOmitted(u.OfWebhookRecipient) {
+		return u.OfWebhookRecipient
+	} else if !param.IsOmitted(u.OfSendMessagesMessageToArray) {
+		return &u.OfSendMessagesMessageToArray
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToUnion) GetAccountID() *string {
+	if vt := u.OfUserRecipient; vt != nil && vt.AccountID.Valid() {
+		return &vt.AccountID.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToUnion) GetContext() *shared.MessageContextParam {
+	if vt := u.OfUserRecipient; vt != nil {
+		return &vt.Context
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToUnion) GetEmail() *string {
+	if vt := u.OfUserRecipient; vt != nil && vt.Email.Valid() {
+		return &vt.Email.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToUnion) GetLocale() *string {
+	if vt := u.OfUserRecipient; vt != nil && vt.Locale.Valid() {
+		return &vt.Locale.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToUnion) GetPhoneNumber() *string {
+	if vt := u.OfUserRecipient; vt != nil && vt.PhoneNumber.Valid() {
+		return &vt.PhoneNumber.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToUnion) GetPreferences() *shared.UserRecipientPreferencesParam {
+	if vt := u.OfUserRecipient; vt != nil {
+		return &vt.Preferences
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToUnion) GetTenantID() *string {
+	if vt := u.OfUserRecipient; vt != nil && vt.TenantID.Valid() {
+		return &vt.TenantID.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToUnion) GetUserID() *string {
+	if vt := u.OfUserRecipient; vt != nil && vt.UserID.Valid() {
+		return &vt.UserID.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToUnion) GetAudienceID() *string {
+	if vt := u.OfAudienceRecipient; vt != nil {
+		return &vt.AudienceID
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToUnion) GetListPattern() *string {
+	if vt := u.OfListPatternRecipient; vt != nil && vt.ListPattern.Valid() {
+		return &vt.ListPattern.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToUnion) GetSlack() *shared.SlackUnionParam {
+	if vt := u.OfSlackRecipient; vt != nil {
+		return &vt.Slack
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToUnion) GetMsTeams() *shared.MsTeamsUnionParam {
+	if vt := u.OfMsTeamsRecipient; vt != nil {
+		return &vt.MsTeams
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToUnion) GetPagerduty() *shared.PagerdutyParam {
+	if vt := u.OfPagerDutyRecipient; vt != nil {
+		return &vt.Pagerduty
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToUnion) GetWebhook() *shared.WebhookProfileParam {
+	if vt := u.OfWebhookRecipient; vt != nil {
+		return &vt.Webhook
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToUnion) GetListID() *string {
+	if vt := u.OfUserRecipient; vt != nil && vt.ListID.Valid() {
+		return &vt.ListID.Value
+	} else if vt := u.OfListRecipient; vt != nil && vt.ListID.Valid() {
+		return &vt.ListID.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's Data property, if present.
+func (u SendMessageParamsMessageToUnion) GetData() map[string]any {
+	if vt := u.OfUserRecipient; vt != nil {
+		return vt.Data
+	} else if vt := u.OfAudienceRecipient; vt != nil {
+		return vt.Data
+	} else if vt := u.OfListRecipient; vt != nil {
+		return vt.Data
+	} else if vt := u.OfListPatternRecipient; vt != nil {
+		return vt.Data
+	}
+	return nil
+}
+
+// Returns a subunion which exports methods to access subproperties
+//
+// Or use AsAny() to get the underlying value
+func (u SendMessageParamsMessageToUnion) GetFilters() (res sendMessageParamsMessageToUnionFilters) {
+	if vt := u.OfAudienceRecipient; vt != nil {
+		res.any = &vt.Filters
+	} else if vt := u.OfListRecipient; vt != nil {
+		res.any = &vt.Filters
+	}
+	return
+}
+
+// Can have the runtime types [_[]shared.AudienceFilterParam],
+// [_[]shared.ListFilterParam]
+type sendMessageParamsMessageToUnionFilters struct{ any }
+
+// Use the following switch statement to get the type of the union:
+//
+//	switch u.AsAny().(type) {
+//	case *[]shared.AudienceFilterParam:
+//	case *[]shared.ListFilterParam:
+//	default:
+//	    fmt.Errorf("not present")
+//	}
+func (u sendMessageParamsMessageToUnionFilters) AsAny() any { return u.any }
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SendMessageParamsMessageToArrayItemUnion struct {
+	OfUserRecipient        *shared.UserRecipientParam        `json:",omitzero,inline"`
+	OfAudienceRecipient    *shared.AudienceRecipientParam    `json:",omitzero,inline"`
+	OfListRecipient        *shared.ListRecipientParam        `json:",omitzero,inline"`
+	OfListPatternRecipient *shared.ListPatternRecipientParam `json:",omitzero,inline"`
+	OfSlackRecipient       *shared.SlackRecipientParam       `json:",omitzero,inline"`
+	OfMsTeamsRecipient     *shared.MsTeamsRecipientParam     `json:",omitzero,inline"`
+	OfPagerDutyRecipient   *shared.PagerdutyRecipientParam   `json:",omitzero,inline"`
+	OfWebhookRecipient     *shared.WebhookRecipientParam     `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SendMessageParamsMessageToArrayItemUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfUserRecipient,
+		u.OfAudienceRecipient,
+		u.OfListRecipient,
+		u.OfListPatternRecipient,
+		u.OfSlackRecipient,
+		u.OfMsTeamsRecipient,
+		u.OfPagerDutyRecipient,
+		u.OfWebhookRecipient)
+}
+func (u *SendMessageParamsMessageToArrayItemUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SendMessageParamsMessageToArrayItemUnion) asAny() any {
+	if !param.IsOmitted(u.OfUserRecipient) {
+		return u.OfUserRecipient
+	} else if !param.IsOmitted(u.OfAudienceRecipient) {
+		return u.OfAudienceRecipient
+	} else if !param.IsOmitted(u.OfListRecipient) {
+		return u.OfListRecipient
+	} else if !param.IsOmitted(u.OfListPatternRecipient) {
+		return u.OfListPatternRecipient
+	} else if !param.IsOmitted(u.OfSlackRecipient) {
+		return u.OfSlackRecipient
+	} else if !param.IsOmitted(u.OfMsTeamsRecipient) {
+		return u.OfMsTeamsRecipient
+	} else if !param.IsOmitted(u.OfPagerDutyRecipient) {
+		return u.OfPagerDutyRecipient
+	} else if !param.IsOmitted(u.OfWebhookRecipient) {
+		return u.OfWebhookRecipient
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToArrayItemUnion) GetAccountID() *string {
+	if vt := u.OfUserRecipient; vt != nil && vt.AccountID.Valid() {
+		return &vt.AccountID.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToArrayItemUnion) GetContext() *shared.MessageContextParam {
+	if vt := u.OfUserRecipient; vt != nil {
+		return &vt.Context
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToArrayItemUnion) GetEmail() *string {
+	if vt := u.OfUserRecipient; vt != nil && vt.Email.Valid() {
+		return &vt.Email.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToArrayItemUnion) GetLocale() *string {
+	if vt := u.OfUserRecipient; vt != nil && vt.Locale.Valid() {
+		return &vt.Locale.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToArrayItemUnion) GetPhoneNumber() *string {
+	if vt := u.OfUserRecipient; vt != nil && vt.PhoneNumber.Valid() {
+		return &vt.PhoneNumber.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToArrayItemUnion) GetPreferences() *shared.UserRecipientPreferencesParam {
+	if vt := u.OfUserRecipient; vt != nil {
+		return &vt.Preferences
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToArrayItemUnion) GetTenantID() *string {
+	if vt := u.OfUserRecipient; vt != nil && vt.TenantID.Valid() {
+		return &vt.TenantID.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToArrayItemUnion) GetUserID() *string {
+	if vt := u.OfUserRecipient; vt != nil && vt.UserID.Valid() {
+		return &vt.UserID.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToArrayItemUnion) GetAudienceID() *string {
+	if vt := u.OfAudienceRecipient; vt != nil {
+		return &vt.AudienceID
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToArrayItemUnion) GetListPattern() *string {
+	if vt := u.OfListPatternRecipient; vt != nil && vt.ListPattern.Valid() {
+		return &vt.ListPattern.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToArrayItemUnion) GetSlack() *shared.SlackUnionParam {
+	if vt := u.OfSlackRecipient; vt != nil {
+		return &vt.Slack
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToArrayItemUnion) GetMsTeams() *shared.MsTeamsUnionParam {
+	if vt := u.OfMsTeamsRecipient; vt != nil {
+		return &vt.MsTeams
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToArrayItemUnion) GetPagerduty() *shared.PagerdutyParam {
+	if vt := u.OfPagerDutyRecipient; vt != nil {
+		return &vt.Pagerduty
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToArrayItemUnion) GetWebhook() *shared.WebhookProfileParam {
+	if vt := u.OfWebhookRecipient; vt != nil {
+		return &vt.Webhook
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SendMessageParamsMessageToArrayItemUnion) GetListID() *string {
+	if vt := u.OfUserRecipient; vt != nil && vt.ListID.Valid() {
+		return &vt.ListID.Value
+	} else if vt := u.OfListRecipient; vt != nil && vt.ListID.Valid() {
+		return &vt.ListID.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's Data property, if present.
+func (u SendMessageParamsMessageToArrayItemUnion) GetData() map[string]any {
+	if vt := u.OfUserRecipient; vt != nil {
+		return vt.Data
+	} else if vt := u.OfAudienceRecipient; vt != nil {
+		return vt.Data
+	} else if vt := u.OfListRecipient; vt != nil {
+		return vt.Data
+	} else if vt := u.OfListPatternRecipient; vt != nil {
+		return vt.Data
+	}
+	return nil
+}
+
+// Returns a subunion which exports methods to access subproperties
+//
+// Or use AsAny() to get the underlying value
+func (u SendMessageParamsMessageToArrayItemUnion) GetFilters() (res sendMessageParamsMessageToArrayItemUnionFilters) {
+	if vt := u.OfAudienceRecipient; vt != nil {
+		res.any = &vt.Filters
+	} else if vt := u.OfListRecipient; vt != nil {
+		res.any = &vt.Filters
+	}
+	return
+}
+
+// Can have the runtime types [_[]shared.AudienceFilterParam],
+// [_[]shared.ListFilterParam]
+type sendMessageParamsMessageToArrayItemUnionFilters struct{ any }
+
+// Use the following switch statement to get the type of the union:
+//
+//	switch u.AsAny().(type) {
+//	case *[]shared.AudienceFilterParam:
+//	case *[]shared.ListFilterParam:
+//	default:
+//	    fmt.Errorf("not present")
+//	}
+func (u sendMessageParamsMessageToArrayItemUnionFilters) AsAny() any { return u.any }

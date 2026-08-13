@@ -16,7 +16,7 @@ import (
 
 var usersTokensRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Get single token available for a `:token`",
+	Usage:   "Returns one device token with its provider key, status and status reason, expiry\ndate, and any properties stored alongside it.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -36,7 +36,7 @@ var usersTokensRetrieve = cli.Command{
 
 var usersTokensUpdate = requestflag.WithInnerFlags(cli.Command{
 	Name:    "update",
-	Usage:   "Apply a JSON Patch (RFC 6902) to the specified token.",
+	Usage:   "Applies a JSON Patch to a device token, changing its status, expiry, or\nproperties without re-registering it.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -79,7 +79,7 @@ var usersTokensUpdate = requestflag.WithInnerFlags(cli.Command{
 
 var usersTokensList = cli.Command{
 	Name:    "list",
-	Usage:   "Gets all tokens available for a :user_id",
+	Usage:   "Returns every device token registered for a user, each with its provider key,\nstatus, and expiry date.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -94,7 +94,7 @@ var usersTokensList = cli.Command{
 
 var usersTokensDelete = cli.Command{
 	Name:    "delete",
-	Usage:   "Delete User Token",
+	Usage:   "Deletes one device token for a user, addressed by the token value, so push sends\nno longer target that device.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -114,7 +114,7 @@ var usersTokensDelete = cli.Command{
 
 var usersTokensAddMultiple = cli.Command{
 	Name:    "add-multiple",
-	Usage:   "Adds multiple tokens to a user and overwrites matching existing tokens.",
+	Usage:   "Registers several device tokens for a user in one call, overwriting any stored\ntoken with a matching value.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -129,7 +129,7 @@ var usersTokensAddMultiple = cli.Command{
 
 var usersTokensAddSingle = requestflag.WithInnerFlags(cli.Command{
 	Name:    "add-single",
-	Usage:   "Adds a single token to a user and overwrites a matching existing token.",
+	Usage:   "Registers one device token for a user against a provider key, overwriting the\ntoken if it already exists. Push sends resolve tokens per user.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

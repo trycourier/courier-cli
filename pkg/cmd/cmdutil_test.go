@@ -62,19 +62,7 @@ func TestWriteBinaryResponse(t *testing.T) {
 }
 
 func TestCreateDownloadFile(t *testing.T) {
-	t.Run("uses Content-Disposition filename", func(t *testing.T) {
-		t.Chdir(t.TempDir())
-
-		resp := &http.Response{Header: http.Header{}}
-		resp.Header.Set("Content-Disposition", `attachment; filename="report.csv"`)
-
-		f, err := createDownloadFile(resp, []byte("a,b,c"))
-		require.NoError(t, err)
-		defer f.Close()
-		assert.Equal(t, "report.csv", filepath.Base(f.Name()))
-	})
-
-	t.Run("does not clobber existing file with same name", func(t *testing.T) {
+	t.Run("creates file with filename from header", func(t *testing.T) {
 		t.Chdir(t.TempDir())
 
 		resp := &http.Response{
@@ -82,39 +70,46 @@ func TestCreateDownloadFile(t *testing.T) {
 				"Content-Disposition": []string{`attachment; filename="test.txt"`},
 			},
 		}
-		file, err := createDownloadFile(resp, []byte("first"))
+		file, err := createDownloadFile(resp, []byte("test content"))
 		require.NoError(t, err)
 		defer file.Close()
+		assert.Equal(t, "test.txt", filepath.Base(file.Name()))
 
-		file2, err := createDownloadFile(resp, []byte("second"))
+		// Create a second file with the same name to ensure it doesn't clobber the first
+		resp2 := &http.Response{
+			Header: http.Header{
+				"Content-Disposition": []string{`attachment; filename="test.txt"`},
+			},
+		}
+		file2, err := createDownloadFile(resp2, []byte("second content"))
 		require.NoError(t, err)
 		defer file2.Close()
 		assert.NotEqual(t, file.Name(), file2.Name(), "second file should have a different name")
 		assert.Contains(t, filepath.Base(file2.Name()), "test")
 	})
 
-	t.Run("falls back to MIME sniffing when no Content-Disposition", func(t *testing.T) {
+	t.Run("creates temp file when no header", func(t *testing.T) {
 		t.Chdir(t.TempDir())
 
 		resp := &http.Response{Header: http.Header{}}
-		pngData := []byte{0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A}
-
-		f, err := createDownloadFile(resp, pngData)
+		file, err := createDownloadFile(resp, []byte("test content"))
 		require.NoError(t, err)
-		defer f.Close()
-		assert.Contains(t, f.Name(), ".png")
+		defer file.Close()
+		assert.Contains(t, filepath.Base(file.Name()), "file-")
 	})
 
-	t.Run("directory traversal in filename is sanitized", func(t *testing.T) {
+	t.Run("prevents directory traversal", func(t *testing.T) {
 		t.Chdir(t.TempDir())
 
-		resp := &http.Response{Header: http.Header{}}
-		resp.Header.Set("Content-Disposition", `attachment; filename="../../../etc/passwd"`)
-
-		f, err := createDownloadFile(resp, []byte("not really"))
+		resp := &http.Response{
+			Header: http.Header{
+				"Content-Disposition": []string{`attachment; filename="../../../etc/passwd"`},
+			},
+		}
+		file, err := createDownloadFile(resp, []byte("test content"))
 		require.NoError(t, err)
-		defer f.Close()
-		assert.Equal(t, "passwd", filepath.Base(f.Name()))
+		defer file.Close()
+		assert.Equal(t, "passwd", filepath.Base(file.Name()))
 	})
 }
 
@@ -123,21 +118,25 @@ func TestValidateBaseURL(t *testing.T) {
 
 	t.Run("ValidHTTPS", func(t *testing.T) {
 		t.Parallel()
+
 		require.NoError(t, ValidateBaseURL("https://api.example.com", "--base-url"))
 	})
 
 	t.Run("ValidHTTP", func(t *testing.T) {
 		t.Parallel()
+
 		require.NoError(t, ValidateBaseURL("http://localhost:8080", "--base-url"))
 	})
 
 	t.Run("Empty", func(t *testing.T) {
 		t.Parallel()
+
 		require.NoError(t, ValidateBaseURL("", "MY_BASE_URL"))
 	})
 
 	t.Run("MissingScheme", func(t *testing.T) {
 		t.Parallel()
+
 		err := ValidateBaseURL("localhost:8080", "MY_BASE_URL")
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "MY_BASE_URL")
@@ -146,6 +145,7 @@ func TestValidateBaseURL(t *testing.T) {
 
 	t.Run("HostOnly", func(t *testing.T) {
 		t.Parallel()
+
 		err := ValidateBaseURL("api.example.com", "--base-url")
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "--base-url")

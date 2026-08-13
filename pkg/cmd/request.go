@@ -14,7 +14,7 @@ import (
 
 var requestsArchive = cli.Command{
 	Name:    "archive",
-	Usage:   "Archive message",
+	Usage:   "Archives a send request by its request id. Use it to remove test sends or\nsuperseded requests from the message list without deleting them.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

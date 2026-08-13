@@ -21,6 +21,8 @@ func TestJourneysTemplatesCreate(t *testing.T) {
 			"--notification", "{brand: {id: id}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, type: text}], version: '2022-01-01', scope: default}, name: Welcome email, subscription: {topic_id: topic_id}, tags: [string]}",
 			"--provider-key", "x",
 			"--state", "state",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -42,6 +44,8 @@ func TestJourneysTemplatesCreate(t *testing.T) {
 			"--notification.tags", "[string]",
 			"--provider-key", "x",
 			"--state", "state",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -74,6 +78,8 @@ func TestJourneysTemplatesCreate(t *testing.T) {
 			"--api-key", "string",
 			"journeys:templates", "create",
 			"--template-id", "x",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }
@@ -141,6 +147,8 @@ func TestJourneysTemplatesPublish(t *testing.T) {
 			"--template-id", "x",
 			"--notification-id", "x",
 			"--version", "v321669910225",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -153,6 +161,8 @@ func TestJourneysTemplatesPublish(t *testing.T) {
 			"journeys:templates", "publish",
 			"--template-id", "x",
 			"--notification-id", "x",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }
@@ -166,7 +176,7 @@ func TestJourneysTemplatesPutContent(t *testing.T) {
 			"journeys:templates", "put-content",
 			"--template-id", "x",
 			"--notification-id", "x",
-			"--content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, raw: {foo: bar}, type: channel}], version: '2022-01-01'}",
+			"--content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}], version: '2022-01-01'}",
 			"--state", "DRAFT",
 		)
 	})
@@ -182,7 +192,7 @@ func TestJourneysTemplatesPutContent(t *testing.T) {
 			"journeys:templates", "put-content",
 			"--template-id", "x",
 			"--notification-id", "x",
-			"--content.elements", "[{channels: [string], if: if, loop: loop, ref: ref, channel: email, raw: {foo: bar}, type: channel}]",
+			"--content.elements", "[{channels: [string], if: if, loop: loop, ref: ref, channel: email, font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}]",
 			"--content.version", "2022-01-01",
 			"--state", "DRAFT",
 		)
@@ -199,6 +209,9 @@ func TestJourneysTemplatesPutContent(t *testing.T) {
 			"      loop: loop\n" +
 			"      ref: ref\n" +
 			"      channel: email\n" +
+			"      font_size: font_size\n" +
+			"      line_height: line_height\n" +
+			"      padding: padding\n" +
 			"      raw:\n" +
 			"        foo: bar\n" +
 			"      type: channel\n" +
