@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.12.3](https://github.com/trycourier/courier-cli/compare/v3.12.2...v3.12.3) (2026-08-13)
+
+
+### Documentation
+
+* sync README from api-spec ([#82](https://github.com/trycourier/courier-cli/issues/82)) ([794fcf1](https://github.com/trycourier/courier-cli/commit/794fcf1664ec0f7d5f0b98d3cb44f84b4b4abfab))
+
 ## 3.12.2 (2026-07-29)
 
 Full Changelog: [v3.12.1...v3.12.2](https://github.com/trycourier/courier-cli/compare/v3.12.1...v3.12.2)
