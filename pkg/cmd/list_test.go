@@ -29,7 +29,7 @@ func TestListsUpdate(t *testing.T) {
 			"--api-key", "string",
 			"lists", "update",
 			"--list-id", "list_id",
-			"--name", "name",
+			"--name", "Product Updates",
 			"--preferences", "{categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}",
 		)
 	})
@@ -44,7 +44,7 @@ func TestListsUpdate(t *testing.T) {
 			"--api-key", "string",
 			"lists", "update",
 			"--list-id", "list_id",
-			"--name", "name",
+			"--name", "Product Updates",
 			"--preferences.categories", "{foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}",
 			"--preferences.notifications", "{foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}",
 		)
@@ -53,7 +53,7 @@ func TestListsUpdate(t *testing.T) {
 	t.Run("piping data", func(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
-			"name: name\n" +
+			"name: Product Updates\n" +
 			"preferences:\n" +
 			"  categories:\n" +
 			"    foo:\n" +

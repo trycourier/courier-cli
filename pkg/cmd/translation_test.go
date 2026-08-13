@@ -30,13 +30,15 @@ func TestTranslationsUpdate(t *testing.T) {
 			"translations", "update",
 			"--domain", "domain",
 			"--locale", "locale",
-			"--body", "body",
+			"--body", "msgid \"Hello\"\nmsgstr \"Hola\"",
 		)
 	})
 
 	t.Run("piping data", func(t *testing.T) {
 		// Test piping YAML data over stdin
-		pipeData := []byte("body")
+		pipeData := []byte("" +
+			"msgid \"Hello\"\n" +
+			"msgstr \"Hola\"\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
 			t, pipeData,
 			"--api-key", "string",

@@ -99,12 +99,12 @@ func TestWorkspacePreferencesTopicsReplace(t *testing.T) {
 			"workspace-preferences:topics", "replace",
 			"--section-id", "section_id",
 			"--topic-id", "topic_id",
-			"--default-status", "OPTED_OUT",
-			"--name", "name",
-			"--allowed-preference", "[snooze]",
+			"--default-status", "OPTED_IN",
+			"--name", "Product Updates",
+			"--allowed-preference", "[channel_preferences]",
 			"--description", "description",
 			"--include-unsubscribe-header=true",
-			"--routing-option", "[direct_message]",
+			"--routing-option", "[email, inbox]",
 			"--topic-data", "{foo: bar}",
 		)
 	})
@@ -112,14 +112,15 @@ func TestWorkspacePreferencesTopicsReplace(t *testing.T) {
 	t.Run("piping data", func(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
-			"default_status: OPTED_OUT\n" +
-			"name: name\n" +
+			"default_status: OPTED_IN\n" +
+			"name: Product Updates\n" +
 			"allowed_preferences:\n" +
-			"  - snooze\n" +
+			"  - channel_preferences\n" +
 			"description: description\n" +
 			"include_unsubscribe_header: true\n" +
 			"routing_options:\n" +
-			"  - direct_message\n" +
+			"  - email\n" +
+			"  - inbox\n" +
 			"topic_data:\n" +
 			"  foo: bar\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(

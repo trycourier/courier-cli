@@ -29,11 +29,11 @@ func TestTenantsUpdate(t *testing.T) {
 			"--api-key", "string",
 			"tenants", "update",
 			"--tenant-id", "tenant_id",
-			"--name", "name",
-			"--brand-id", "brand_id",
+			"--name", "Acme Corp",
+			"--brand-id", "bnd_01kx4mrd0pfzw8wt7pn7p2fzag",
 			"--default-preferences", "{items: [{status: OPTED_OUT, custom_routing: [direct_message], has_custom_routing: true, id: id}]}",
 			"--parent-tenant-id", "parent_tenant_id",
-			"--properties", "{foo: bar}",
+			"--properties", "{plan: bar}",
 			"--user-profile", "{foo: bar}",
 		)
 	})
@@ -48,11 +48,11 @@ func TestTenantsUpdate(t *testing.T) {
 			"--api-key", "string",
 			"tenants", "update",
 			"--tenant-id", "tenant_id",
-			"--name", "name",
-			"--brand-id", "brand_id",
+			"--name", "Acme Corp",
+			"--brand-id", "bnd_01kx4mrd0pfzw8wt7pn7p2fzag",
 			"--default-preferences.items", "[{status: OPTED_OUT, custom_routing: [direct_message], has_custom_routing: true, id: id}]",
 			"--parent-tenant-id", "parent_tenant_id",
-			"--properties", "{foo: bar}",
+			"--properties", "{plan: bar}",
 			"--user-profile", "{foo: bar}",
 		)
 	})
@@ -60,8 +60,8 @@ func TestTenantsUpdate(t *testing.T) {
 	t.Run("piping data", func(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
-			"name: name\n" +
-			"brand_id: brand_id\n" +
+			"name: Acme Corp\n" +
+			"brand_id: bnd_01kx4mrd0pfzw8wt7pn7p2fzag\n" +
 			"default_preferences:\n" +
 			"  items:\n" +
 			"    - status: OPTED_OUT\n" +
@@ -71,7 +71,7 @@ func TestTenantsUpdate(t *testing.T) {
 			"      id: id\n" +
 			"parent_tenant_id: parent_tenant_id\n" +
 			"properties:\n" +
-			"  foo: bar\n" +
+			"  plan: bar\n" +
 			"user_profile:\n" +
 			"  foo: bar\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(

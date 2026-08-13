@@ -133,8 +133,8 @@ func TestBrandsUpdate(t *testing.T) {
 			"--api-key", "string",
 			"brands", "update",
 			"--brand-id", "brand_id",
-			"--name", "name",
-			"--settings", "{colors: {primary: primary, secondary: secondary}, email: {footer: {content: content, inheritDefault: true}, head: {inheritDefault: true, content: content}, header: {logo: {href: href, image: image}, barColor: barColor, inheritDefault: true}, templateOverride: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width, mjml: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width}, footerBackgroundColor: footerBackgroundColor, footerFullWidth: true}}, inapp: {colors: {primary: primary, secondary: secondary}, icons: {bell: bell, message: message}, widgetBackground: {bottomColor: bottomColor, topColor: topColor}, borderRadius: borderRadius, disableMessageIcon: true, fontFamily: fontFamily, placement: top}}",
+			"--name", "My Brand",
+			"--settings", "{colors: {primary: '#9D3789', secondary: '#FFFFFF'}, email: {footer: {content: content, inheritDefault: true}, head: {inheritDefault: true, content: content}, header: {logo: {href: href, image: image}, barColor: barColor, inheritDefault: true}, templateOverride: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width, mjml: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width}, footerBackgroundColor: footerBackgroundColor, footerFullWidth: true}}, inapp: {colors: {primary: primary, secondary: secondary}, icons: {bell: bell, message: message}, widgetBackground: {bottomColor: bottomColor, topColor: topColor}, borderRadius: borderRadius, disableMessageIcon: true, fontFamily: fontFamily, placement: top}}",
 			"--snippets", "{items: [{name: name, value: value}]}",
 		)
 	})
@@ -149,8 +149,8 @@ func TestBrandsUpdate(t *testing.T) {
 			"--api-key", "string",
 			"brands", "update",
 			"--brand-id", "brand_id",
-			"--name", "name",
-			"--settings.colors", "{primary: primary, secondary: secondary}",
+			"--name", "My Brand",
+			"--settings.colors", "{primary: '#9D3789', secondary: '#FFFFFF'}",
 			"--settings.email", "{footer: {content: content, inheritDefault: true}, head: {inheritDefault: true, content: content}, header: {logo: {href: href, image: image}, barColor: barColor, inheritDefault: true}, templateOverride: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width, mjml: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width}, footerBackgroundColor: footerBackgroundColor, footerFullWidth: true}}",
 			"--settings.inapp", "{colors: {primary: primary, secondary: secondary}, icons: {bell: bell, message: message}, widgetBackground: {bottomColor: bottomColor, topColor: topColor}, borderRadius: borderRadius, disableMessageIcon: true, fontFamily: fontFamily, placement: top}",
 			"--snippets.items", "[{name: name, value: value}]",
@@ -160,11 +160,11 @@ func TestBrandsUpdate(t *testing.T) {
 	t.Run("piping data", func(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
-			"name: name\n" +
+			"name: My Brand\n" +
 			"settings:\n" +
 			"  colors:\n" +
-			"    primary: primary\n" +
-			"    secondary: secondary\n" +
+			"    primary: '#9D3789'\n" +
+			"    secondary: '#FFFFFF'\n" +
 			"  email:\n" +
 			"    footer:\n" +
 			"      content: content\n" +

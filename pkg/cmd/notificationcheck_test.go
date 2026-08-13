@@ -18,7 +18,7 @@ func TestNotificationsChecksUpdate(t *testing.T) {
 			"notifications:checks", "update",
 			"--id", "id",
 			"--submission-id", "submissionId",
-			"--check", "{id: id, status: RESOLVED, type: custom}",
+			"--check", "{id: abc-123, status: RESOLVED, type: custom}",
 		)
 	})
 
@@ -33,7 +33,7 @@ func TestNotificationsChecksUpdate(t *testing.T) {
 			"notifications:checks", "update",
 			"--id", "id",
 			"--submission-id", "submissionId",
-			"--check.id", "id",
+			"--check.id", "abc-123",
 			"--check.status", "RESOLVED",
 			"--check.type", "custom",
 		)
@@ -43,7 +43,7 @@ func TestNotificationsChecksUpdate(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
 			"checks:\n" +
-			"  - id: id\n" +
+			"  - id: abc-123\n" +
 			"    status: RESOLVED\n" +
 			"    type: custom\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(

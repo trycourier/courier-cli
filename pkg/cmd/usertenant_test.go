@@ -31,7 +31,8 @@ func TestUsersTenantsAddMultiple(t *testing.T) {
 			"--api-key", "string",
 			"users:tenants", "add-multiple",
 			"--user-id", "user_id",
-			"--tenant", "{tenant_id: tenant_id, profile: {foo: bar}, type: user, user_id: user_id}",
+			"--tenant", "{tenant_id: tenant_abc, profile: {foo: bar}, type: user, user_id: user_id}",
+			"--tenant", "{tenant_id: tenant_def, profile: {foo: bar}, type: user, user_id: user_id}",
 		)
 	})
 
@@ -45,7 +46,11 @@ func TestUsersTenantsAddMultiple(t *testing.T) {
 			"--api-key", "string",
 			"users:tenants", "add-multiple",
 			"--user-id", "user_id",
-			"--tenant.tenant-id", "tenant_id",
+			"--tenant.tenant-id", "tenant_abc",
+			"--tenant.profile", "{foo: bar}",
+			"--tenant.type", "user",
+			"--tenant.user-id", "user_id",
+			"--tenant.tenant-id", "tenant_def",
 			"--tenant.profile", "{foo: bar}",
 			"--tenant.type", "user",
 			"--tenant.user-id", "user_id",
@@ -56,7 +61,12 @@ func TestUsersTenantsAddMultiple(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
 			"tenants:\n" +
-			"  - tenant_id: tenant_id\n" +
+			"  - tenant_id: tenant_abc\n" +
+			"    profile:\n" +
+			"      foo: bar\n" +
+			"    type: user\n" +
+			"    user_id: user_id\n" +
+			"  - tenant_id: tenant_def\n" +
 			"    profile:\n" +
 			"      foo: bar\n" +
 			"    type: user\n" +
@@ -79,7 +89,7 @@ func TestUsersTenantsAddSingle(t *testing.T) {
 			"users:tenants", "add-single",
 			"--user-id", "user_id",
 			"--tenant-id", "tenant_id",
-			"--profile", "{foo: bar}",
+			"--profile", "{role: bar}",
 		)
 	})
 
@@ -87,7 +97,7 @@ func TestUsersTenantsAddSingle(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
 			"profile:\n" +
-			"  foo: bar\n")
+			"  role: bar\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
 			t, pipeData,
 			"--api-key", "string",
