@@ -1,5 +1,22 @@
 # Changelog
 
+## 3.13.0 (2026-08-13)
+
+Full Changelog: [v3.12.2...v3.13.0](https://github.com/trycourier/courier-cli/compare/v3.12.2...v3.13.0)
+
+### Features
+
+* Document DELETE/PUT restore for inbox messages (C-19268) ([#175](https://github.com/trycourier/courier-cli/issues/175)) ([2d530cf](https://github.com/trycourier/courier-cli/commit/2d530cf566975c790d591b44722b4ef3996a0cc1))
+* Remove /bulk endpoints from api-spec (C-19507) ([#171](https://github.com/trycourier/courier-cli/issues/171)) ([6d164c7](https://github.com/trycourier/courier-cli/commit/6d164c76f237ddd4b4b28af4f635401e257df1e2))
+
+
+### Documentation
+
+* **openapi:** describe user topic-preference fields explicitly ([#172](https://github.com/trycourier/courier-cli/issues/172)) ([78d8598](https://github.com/trycourier/courier-cli/commit/78d8598cca0b1c218dda8e9e9633a5de232e4351))
+* **openapi:** document Idempotency-Key header on idempotent POST endpoints ([#176](https://github.com/trycourier/courier-cli/issues/176)) ([08a90ab](https://github.com/trycourier/courier-cli/commit/08a90ab2873eb49e07c386fc349893d9368729b4))
+* **openapi:** rewrite operation descriptions for agents and SEO ([#174](https://github.com/trycourier/courier-cli/issues/174)) ([77b3fee](https://github.com/trycourier/courier-cli/commit/77b3feec6c72e4f4483025846a6bba5cdea76a9a))
+* sync README from api-spec ([#82](https://github.com/trycourier/courier-cli/issues/82)) ([794fcf1](https://github.com/trycourier/courier-cli/commit/794fcf1664ec0f7d5f0b98d3cb44f84b4b4abfab))
+
 ## 3.12.2 (2026-07-29)
 
 Full Changelog: [v3.12.1...v3.12.2](https://github.com/trycourier/courier-cli/compare/v3.12.1...v3.12.2)
