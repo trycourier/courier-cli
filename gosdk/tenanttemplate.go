@@ -1,0 +1,261 @@
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+package courier
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"net/http"
+	"net/url"
+	"slices"
+
+	"github.com/trycourier/courier-go/v4/internal/apijson"
+	"github.com/trycourier/courier-go/v4/internal/apiquery"
+	shimjson "github.com/trycourier/courier-go/v4/internal/encoding/json"
+	"github.com/trycourier/courier-go/v4/internal/requestconfig"
+	"github.com/trycourier/courier-go/v4/option"
+	"github.com/trycourier/courier-go/v4/packages/param"
+	"github.com/trycourier/courier-go/v4/packages/respjson"
+	"github.com/trycourier/courier-go/v4/shared"
+)
+
+// Manage the templates and template versions scoped to a single tenant, including
+// the ones authored in the embedded designer.
+//
+// TenantTemplateService contains methods and other services that help with
+// interacting with the Courier API.
+//
+// Note, unlike clients, this service does not read variables from the environment
+// automatically. You should not instantiate this service directly, and instead use
+// the [NewTenantTemplateService] method instead.
+type TenantTemplateService struct {
+	Options []option.RequestOption
+	// Manage the templates and template versions scoped to a single tenant, including
+	// the ones authored in the embedded designer.
+	Versions TenantTemplateVersionService
+}
+
+// NewTenantTemplateService generates a new service that applies the given options
+// to each request. These options are applied after the parent client's options (if
+// there is one), and before any request-specific options.
+func NewTenantTemplateService(opts ...option.RequestOption) (r TenantTemplateService) {
+	r = TenantTemplateService{}
+	r.Options = opts
+	r.Versions = NewTenantTemplateVersionService(opts...)
+	return
+}
+
+// Returns a tenant's notification template with its content, version, and created,
+// updated, and published timestamps.
+func (r *TenantTemplateService) Get(ctx context.Context, templateID string, query TenantTemplateGetParams, opts ...option.RequestOption) (res *BaseTemplateTenantAssociation, err error) {
+	opts = slices.Concat(r.Options, opts)
+	if query.TenantID == "" {
+		err = errors.New("missing required tenant_id parameter")
+		return nil, err
+	}
+	if templateID == "" {
+		err = errors.New("missing required template_id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("tenants/%s/templates/%s", query.TenantID, templateID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	return res, err
+}
+
+// Lists a tenant's notification templates, each carrying its version and published
+// timestamp. Paged.
+func (r *TenantTemplateService) List(ctx context.Context, tenantID string, query TenantTemplateListParams, opts ...option.RequestOption) (res *TenantTemplateListResponse, err error) {
+	opts = slices.Concat(r.Options, opts)
+	if tenantID == "" {
+		err = errors.New("missing required tenant_id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("tenants/%s/templates", tenantID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	return res, err
+}
+
+// Deletes a tenant's notification template by id. Sends for that tenant then use
+// the workspace template registered under the same id.
+func (r *TenantTemplateService) Delete(ctx context.Context, templateID string, body TenantTemplateDeleteParams, opts ...option.RequestOption) (err error) {
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
+	if body.TenantID == "" {
+		err = errors.New("missing required tenant_id parameter")
+		return err
+	}
+	if templateID == "" {
+		err = errors.New("missing required template_id parameter")
+		return err
+	}
+	path := fmt.Sprintf("tenants/%s/templates/%s", body.TenantID, templateID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
+	return err
+}
+
+// Publishes a version of a tenant's notification template, making it the content
+// that tenant's sends render from until you publish another.
+func (r *TenantTemplateService) Publish(ctx context.Context, templateID string, params TenantTemplatePublishParams, opts ...option.RequestOption) (res *PostTenantTemplatePublishResponse, err error) {
+	opts = slices.Concat(r.Options, opts)
+	if params.TenantID == "" {
+		err = errors.New("missing required tenant_id parameter")
+		return nil, err
+	}
+	if templateID == "" {
+		err = errors.New("missing required template_id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("tenants/%s/templates/%s/publish", params.TenantID, templateID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	return res, err
+}
+
+// Creates or updates a notification template scoped to one tenant, letting a
+// tenant override the content the workspace template would send.
+func (r *TenantTemplateService) Replace(ctx context.Context, templateID string, params TenantTemplateReplaceParams, opts ...option.RequestOption) (res *PutTenantTemplateResponse, err error) {
+	opts = slices.Concat(r.Options, opts)
+	if params.TenantID == "" {
+		err = errors.New("missing required tenant_id parameter")
+		return nil, err
+	}
+	if templateID == "" {
+		err = errors.New("missing required template_id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("tenants/%s/templates/%s", params.TenantID, templateID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, params, &res, opts...)
+	return res, err
+}
+
+type TenantTemplateListResponse struct {
+	// Set to true when there are more pages that can be retrieved.
+	HasMore bool `json:"has_more" api:"required"`
+	// Always set to `list`. Represents the type of this object.
+	//
+	// Any of "list".
+	Type TenantTemplateListResponseType `json:"type" api:"required"`
+	// A url that may be used to generate these results.
+	URL string `json:"url" api:"required"`
+	// A pointer to the next page of results. Defined only when `has_more` is set to
+	// true
+	Cursor string                           `json:"cursor" api:"nullable"`
+	Items  []TenantTemplateListResponseItem `json:"items" api:"nullable"`
+	// A url that may be used to generate fetch the next set of results. Defined only
+	// when `has_more` is set to true
+	NextURL string `json:"next_url" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		HasMore     respjson.Field
+		Type        respjson.Field
+		URL         respjson.Field
+		Cursor      respjson.Field
+		Items       respjson.Field
+		NextURL     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r TenantTemplateListResponse) RawJSON() string { return r.JSON.raw }
+func (r *TenantTemplateListResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Always set to `list`. Represents the type of this object.
+type TenantTemplateListResponseType string
+
+const (
+	TenantTemplateListResponseTypeList TenantTemplateListResponseType = "list"
+)
+
+type TenantTemplateListResponseItem struct {
+	// The template's data containing it's routing configs
+	Data TenantTemplateListResponseItemData `json:"data" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Data        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+	BaseTemplateTenantAssociation
+}
+
+// Returns the unmodified JSON received from the API
+func (r TenantTemplateListResponseItem) RawJSON() string { return r.JSON.raw }
+func (r *TenantTemplateListResponseItem) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The template's data containing it's routing configs
+type TenantTemplateListResponseItemData struct {
+	Routing shared.MessageRouting `json:"routing" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Routing     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r TenantTemplateListResponseItemData) RawJSON() string { return r.JSON.raw }
+func (r *TenantTemplateListResponseItemData) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type TenantTemplateGetParams struct {
+	TenantID string `path:"tenant_id" api:"required" json:"-"`
+	paramObj
+}
+
+type TenantTemplateListParams struct {
+	// Continue the pagination with the next cursor
+	Cursor param.Opt[string] `query:"cursor,omitzero" json:"-"`
+	// The number of templates to return (defaults to 20, maximum value of 100)
+	Limit param.Opt[int64] `query:"limit,omitzero" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [TenantTemplateListParams]'s query parameters as
+// `url.Values`.
+func (r TenantTemplateListParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatComma,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+type TenantTemplateDeleteParams struct {
+	TenantID string `path:"tenant_id" api:"required" json:"-"`
+	paramObj
+}
+
+type TenantTemplatePublishParams struct {
+	TenantID string `path:"tenant_id" api:"required" json:"-"`
+	// Request body for publishing a tenant template version
+	PostTenantTemplatePublishRequest PostTenantTemplatePublishRequestParam
+	paramObj
+}
+
+func (r TenantTemplatePublishParams) MarshalJSON() (data []byte, err error) {
+	return shimjson.Marshal(r.PostTenantTemplatePublishRequest)
+}
+func (r *TenantTemplatePublishParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type TenantTemplateReplaceParams struct {
+	TenantID string `path:"tenant_id" api:"required" json:"-"`
+	// Request body for creating or updating a tenant notification template
+	PutTenantTemplateRequest PutTenantTemplateRequestParam
+	paramObj
+}
+
+func (r TenantTemplateReplaceParams) MarshalJSON() (data []byte, err error) {
+	return shimjson.Marshal(r.PutTenantTemplateRequest)
+}
+func (r *TenantTemplateReplaceParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}

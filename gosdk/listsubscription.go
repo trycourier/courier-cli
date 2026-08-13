@@ -1,0 +1,225 @@
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+package courier
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"net/http"
+	"net/url"
+	"slices"
+
+	"github.com/trycourier/courier-go/v4/internal/apijson"
+	"github.com/trycourier/courier-go/v4/internal/apiquery"
+	"github.com/trycourier/courier-go/v4/internal/requestconfig"
+	"github.com/trycourier/courier-go/v4/option"
+	"github.com/trycourier/courier-go/v4/packages/param"
+	"github.com/trycourier/courier-go/v4/packages/respjson"
+	"github.com/trycourier/courier-go/v4/shared"
+)
+
+// Manage static groups of users that you subscribe explicitly, and send to them by
+// list id or list pattern.
+//
+// ListSubscriptionService contains methods and other services that help with
+// interacting with the Courier API.
+//
+// Note, unlike clients, this service does not read variables from the environment
+// automatically. You should not instantiate this service directly, and instead use
+// the [NewListSubscriptionService] method instead.
+type ListSubscriptionService struct {
+	Options []option.RequestOption
+}
+
+// NewListSubscriptionService generates a new service that applies the given
+// options to each request. These options are applied after the parent client's
+// options (if there is one), and before any request-specific options.
+func NewListSubscriptionService(opts ...option.RequestOption) (r ListSubscriptionService) {
+	r = ListSubscriptionService{}
+	r.Options = opts
+	return
+}
+
+// Returns the users subscribed to a list with paging, each with the preferences
+// recorded for that subscription.
+func (r *ListSubscriptionService) List(ctx context.Context, listID string, query ListSubscriptionListParams, opts ...option.RequestOption) (res *ListSubscriptionListResponse, err error) {
+	opts = slices.Concat(r.Options, opts)
+	if listID == "" {
+		err = errors.New("missing required list_id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("lists/%s/subscriptions", listID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	return res, err
+}
+
+// Subscribes additional users to the list, without modifying existing
+// subscriptions. If the list does not exist, it will be automatically created.
+func (r *ListSubscriptionService) Add(ctx context.Context, listID string, params ListSubscriptionAddParams, opts ...option.RequestOption) (err error) {
+	if !param.IsOmitted(params.IdempotencyKey) {
+		opts = append(opts, option.WithHeader("Idempotency-Key", fmt.Sprintf("%v", params.IdempotencyKey.Value)))
+	}
+	if !param.IsOmitted(params.XIdempotencyExpiration) {
+		opts = append(opts, option.WithHeader("x-idempotency-expiration", fmt.Sprintf("%v", params.XIdempotencyExpiration.Value)))
+	}
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
+	if listID == "" {
+		err = errors.New("missing required list_id parameter")
+		return err
+	}
+	path := fmt.Sprintf("lists/%s/subscriptions", listID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, nil, opts...)
+	return err
+}
+
+// Subscribes the users to the list, overwriting existing subscriptions. If the
+// list does not exist, it will be automatically created.
+func (r *ListSubscriptionService) Subscribe(ctx context.Context, listID string, body ListSubscriptionSubscribeParams, opts ...option.RequestOption) (err error) {
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
+	if listID == "" {
+		err = errors.New("missing required list_id parameter")
+		return err
+	}
+	path := fmt.Sprintf("lists/%s/subscriptions", listID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, body, nil, opts...)
+	return err
+}
+
+// Subscribes one user to a list, creating the list if it does not yet exist.
+// Optional preferences apply to this subscription only.
+func (r *ListSubscriptionService) SubscribeUser(ctx context.Context, userID string, params ListSubscriptionSubscribeUserParams, opts ...option.RequestOption) (err error) {
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
+	if params.ListID == "" {
+		err = errors.New("missing required list_id parameter")
+		return err
+	}
+	if userID == "" {
+		err = errors.New("missing required user_id parameter")
+		return err
+	}
+	path := fmt.Sprintf("lists/%s/subscriptions/%s", params.ListID, userID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, params, nil, opts...)
+	return err
+}
+
+// Removes one user's subscription to a list, addressed by list id and user id. The
+// user's profile and other subscriptions are separate resources.
+func (r *ListSubscriptionService) UnsubscribeUser(ctx context.Context, userID string, body ListSubscriptionUnsubscribeUserParams, opts ...option.RequestOption) (err error) {
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
+	if body.ListID == "" {
+		err = errors.New("missing required list_id parameter")
+		return err
+	}
+	if userID == "" {
+		err = errors.New("missing required user_id parameter")
+		return err
+	}
+	path := fmt.Sprintf("lists/%s/subscriptions/%s", body.ListID, userID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
+	return err
+}
+
+type ListSubscriptionListResponse struct {
+	Items  []ListSubscriptionListResponseItem `json:"items" api:"required"`
+	Paging shared.Paging                      `json:"paging" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Items       respjson.Field
+		Paging      respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ListSubscriptionListResponse) RawJSON() string { return r.JSON.raw }
+func (r *ListSubscriptionListResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ListSubscriptionListResponseItem struct {
+	RecipientID string                      `json:"recipientId" api:"required"`
+	Created     string                      `json:"created" api:"nullable"`
+	Preferences shared.RecipientPreferences `json:"preferences" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		RecipientID respjson.Field
+		Created     respjson.Field
+		Preferences respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ListSubscriptionListResponseItem) RawJSON() string { return r.JSON.raw }
+func (r *ListSubscriptionListResponseItem) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ListSubscriptionListParams struct {
+	// A unique identifier that allows for fetching the next set of list subscriptions
+	Cursor param.Opt[string] `query:"cursor,omitzero" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [ListSubscriptionListParams]'s query parameters as
+// `url.Values`.
+func (r ListSubscriptionListParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatComma,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+type ListSubscriptionAddParams struct {
+	Recipients             []PutSubscriptionsRecipientParam `json:"recipients,omitzero" api:"required"`
+	IdempotencyKey         param.Opt[string]                `header:"Idempotency-Key,omitzero" json:"-"`
+	XIdempotencyExpiration param.Opt[string]                `header:"x-idempotency-expiration,omitzero" json:"-"`
+	paramObj
+}
+
+func (r ListSubscriptionAddParams) MarshalJSON() (data []byte, err error) {
+	type shadow ListSubscriptionAddParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ListSubscriptionAddParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ListSubscriptionSubscribeParams struct {
+	Recipients []PutSubscriptionsRecipientParam `json:"recipients,omitzero" api:"required"`
+	paramObj
+}
+
+func (r ListSubscriptionSubscribeParams) MarshalJSON() (data []byte, err error) {
+	type shadow ListSubscriptionSubscribeParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ListSubscriptionSubscribeParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ListSubscriptionSubscribeUserParams struct {
+	ListID      string                           `path:"list_id" api:"required" json:"-"`
+	Preferences shared.RecipientPreferencesParam `json:"preferences,omitzero"`
+	paramObj
+}
+
+func (r ListSubscriptionSubscribeUserParams) MarshalJSON() (data []byte, err error) {
+	type shadow ListSubscriptionSubscribeUserParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ListSubscriptionSubscribeUserParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ListSubscriptionUnsubscribeUserParams struct {
+	ListID string `path:"list_id" api:"required" json:"-"`
+	paramObj
+}

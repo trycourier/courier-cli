@@ -1,0 +1,210 @@
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+package courier
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"net/http"
+	"net/url"
+	"slices"
+
+	"github.com/trycourier/courier-go/v4/internal/apijson"
+	"github.com/trycourier/courier-go/v4/internal/apiquery"
+	"github.com/trycourier/courier-go/v4/internal/requestconfig"
+	"github.com/trycourier/courier-go/v4/option"
+	"github.com/trycourier/courier-go/v4/packages/param"
+	"github.com/trycourier/courier-go/v4/packages/respjson"
+	"github.com/trycourier/courier-go/v4/shared"
+)
+
+// Manage static groups of users that you subscribe explicitly, and send to them by
+// list id or list pattern.
+//
+// ListService contains methods and other services that help with interacting with
+// the Courier API.
+//
+// Note, unlike clients, this service does not read variables from the environment
+// automatically. You should not instantiate this service directly, and instead use
+// the [NewListService] method instead.
+type ListService struct {
+	Options []option.RequestOption
+	// Manage static groups of users that you subscribe explicitly, and send to them by
+	// list id or list pattern.
+	Subscriptions ListSubscriptionService
+}
+
+// NewListService generates a new service that applies the given options to each
+// request. These options are applied after the parent client's options (if there
+// is one), and before any request-specific options.
+func NewListService(opts ...option.RequestOption) (r ListService) {
+	r = ListService{}
+	r.Options = opts
+	r.Subscriptions = NewListSubscriptionService(opts...)
+	return
+}
+
+// Returns one list by id with its name and created and updated timestamps. Fetch
+// its subscribers separately with the subscriptions endpoint.
+func (r *ListService) Get(ctx context.Context, listID string, opts ...option.RequestOption) (res *SubscriptionList, err error) {
+	opts = slices.Concat(r.Options, opts)
+	if listID == "" {
+		err = errors.New("missing required list_id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("lists/%s", listID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	return res, err
+}
+
+// Creates or replaces a list from a name and preferences. Subscribers are managed
+// through the separate subscriptions endpoints.
+func (r *ListService) Update(ctx context.Context, listID string, body ListUpdateParams, opts ...option.RequestOption) (err error) {
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
+	if listID == "" {
+		err = errors.New("missing required list_id parameter")
+		return err
+	}
+	path := fmt.Sprintf("lists/%s", listID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, body, nil, opts...)
+	return err
+}
+
+// Returns the workspace's lists, filterable by a pattern to fetch a subset such as
+// every regional list. Paged by cursor.
+func (r *ListService) List(ctx context.Context, query ListListParams, opts ...option.RequestOption) (res *ListListResponse, err error) {
+	opts = slices.Concat(r.Options, opts)
+	path := "lists"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	return res, err
+}
+
+// Deletes a list, halting sends that target it. A previously deleted list can be
+// brought back with the companion restore endpoint.
+func (r *ListService) Delete(ctx context.Context, listID string, opts ...option.RequestOption) (err error) {
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
+	if listID == "" {
+		err = errors.New("missing required list_id parameter")
+		return err
+	}
+	path := fmt.Sprintf("lists/%s", listID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
+	return err
+}
+
+// Restores a previously deleted list along with its subscribers, so a list removed
+// by mistake can be brought back rather than rebuilt.
+func (r *ListService) Restore(ctx context.Context, listID string, body ListRestoreParams, opts ...option.RequestOption) (err error) {
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
+	if listID == "" {
+		err = errors.New("missing required list_id parameter")
+		return err
+	}
+	path := fmt.Sprintf("lists/%s/restore", listID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, body, nil, opts...)
+	return err
+}
+
+// The property RecipientID is required.
+type PutSubscriptionsRecipientParam struct {
+	RecipientID string                           `json:"recipientId" api:"required"`
+	Preferences shared.RecipientPreferencesParam `json:"preferences,omitzero"`
+	paramObj
+}
+
+func (r PutSubscriptionsRecipientParam) MarshalJSON() (data []byte, err error) {
+	type shadow PutSubscriptionsRecipientParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *PutSubscriptionsRecipientParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type SubscriptionList struct {
+	ID      string `json:"id" api:"required"`
+	Name    string `json:"name" api:"required"`
+	Created string `json:"created" api:"nullable"`
+	Updated string `json:"updated" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ID          respjson.Field
+		Name        respjson.Field
+		Created     respjson.Field
+		Updated     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SubscriptionList) RawJSON() string { return r.JSON.raw }
+func (r *SubscriptionList) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ListListResponse struct {
+	Items  []SubscriptionList `json:"items" api:"required"`
+	Paging shared.Paging      `json:"paging" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Items       respjson.Field
+		Paging      respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ListListResponse) RawJSON() string { return r.JSON.raw }
+func (r *ListListResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ListUpdateParams struct {
+	Name        string                           `json:"name" api:"required"`
+	Preferences shared.RecipientPreferencesParam `json:"preferences,omitzero"`
+	paramObj
+}
+
+func (r ListUpdateParams) MarshalJSON() (data []byte, err error) {
+	type shadow ListUpdateParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ListUpdateParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ListListParams struct {
+	// A unique identifier that allows for fetching the next page of lists.
+	Cursor param.Opt[string] `query:"cursor,omitzero" json:"-"`
+	// "A pattern used to filter the list items returned. Pattern types supported:
+	// exact match on `list_id` or a pattern of one or more pattern parts. you may
+	// replace a part with either: `*` to match all parts in that position, or `**` to
+	// signify a wildcard `endsWith` pattern match."
+	Pattern param.Opt[string] `query:"pattern,omitzero" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [ListListParams]'s query parameters as `url.Values`.
+func (r ListListParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatComma,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+type ListRestoreParams struct {
+	paramObj
+}
+
+func (r ListRestoreParams) MarshalJSON() (data []byte, err error) {
+	type shadow ListRestoreParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ListRestoreParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}

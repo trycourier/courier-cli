@@ -84,6 +84,8 @@ func TestUsersPreferencesBulkUpdate(t *testing.T) {
 			"--topic", "{status: OPTED_IN, topic_id: pt_01kx4h2jdafq8bk996nn92357r, custom_routing: [inbox, email], has_custom_routing: true}",
 			"--topic", "{status: OPTED_OUT, topic_id: pt_01kx4h2jdafq8bk99eyt3dx43x, custom_routing: [direct_message], has_custom_routing: true}",
 			"--tenant-id", "tenant_id",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -106,6 +108,8 @@ func TestUsersPreferencesBulkUpdate(t *testing.T) {
 			"--topic.custom-routing", "[direct_message]",
 			"--topic.has-custom-routing=true",
 			"--tenant-id", "tenant_id",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -130,6 +134,8 @@ func TestUsersPreferencesBulkUpdate(t *testing.T) {
 			"users:preferences", "bulk-update",
 			"--user-id", "user_id",
 			"--tenant-id", "tenant_id",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }
