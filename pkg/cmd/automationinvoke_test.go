@@ -90,10 +90,10 @@ func TestAutomationsInvokeInvokeByTemplate(t *testing.T) {
 			"--api-key", "string",
 			"automations:invoke", "invoke-by-template",
 			"--template-id", "templateId",
-			"--recipient", "recipient",
+			"--recipient", "user_abc",
 			"--brand", "brand",
-			"--data", "{foo: bar}",
-			"--profile", "{foo: bar}",
+			"--data", "{orderId: bar}",
+			"--profile", "{email: bar}",
 			"--template", "template",
 			"--idempotency-key", "order-ORD-456-user-123",
 			"--x-idempotency-expiration", "1785312000",
@@ -103,12 +103,12 @@ func TestAutomationsInvokeInvokeByTemplate(t *testing.T) {
 	t.Run("piping data", func(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
-			"recipient: recipient\n" +
+			"recipient: user_abc\n" +
 			"brand: brand\n" +
 			"data:\n" +
-			"  foo: bar\n" +
+			"  orderId: bar\n" +
 			"profile:\n" +
-			"  foo: bar\n" +
+			"  email: bar\n" +
 			"template: template\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
 			t, pipeData,

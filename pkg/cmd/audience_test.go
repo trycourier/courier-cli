@@ -29,9 +29,9 @@ func TestAudiencesUpdate(t *testing.T) {
 			"--api-key", "string",
 			"audiences", "update",
 			"--audience-id", "audience_id",
-			"--description", "description",
-			"--filter", "{filters: [{operator: operator, filters: [], path: path, value: value}], operator: AND}",
-			"--name", "name",
+			"--description", "Users located in the US",
+			"--filter", "{filters: [{operator: EQ, filters: [], path: profile.location, value: US}], operator: AND}",
+			"--name", "Engaged US Users",
 			"--operator", "AND",
 		)
 	})
@@ -46,10 +46,10 @@ func TestAudiencesUpdate(t *testing.T) {
 			"--api-key", "string",
 			"audiences", "update",
 			"--audience-id", "audience_id",
-			"--description", "description",
-			"--filter.filters", "[{operator: operator, filters: [], path: path, value: value}]",
+			"--description", "Users located in the US",
+			"--filter.filters", "[{operator: EQ, filters: [], path: profile.location, value: US}]",
 			"--filter.operator", "AND",
-			"--name", "name",
+			"--name", "Engaged US Users",
 			"--operator", "AND",
 		)
 	})
@@ -57,15 +57,15 @@ func TestAudiencesUpdate(t *testing.T) {
 	t.Run("piping data", func(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
-			"description: description\n" +
+			"description: Users located in the US\n" +
 			"filter:\n" +
 			"  filters:\n" +
-			"    - operator: operator\n" +
+			"    - operator: EQ\n" +
 			"      filters: []\n" +
-			"      path: path\n" +
-			"      value: value\n" +
+			"      path: profile.location\n" +
+			"      value: US\n" +
 			"  operator: AND\n" +
-			"name: name\n" +
+			"name: Engaged US Users\n" +
 			"operator: AND\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
 			t, pipeData,

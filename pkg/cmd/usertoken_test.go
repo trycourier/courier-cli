@@ -31,7 +31,7 @@ func TestUsersTokensUpdate(t *testing.T) {
 			"users:tokens", "update",
 			"--user-id", "user_id",
 			"--token", "token",
-			"--patch", "{op: op, path: path, value: value}",
+			"--patch", "{op: replace, path: /expiry_date, value: '2024-12-31T00:00:00.000Z'}",
 		)
 	})
 
@@ -46,9 +46,9 @@ func TestUsersTokensUpdate(t *testing.T) {
 			"users:tokens", "update",
 			"--user-id", "user_id",
 			"--token", "token",
-			"--patch.op", "op",
-			"--patch.path", "path",
-			"--patch.value", "value",
+			"--patch.op", "replace",
+			"--patch.path", "/expiry_date",
+			"--patch.value", "2024-12-31T00:00:00.000Z",
 		)
 	})
 
@@ -56,9 +56,9 @@ func TestUsersTokensUpdate(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
 			"patch:\n" +
-			"  - op: op\n" +
-			"    path: path\n" +
-			"    value: value\n")
+			"  - op: replace\n" +
+			"    path: /expiry_date\n" +
+			"    value: '2024-12-31T00:00:00.000Z'\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
 			t, pipeData,
 			"--api-key", "string",
@@ -116,7 +116,7 @@ func TestUsersTokensAddSingle(t *testing.T) {
 			"--user-id", "user_id",
 			"--token", "token",
 			"--provider-key", "firebase-fcm",
-			"--device", "{ad_id: ad_id, app_id: app_id, device_id: device_id, manufacturer: manufacturer, model: model, platform: platform}",
+			"--device", "{ad_id: ad_id, app_id: com.example.app, device_id: device_id, manufacturer: manufacturer, model: model, platform: platform}",
 			"--expiry-date", "string",
 			"--properties", "{}",
 			"--tracking", "{ip: ip, lat: lat, long: long, os_version: os_version}",
@@ -136,7 +136,7 @@ func TestUsersTokensAddSingle(t *testing.T) {
 			"--token", "token",
 			"--provider-key", "firebase-fcm",
 			"--device.ad-id", "ad_id",
-			"--device.app-id", "app_id",
+			"--device.app-id", "com.example.app",
 			"--device.device-id", "device_id",
 			"--device.manufacturer", "manufacturer",
 			"--device.model", "model",
@@ -156,7 +156,7 @@ func TestUsersTokensAddSingle(t *testing.T) {
 			"provider_key: firebase-fcm\n" +
 			"device:\n" +
 			"  ad_id: ad_id\n" +
-			"  app_id: app_id\n" +
+			"  app_id: com.example.app\n" +
 			"  device_id: device_id\n" +
 			"  manufacturer: manufacturer\n" +
 			"  model: model\n" +

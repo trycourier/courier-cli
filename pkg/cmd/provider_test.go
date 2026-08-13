@@ -15,10 +15,10 @@ func TestProvidersCreate(t *testing.T) {
 			t,
 			"--api-key", "string",
 			"providers", "create",
-			"--provider", "provider",
+			"--provider", "sendgrid",
 			"--alias", "alias",
-			"--settings", "{foo: bar}",
-			"--title", "title",
+			"--settings", "{api_key: bar}",
+			"--title", "Production SendGrid",
 			"--idempotency-key", "order-ORD-456-user-123",
 			"--x-idempotency-expiration", "1785312000",
 		)
@@ -27,11 +27,11 @@ func TestProvidersCreate(t *testing.T) {
 	t.Run("piping data", func(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
-			"provider: provider\n" +
+			"provider: sendgrid\n" +
 			"alias: alias\n" +
 			"settings:\n" +
-			"  foo: bar\n" +
-			"title: title\n")
+			"  api_key: bar\n" +
+			"title: Production SendGrid\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
 			t, pipeData,
 			"--api-key", "string",
@@ -62,21 +62,21 @@ func TestProvidersUpdate(t *testing.T) {
 			"--api-key", "string",
 			"providers", "update",
 			"--id", "id",
-			"--provider", "provider",
+			"--provider", "sendgrid",
 			"--alias", "alias",
-			"--settings", "{foo: bar}",
-			"--title", "title",
+			"--settings", "{api_key: bar}",
+			"--title", "Production SendGrid",
 		)
 	})
 
 	t.Run("piping data", func(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
-			"provider: provider\n" +
+			"provider: sendgrid\n" +
 			"alias: alias\n" +
 			"settings:\n" +
-			"  foo: bar\n" +
-			"title: title\n")
+			"  api_key: bar\n" +
+			"title: Production SendGrid\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
 			t, pipeData,
 			"--api-key", "string",

@@ -17,7 +17,7 @@ func TestProfilesCreate(t *testing.T) {
 			"--api-key", "string",
 			"profiles", "create",
 			"--user-id", "user_id",
-			"--profile", "{foo: bar}",
+			"--profile", "{email: bar, phone_number: bar}",
 			"--idempotency-key", "order-ORD-456-user-123",
 			"--x-idempotency-expiration", "1785312000",
 		)
@@ -27,7 +27,8 @@ func TestProfilesCreate(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
 			"profile:\n" +
-			"  foo: bar\n")
+			"  email: bar\n" +
+			"  phone_number: bar\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
 			t, pipeData,
 			"--api-key", "string",
@@ -59,7 +60,7 @@ func TestProfilesUpdate(t *testing.T) {
 			"--api-key", "string",
 			"profiles", "update",
 			"--user-id", "user_id",
-			"--patch", "{op: op, path: path, value: value}",
+			"--patch", "{op: replace, path: /email, value: jdoe@example.com}",
 		)
 	})
 
@@ -73,9 +74,9 @@ func TestProfilesUpdate(t *testing.T) {
 			"--api-key", "string",
 			"profiles", "update",
 			"--user-id", "user_id",
-			"--patch.op", "op",
-			"--patch.path", "path",
-			"--patch.value", "value",
+			"--patch.op", "replace",
+			"--patch.path", "/email",
+			"--patch.value", "jdoe@example.com",
 		)
 	})
 
@@ -83,9 +84,9 @@ func TestProfilesUpdate(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
 			"patch:\n" +
-			"  - op: op\n" +
-			"    path: path\n" +
-			"    value: value\n")
+			"  - op: replace\n" +
+			"    path: /email\n" +
+			"    value: jdoe@example.com\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
 			t, pipeData,
 			"--api-key", "string",
@@ -115,7 +116,7 @@ func TestProfilesReplace(t *testing.T) {
 			"--api-key", "string",
 			"profiles", "replace",
 			"--user-id", "user_id",
-			"--profile", "{foo: bar}",
+			"--profile", "{email: bar, phone_number: bar, locale: bar}",
 		)
 	})
 
@@ -123,7 +124,9 @@ func TestProfilesReplace(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
 			"profile:\n" +
-			"  foo: bar\n")
+			"  email: bar\n" +
+			"  phone_number: bar\n" +
+			"  locale: bar\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
 			t, pipeData,
 			"--api-key", "string",

@@ -58,13 +58,13 @@ func TestTenantsTemplatesPublish(t *testing.T) {
 			"tenants:templates", "publish",
 			"--tenant-id", "tenant_id",
 			"--template-id", "template_id",
-			"--version", "version",
+			"--version", "latest",
 		)
 	})
 
 	t.Run("piping data", func(t *testing.T) {
 		// Test piping YAML data over stdin
-		pipeData := []byte("version: version")
+		pipeData := []byte("version: latest")
 		mocktest.TestRunMockTestWithPipeAndFlags(
 			t, pipeData,
 			"--api-key", "string",
@@ -84,7 +84,7 @@ func TestTenantsTemplatesReplace(t *testing.T) {
 			"tenants:templates", "replace",
 			"--tenant-id", "tenant_id",
 			"--template-id", "template_id",
-			"--template", "{content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, type: text}], version: version}, channels: {foo: {brand_id: brand_id, if: if, metadata: {utm: {campaign: campaign, content: content, medium: medium, source: source, term: term}}, override: {foo: bar}, providers: [string], routing_method: all, timeouts: {channel: 0, provider: 0}}}, providers: {foo: {if: if, metadata: {utm: {campaign: campaign, content: content, medium: medium, source: source, term: term}}, override: {foo: bar}, timeouts: 0}}, routing: {channels: [string], method: all}}",
+			"--template", "{content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, type: text}], version: '2022-01-01'}, channels: {foo: {brand_id: brand_id, if: if, metadata: {utm: {campaign: campaign, content: content, medium: medium, source: source, term: term}}, override: {foo: bar}, providers: [string], routing_method: all, timeouts: {channel: 0, provider: 0}}}, providers: {foo: {if: if, metadata: {utm: {campaign: campaign, content: content, medium: medium, source: source, term: term}}, override: {foo: bar}, timeouts: 0}}, routing: {channels: [email], method: single}}",
 			"--published=true",
 		)
 	})
@@ -100,10 +100,10 @@ func TestTenantsTemplatesReplace(t *testing.T) {
 			"tenants:templates", "replace",
 			"--tenant-id", "tenant_id",
 			"--template-id", "template_id",
-			"--template.content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, type: text}], version: version}",
+			"--template.content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, type: text}], version: '2022-01-01'}",
 			"--template.channels", "{foo: {brand_id: brand_id, if: if, metadata: {utm: {campaign: campaign, content: content, medium: medium, source: source, term: term}}, override: {foo: bar}, providers: [string], routing_method: all, timeouts: {channel: 0, provider: 0}}}",
 			"--template.providers", "{foo: {if: if, metadata: {utm: {campaign: campaign, content: content, medium: medium, source: source, term: term}}, override: {foo: bar}, timeouts: 0}}",
-			"--template.routing", "{channels: [string], method: all}",
+			"--template.routing", "{channels: [email], method: single}",
 			"--published=true",
 		)
 	})
@@ -120,7 +120,7 @@ func TestTenantsTemplatesReplace(t *testing.T) {
 			"        loop: loop\n" +
 			"        ref: ref\n" +
 			"        type: text\n" +
-			"    version: version\n" +
+			"    version: '2022-01-01'\n" +
 			"  channels:\n" +
 			"    foo:\n" +
 			"      brand_id: brand_id\n" +
@@ -155,8 +155,8 @@ func TestTenantsTemplatesReplace(t *testing.T) {
 			"      timeouts: 0\n" +
 			"  routing:\n" +
 			"    channels:\n" +
-			"      - string\n" +
-			"    method: all\n" +
+			"      - email\n" +
+			"    method: single\n" +
 			"published: true\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
 			t, pipeData,
