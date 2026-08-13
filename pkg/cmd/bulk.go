@@ -112,7 +112,7 @@ var bulkCreateJob = requestflag.WithInnerFlags(cli.Command{
 
 var bulkListUsers = cli.Command{
 	Name:    "list-users",
-	Usage:   "Get Bulk Job Users",
+	Usage:   "Returns the users ingested into a bulk job with paging, each carrying the status\nCourier recorded for it and the id of the message it produced.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -132,7 +132,7 @@ var bulkListUsers = cli.Command{
 
 var bulkRetrieveJob = cli.Command{
 	Name:    "retrieve-job",
-	Usage:   "Get a bulk job",
+	Usage:   "Returns a bulk job's message definition, its status — CREATED, PROCESSING,\nCOMPLETED, or ERROR — and running counts of users received, messages enqueued,\nand failures. Poll it to follow a job through to completion.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -147,7 +147,7 @@ var bulkRetrieveJob = cli.Command{
 
 var bulkRunJob = cli.Command{
 	Name:    "run-job",
-	Usage:   "Run a bulk job",
+	Usage:   "Starts processing a bulk job, sending to every user ingested into it. Returns\n204 immediately; the job runs asynchronously, so poll the job to watch its\nstatus and counts.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
