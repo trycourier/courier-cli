@@ -1,134 +1,44 @@
 # Courier CLI
 
-The official CLI for the [Courier REST API](https://www.courier.com/docs).
-
-It is generated with [Stainless](https://www.stainless.com/).
-
-<!-- x-release-please-start-version -->
+The Courier CLI sends notifications, inspects delivery, and manages Courier resources from your terminal or a script. It covers the same API surface as the SDKs, so anything you can send from code you can send from the command line.
 
 ## Installation
 
-### Installing with npm
-
-```sh
+```bash
 npm install -g @trycourier/cli
 ```
 
-This downloads a platform-specific native binary via a postinstall step. No Node.js runtime is needed after installation.
+This downloads a platform-specific native binary in a postinstall step — no Node.js runtime is needed afterwards.
 
-<!-- x-release-please-end -->
+With Go instead (requires Go 1.22+):
 
-### Running Locally
-
-After cloning the git repository for this project, you can use the
-`scripts/run` script to run the tool locally:
-
-```sh
-./scripts/run args...
+```bash
+go install 'github.com/trycourier/courier-cli/v3/cmd/courier@latest'
 ```
 
-### Branch `next`
+That puts the binary in `$(go env GOPATH)/bin`, which needs to be on your `PATH`.
 
-The default branch is `main`. **Stainless** merge pipelines (for example from [api-spec](https://github.com/trycourier/api-spec)) and CI for this generated CLI usually run against **`next`**. When debugging merge failures or comparing to [`courier-go`](https://github.com/trycourier/courier-go), use:
+## Quick Start
 
-```sh
-git fetch origin next
-git checkout next
+```bash
+export COURIER_API_KEY='your-api-key'
+
+courier send message \
+  --message '{"to": {"user_id": "your_user_id"}, "template": "your_template_id"}'
 ```
 
-Releases are still published from `main` via release-please.
+Every command follows the same shape:
 
-## Usage
-
-The CLI follows a resource-based command structure:
-
-```sh
+```bash
 courier [resource] <command> [flags...]
 ```
 
-```sh
-courier send message \
-  --api-key 'My API Key' \
-  --message '{}'
-```
+Use `--help` on any command to see its flags, and `--api-key` to override the `COURIER_API_KEY` environment variable.
 
-For details about specific commands, use the `--help` flag.
+## Documentation
 
-### Environment variables
+Full documentation: **[courier.com/docs/tools/cli](https://www.courier.com/docs/tools/cli/)**
 
-| Environment variable | Required |
-| -------------------- | -------- |
-| `COURIER_API_KEY`    | yes      |
-
-### Global flags
-
-- `--api-key` (can also be set with `COURIER_API_KEY` env var)
-- `--help` - Show command line usage
-- `--debug` - Enable debug logging (includes HTTP request/response details)
-- `--version`, `-v` - Show the CLI version
-- `--base-url` - Use a custom API backend URL
-- `--format` - Change the output format (`auto`, `explore`, `json`, `jsonl`, `pretty`, `raw`, `yaml`)
-- `--format-error` - Change the output format for errors (`auto`, `explore`, `json`, `jsonl`, `pretty`, `raw`, `yaml`)
-- `--transform` - Transform the data output using [GJSON syntax](https://github.com/tidwall/gjson/blob/master/SYNTAX.md)
-- `--transform-error` - Transform the error output using [GJSON syntax](https://github.com/tidwall/gjson/blob/master/SYNTAX.md)
-
-### Passing files as arguments
-
-To pass files to your API, you can use the `@myfile.ext` syntax:
-
-```bash
-courier <command> --arg @abe.jpg
-```
-
-Files can also be passed inside JSON or YAML blobs:
-
-```bash
-courier <command> --arg '{image: "@abe.jpg"}'
-# Equivalent:
-courier <command> <<YAML
-arg:
-  image: "@abe.jpg"
-YAML
-```
-
-If you need to pass a string literal that begins with an `@` sign, you can
-escape the `@` sign to avoid accidentally passing a file.
-
-```bash
-courier <command> --username '\@abe'
-```
-
-#### Explicit encoding
-
-For JSON endpoints, the CLI tool does filetype sniffing to determine whether the
-file contents should be sent as a string literal (for plain text files) or as a
-base64-encoded string literal (for binary files). If you need to explicitly send
-the file as either plain text or base64-encoded data, you can use
-`@file://myfile.txt` (for string encoding) or `@data://myfile.dat` (for
-base64-encoding). Note that absolute paths will begin with `@file://` or
-`@data://`, followed by a third `/` (for example, `@file:///tmp/file.txt`).
-
-```bash
-courier <command> --arg @data://file.txt
-```
-
-## Use with AI agents
-
-The CLI works as a tool backend for AI coding agents. Because every API endpoint maps to a single shell command with structured JSON output, agents can call Courier without an SDK or custom integration.
-
-```sh
-export COURIER_API_KEY=your_api_key
-
-# Send a message
-courier send message \
-  --message.to.user_id "user-123" \
-  --message.template "order-confirmation" \
-  --message.data '{"orderId": "ORD-456"}'
-
-# Check delivery status
-courier messages list --recipient "user-123" --format json
-```
-
-For richer agent integration, Courier also provides an [MCP server](https://github.com/trycourier/courier-mcp) that exposes the full API as structured tools for Cursor, Claude Code, Windsurf, and other MCP-compatible clients.
-
-See [Build with AI](https://www.courier.com/docs/tools/ai-onboarding) for setup instructions.
+- [Quickstart](https://www.courier.com/docs/getting-started/quickstart/)
+- [Send API](https://www.courier.com/docs/platform/sending/send-message/)
+- [API Reference](https://www.courier.com/docs/reference/get-started/)
