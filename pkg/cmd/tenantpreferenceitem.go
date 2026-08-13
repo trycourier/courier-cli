@@ -14,7 +14,7 @@ import (
 
 var tenantsPreferencesItemsUpdate = cli.Command{
 	Name:    "update",
-	Usage:   "Create or Replace Default Preferences For Topic",
+	Usage:   "Sets a tenant's default opt-in status for one subscription topic, which applies\nto every member unless a user sets their own override.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -50,7 +50,7 @@ var tenantsPreferencesItemsUpdate = cli.Command{
 
 var tenantsPreferencesItemsDelete = cli.Command{
 	Name:    "delete",
-	Usage:   "Remove Default Preferences For Topic",
+	Usage:   "Removes a tenant's default preference for one subscription topic, addressed by\ntenant id and topic id.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

@@ -14,59 +14,67 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-var notificationsCreate = cli.Command{
+var broadcastsCreate = cli.Command{
 	Name:    "create",
-	Usage:   "Create a notification template. Requires all fields in the notification object.\nTemplates are created in draft state by default.",
+	Usage:   "Create a broadcast. Provisions a private notification template for the broadcast\nand returns the new broadcast in the draft state. Exactly one channel is\nrequired.",
 	Suggest: true,
 	Flags: []cli.Flag{
-		&requestflag.Flag[map[string]any]{
-			Name:     "notification",
-			Usage:    "Template fields accepted in POST and PUT request bodies, nested under a `notification` key.",
+		&requestflag.Flag[string]{
+			Name:     "channel",
+			Usage:    "The single delivery channel for this broadcast.",
 			Required: true,
-			BodyPath: "notification",
+			BodyPath: "channel",
 		},
 		&requestflag.Flag[string]{
-			Name:     "state",
-			Usage:    `Template state after creation. Case-insensitive input, normalized to uppercase in the response. Defaults to "DRAFT".`,
-			Default:  "DRAFT",
-			BodyPath: "state",
-		},
-		&requestflag.Flag[string]{
-			Name:       "idempotency-key",
-			HeaderPath: "Idempotency-Key",
-		},
-		&requestflag.Flag[string]{
-			Name:       "x-idempotency-expiration",
-			HeaderPath: "x-idempotency-expiration",
+			Name:     "name",
+			Usage:    "Human-readable name.",
+			Required: true,
+			BodyPath: "name",
 		},
 	},
-	Action:          handleNotificationsCreate,
+	Action:          handleBroadcastsCreate,
 	HideHelpCommand: true,
 }
 
-var notificationsRetrieve = cli.Command{
+var broadcastsRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Retrieve a notification template by ID. Returns the published version by\ndefault. Pass version=draft to retrieve an unpublished template.",
+	Usage:   "Retrieve a broadcast by ID. Archived broadcasts return 404.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:      "id",
+			Name:      "broadcast-id",
 			Required:  true,
-			PathParam: "id",
-		},
-		&requestflag.Flag[string]{
-			Name:      "version",
-			Usage:     `Version to retrieve. One of "draft", "published", or a version string like "v001". Defaults to "published".`,
-			QueryPath: "version",
+			PathParam: "broadcastId",
 		},
 	},
-	Action:          handleNotificationsRetrieve,
+	Action:          handleBroadcastsRetrieve,
 	HideHelpCommand: true,
 }
 
-var notificationsList = cli.Command{
+var broadcastsUpdate = cli.Command{
+	Name:    "update",
+	Usage:   "Update a broadcast's name. Content is edited via the broadcast's notification\ntemplate, not this endpoint.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "broadcast-id",
+			Required:  true,
+			PathParam: "broadcastId",
+		},
+		&requestflag.Flag[string]{
+			Name:     "name",
+			Usage:    "New human-readable name.",
+			Required: true,
+			BodyPath: "name",
+		},
+	},
+	Action:          handleBroadcastsUpdate,
+	HideHelpCommand: true,
+}
+
+var broadcastsList = cli.Command{
 	Name:    "list",
-	Usage:   "Lists the workspace's notification templates. Each carries a name, tags, brand,\nrouting, and its draft or published state.",
+	Usage:   "List broadcasts in your workspace. Cursor-paginated; returns broadcasts\nnewest-first.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[*string]{
@@ -74,114 +82,70 @@ var notificationsList = cli.Command{
 			Usage:     "Opaque pagination cursor from a previous response. Omit for the first page.",
 			QueryPath: "cursor",
 		},
-		&requestflag.Flag[string]{
-			Name:      "event-id",
-			Usage:     "Filter to templates linked to this event map ID.",
-			QueryPath: "event_id",
-		},
-		&requestflag.Flag[*bool]{
-			Name:      "notes",
-			Usage:     "Include template notes in the response. Only applies to legacy templates.",
-			QueryPath: "notes",
-		},
-	},
-	Action:          handleNotificationsList,
-	HideHelpCommand: true,
-}
-
-var notificationsArchive = cli.Command{
-	Name:    "archive",
-	Usage:   "Archives a notification template, preventing new sends from referencing it. The\ntemplate stays retrievable for its version history.",
-	Suggest: true,
-	Flags: []cli.Flag{
-		&requestflag.Flag[string]{
-			Name:      "id",
-			Required:  true,
-			PathParam: "id",
-		},
-	},
-	Action:          handleNotificationsArchive,
-	HideHelpCommand: true,
-}
-
-var notificationsDuplicate = cli.Command{
-	Name:    "duplicate",
-	Usage:   "Copies a notification template within the same workspace and environment,\nappending \" COPY\" to the title. The copy is standalone and independently\neditable.",
-	Suggest: true,
-	Flags: []cli.Flag{
-		&requestflag.Flag[string]{
-			Name:      "id",
-			Required:  true,
-			PathParam: "id",
-		},
-	},
-	Action:          handleNotificationsDuplicate,
-	HideHelpCommand: true,
-}
-
-var notificationsListVersions = cli.Command{
-	Name:    "list-versions",
-	Usage:   "Returns a notification template's published versions, most recent first, for\ncomparison or rollback. Paged.",
-	Suggest: true,
-	Flags: []cli.Flag{
-		&requestflag.Flag[string]{
-			Name:      "id",
-			Required:  true,
-			PathParam: "id",
-		},
-		&requestflag.Flag[string]{
-			Name:      "cursor",
-			Usage:     "Opaque pagination cursor from a previous response. Omit for the first page.",
-			QueryPath: "cursor",
-		},
 		&requestflag.Flag[int64]{
 			Name:      "limit",
-			Usage:     "Maximum number of versions to return per page. Default 10, max 10.",
-			Default:   10,
+			Usage:     "Maximum number of results per page.",
 			QueryPath: "limit",
 		},
 	},
-	Action:          handleNotificationsListVersions,
+	Action:          handleBroadcastsList,
 	HideHelpCommand: true,
 }
 
-var notificationsPublish = cli.Command{
-	Name:    "publish",
-	Usage:   "Publish a notification template. Publishes the current draft by default. Pass a\nversion in the request body to publish a specific historical version.",
+var broadcastsArchive = cli.Command{
+	Name:    "archive",
+	Usage:   "Archive a broadcast. This is a soft delete — the archived broadcast is returned\nand no longer appears in list results.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:      "id",
+			Name:      "broadcast-id",
 			Required:  true,
-			PathParam: "id",
-		},
-		&requestflag.Flag[string]{
-			Name:     "version",
-			Usage:    `Historical version to publish (e.g. "v001"). Omit to publish the current draft.`,
-			BodyPath: "version",
-		},
-		&requestflag.Flag[string]{
-			Name:       "idempotency-key",
-			HeaderPath: "Idempotency-Key",
-		},
-		&requestflag.Flag[string]{
-			Name:       "x-idempotency-expiration",
-			HeaderPath: "x-idempotency-expiration",
+			PathParam: "broadcastId",
 		},
 	},
-	Action:          handleNotificationsPublish,
+	Action:          handleBroadcastsArchive,
 	HideHelpCommand: true,
 }
 
-var notificationsPutContent = requestflag.WithInnerFlags(cli.Command{
-	Name:    "put-content",
-	Usage:   "Replaces all Elemental content in a template, overwriting every existing\nelement. Supported for V2 templates only, not V1 blocks and channels.",
+var broadcastsCancel = cli.Command{
+	Name:    "cancel",
+	Usage:   "Cancel a broadcast's pending schedule, returning it to the draft state. Only\nvalid for a scheduled broadcast.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:      "id",
+			Name:      "broadcast-id",
 			Required:  true,
-			PathParam: "id",
+			PathParam: "broadcastId",
+		},
+	},
+	Action:          handleBroadcastsCancel,
+	HideHelpCommand: true,
+}
+
+var broadcastsDuplicate = cli.Command{
+	Name:    "duplicate",
+	Usage:   "Duplicate a broadcast (and its template) into a new draft named \"{source name}\n(copy)\".",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "broadcast-id",
+			Required:  true,
+			PathParam: "broadcastId",
+		},
+	},
+	Action:          handleBroadcastsDuplicate,
+	HideHelpCommand: true,
+}
+
+var broadcastsPutContent = requestflag.WithInnerFlags(cli.Command{
+	Name:    "put-content",
+	Usage:   "Author the broadcast's content by replacing the draft elemental content of its\nprivate notification template. The draft is published automatically when the\nbroadcast is sent or scheduled.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "broadcast-id",
+			Required:  true,
+			PathParam: "broadcastId",
 		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "content",
@@ -196,7 +160,7 @@ var notificationsPutContent = requestflag.WithInnerFlags(cli.Command{
 			BodyPath: "state",
 		},
 	},
-	Action:          handleNotificationsPutContent,
+	Action:          handleBroadcastsPutContent,
 	HideHelpCommand: true,
 }, map[string][]requestflag.HasOuterFlag{
 	"content": {
@@ -212,146 +176,92 @@ var notificationsPutContent = requestflag.WithInnerFlags(cli.Command{
 	},
 })
 
-var notificationsPutElement = cli.Command{
-	Name:    "put-element",
-	Usage:   "Replaces one Elemental element in a template, addressed by its element id.\nSupported for V2 templates only, not V1 blocks and channels.",
-	Suggest: true,
-	Flags: []cli.Flag{
-		&requestflag.Flag[string]{
-			Name:      "id",
-			Required:  true,
-			PathParam: "id",
-		},
-		&requestflag.Flag[string]{
-			Name:      "element-id",
-			Required:  true,
-			PathParam: "elementId",
-		},
-		&requestflag.Flag[string]{
-			Name:     "type",
-			Usage:    "Element type (text, meta, action, image, etc.).",
-			Required: true,
-			BodyPath: "type",
-		},
-		&requestflag.Flag[[]string]{
-			Name:     "channel",
-			BodyPath: "channels",
-		},
-		&requestflag.Flag[map[string]any]{
-			Name:     "data",
-			BodyPath: "data",
-		},
-		&requestflag.Flag[string]{
-			Name:     "if",
-			BodyPath: "if",
-		},
-		&requestflag.Flag[string]{
-			Name:     "loop",
-			BodyPath: "loop",
-		},
-		&requestflag.Flag[string]{
-			Name:     "ref",
-			BodyPath: "ref",
-		},
-		&requestflag.Flag[string]{
-			Name:     "state",
-			Usage:    "Template state. Defaults to `DRAFT`.",
-			Default:  "DRAFT",
-			BodyPath: "state",
-		},
-	},
-	Action:          handleNotificationsPutElement,
-	HideHelpCommand: true,
-}
-
-var notificationsPutLocale = requestflag.WithInnerFlags(cli.Command{
-	Name:    "put-locale",
-	Usage:   "Sets locale-specific content overrides for a template. Each override must\nreference an element that already exists in the default content.",
-	Suggest: true,
-	Flags: []cli.Flag{
-		&requestflag.Flag[string]{
-			Name:      "id",
-			Required:  true,
-			PathParam: "id",
-		},
-		&requestflag.Flag[string]{
-			Name:      "locale-id",
-			Required:  true,
-			PathParam: "localeId",
-		},
-		&requestflag.Flag[[]map[string]any]{
-			Name:     "element",
-			Usage:    "Elements with locale-specific content overrides.",
-			Required: true,
-			BodyPath: "elements",
-		},
-		&requestflag.Flag[string]{
-			Name:     "state",
-			Usage:    "Template state. Defaults to `DRAFT`.",
-			Default:  "DRAFT",
-			BodyPath: "state",
-		},
-	},
-	Action:          handleNotificationsPutLocale,
-	HideHelpCommand: true,
-}, map[string][]requestflag.HasOuterFlag{
-	"element": {
-		&requestflag.InnerFlag[string]{
-			Name:       "element.id",
-			Usage:      "Target element ID.",
-			InnerField: "id",
-		},
-	},
-})
-
-var notificationsReplace = cli.Command{
-	Name:    "replace",
-	Usage:   "Replaces a notification template in full, so send every field rather than only\nthe ones you want changed. Publish separately to make it live.",
-	Suggest: true,
-	Flags: []cli.Flag{
-		&requestflag.Flag[string]{
-			Name:      "id",
-			Required:  true,
-			PathParam: "id",
-		},
-		&requestflag.Flag[map[string]any]{
-			Name:     "notification",
-			Usage:    "Template fields accepted in POST and PUT request bodies, nested under a `notification` key.",
-			Required: true,
-			BodyPath: "notification",
-		},
-		&requestflag.Flag[string]{
-			Name:     "state",
-			Usage:    `Template state after update. Case-insensitive input, normalized to uppercase in the response. Defaults to "DRAFT".`,
-			Default:  "DRAFT",
-			BodyPath: "state",
-		},
-	},
-	Action:          handleNotificationsReplace,
-	HideHelpCommand: true,
-}
-
-var notificationsRetrieveContent = cli.Command{
+var broadcastsRetrieveContent = cli.Command{
 	Name:    "retrieve-content",
-	Usage:   "Returns a template's content and checksum. V2 templates return Elemental\nelements, while V1 templates return blocks and channels instead.",
+	Usage:   "Retrieve the broadcast's content — the elemental content of its private\nnotification template. Defaults to the working draft, since broadcast content is\nauthored as a draft until the broadcast is sent.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:      "id",
+			Name:      "broadcast-id",
 			Required:  true,
-			PathParam: "id",
+			PathParam: "broadcastId",
 		},
 		&requestflag.Flag[string]{
 			Name:      "version",
-			Usage:     "Accepts `draft`, `published`, or a version string (e.g., `v001`). Defaults to `published`.",
+			Usage:     "Accepts `draft`, `published`, or a version string (e.g. `v001`). Defaults to `draft`.",
 			QueryPath: "version",
 		},
 	},
-	Action:          handleNotificationsRetrieveContent,
+	Action:          handleBroadcastsRetrieveContent,
 	HideHelpCommand: true,
 }
 
-func handleNotificationsCreate(ctx context.Context, cmd *cli.Command) error {
+var broadcastsSchedule = cli.Command{
+	Name:    "schedule",
+	Usage:   "Schedule a broadcast for a future send to a list or audience. Publishes the\nbroadcast template first. Not allowed once the broadcast is sending or sent. For\nan immediate send use POST /broadcasts/{broadcastId}/send.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "broadcast-id",
+			Required:  true,
+			PathParam: "broadcastId",
+		},
+		&requestflag.Flag[string]{
+			Name:     "recipient-id",
+			Usage:    "ID of the target list or audience.",
+			Required: true,
+			BodyPath: "recipient_id",
+		},
+		&requestflag.Flag[string]{
+			Name:     "recipient-type",
+			Usage:    "Whether the broadcast targets a list or an audience.",
+			Required: true,
+			BodyPath: "recipient_type",
+		},
+		&requestflag.Flag[string]{
+			Name:     "scheduled-to",
+			Usage:    "Wall-clock timestamp of the future send, no timezone offset (e.g. \"2026-07-21T20:00:00\"). The zone is given by `timezone`.",
+			Required: true,
+			BodyPath: "scheduled_to",
+		},
+		&requestflag.Flag[string]{
+			Name:     "timezone",
+			Usage:    "IANA timezone for the scheduled send (e.g. America/New_York).",
+			BodyPath: "timezone",
+		},
+	},
+	Action:          handleBroadcastsSchedule,
+	HideHelpCommand: true,
+}
+
+var broadcastsSend = cli.Command{
+	Name:    "send",
+	Usage:   "Send a broadcast immediately to a list or audience. Publishes the broadcast\ntemplate first. Not allowed once the broadcast is sending or sent.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "broadcast-id",
+			Required:  true,
+			PathParam: "broadcastId",
+		},
+		&requestflag.Flag[string]{
+			Name:     "recipient-id",
+			Usage:    "ID of the target list or audience.",
+			Required: true,
+			BodyPath: "recipient_id",
+		},
+		&requestflag.Flag[string]{
+			Name:     "recipient-type",
+			Usage:    "Whether the broadcast targets a list or an audience.",
+			Required: true,
+			BodyPath: "recipient_type",
+		},
+	},
+	Action:          handleBroadcastsSend,
+	HideHelpCommand: true,
+}
+
+func handleBroadcastsCreate(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
 
@@ -370,11 +280,11 @@ func handleNotificationsCreate(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	params := courier.NotificationNewParams{}
+	params := courier.BroadcastNewParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Notifications.New(ctx, params, options...)
+	_, err = client.Broadcasts.New(ctx, params, options...)
 	if err != nil {
 		return err
 	}
@@ -387,131 +297,16 @@ func handleNotificationsCreate(ctx context.Context, cmd *cli.Command) error {
 		ExplicitFormat: explicitFormat,
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "notifications create",
+		Title:          "broadcasts create",
 		Transform:      transform,
 	})
 }
 
-func handleNotificationsRetrieve(ctx context.Context, cmd *cli.Command) error {
+func handleBroadcastsRetrieve(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("id") && len(unusedArgs) > 0 {
-		cmd.Set("id", unusedArgs[0])
-		unusedArgs = unusedArgs[1:]
-	}
-	if len(unusedArgs) > 0 {
-		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
-	}
-
-	options, err := flagOptions(
-		cmd,
-		apiquery.NestedQueryFormatBrackets,
-		apiquery.ArrayQueryFormatComma,
-		EmptyBody,
-		false,
-	)
-	if err != nil {
-		return err
-	}
-
-	params := courier.NotificationGetParams{}
-
-	var res []byte
-	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Notifications.Get(
-		ctx,
-		cmd.Value("id").(string),
-		params,
-		options...,
-	)
-	if err != nil {
-		return err
-	}
-
-	obj := gjson.ParseBytes(res)
-	format := cmd.Root().String("format")
-	explicitFormat := cmd.Root().IsSet("format")
-	transform := cmd.Root().String("transform")
-	return ShowJSON(obj, ShowJSONOpts{
-		ExplicitFormat: explicitFormat,
-		Format:         format,
-		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "notifications retrieve",
-		Transform:      transform,
-	})
-}
-
-func handleNotificationsList(ctx context.Context, cmd *cli.Command) error {
-	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
-	unusedArgs := cmd.Args().Slice()
-
-	if len(unusedArgs) > 0 {
-		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
-	}
-
-	options, err := flagOptions(
-		cmd,
-		apiquery.NestedQueryFormatBrackets,
-		apiquery.ArrayQueryFormatComma,
-		EmptyBody,
-		false,
-	)
-	if err != nil {
-		return err
-	}
-
-	params := courier.NotificationListParams{}
-
-	var res []byte
-	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Notifications.List(ctx, params, options...)
-	if err != nil {
-		return err
-	}
-
-	obj := gjson.ParseBytes(res)
-	format := cmd.Root().String("format")
-	explicitFormat := cmd.Root().IsSet("format")
-	transform := cmd.Root().String("transform")
-	return ShowJSON(obj, ShowJSONOpts{
-		ExplicitFormat: explicitFormat,
-		Format:         format,
-		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "notifications list",
-		Transform:      transform,
-	})
-}
-
-func handleNotificationsArchive(ctx context.Context, cmd *cli.Command) error {
-	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
-	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("id") && len(unusedArgs) > 0 {
-		cmd.Set("id", unusedArgs[0])
-		unusedArgs = unusedArgs[1:]
-	}
-	if len(unusedArgs) > 0 {
-		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
-	}
-
-	options, err := flagOptions(
-		cmd,
-		apiquery.NestedQueryFormatBrackets,
-		apiquery.ArrayQueryFormatComma,
-		EmptyBody,
-		false,
-	)
-	if err != nil {
-		return err
-	}
-
-	return client.Notifications.Archive(ctx, cmd.Value("id").(string), options...)
-}
-
-func handleNotificationsDuplicate(ctx context.Context, cmd *cli.Command) error {
-	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
-	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("id") && len(unusedArgs) > 0 {
-		cmd.Set("id", unusedArgs[0])
+	if !cmd.IsSet("broadcast-id") && len(unusedArgs) > 0 {
+		cmd.Set("broadcast-id", unusedArgs[0])
 		unusedArgs = unusedArgs[1:]
 	}
 	if len(unusedArgs) > 0 {
@@ -531,7 +326,7 @@ func handleNotificationsDuplicate(ctx context.Context, cmd *cli.Command) error {
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Notifications.Duplicate(ctx, cmd.Value("id").(string), options...)
+	_, err = client.Broadcasts.Get(ctx, cmd.Value("broadcast-id").(string), options...)
 	if err != nil {
 		return err
 	}
@@ -544,16 +339,106 @@ func handleNotificationsDuplicate(ctx context.Context, cmd *cli.Command) error {
 		ExplicitFormat: explicitFormat,
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "notifications duplicate",
+		Title:          "broadcasts retrieve",
 		Transform:      transform,
 	})
 }
 
-func handleNotificationsListVersions(ctx context.Context, cmd *cli.Command) error {
+func handleBroadcastsUpdate(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("id") && len(unusedArgs) > 0 {
-		cmd.Set("id", unusedArgs[0])
+	if !cmd.IsSet("broadcast-id") && len(unusedArgs) > 0 {
+		cmd.Set("broadcast-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		ApplicationJSON,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.BroadcastUpdateParams{}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Broadcasts.Update(
+		ctx,
+		cmd.Value("broadcast-id").(string),
+		params,
+		options...,
+	)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "broadcasts update",
+		Transform:      transform,
+	})
+}
+
+func handleBroadcastsList(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		EmptyBody,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.BroadcastListParams{}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Broadcasts.List(ctx, params, options...)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "broadcasts list",
+		Transform:      transform,
+	})
+}
+
+func handleBroadcastsArchive(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("broadcast-id") && len(unusedArgs) > 0 {
+		cmd.Set("broadcast-id", unusedArgs[0])
 		unusedArgs = unusedArgs[1:]
 	}
 	if len(unusedArgs) > 0 {
@@ -571,16 +456,9 @@ func handleNotificationsListVersions(ctx context.Context, cmd *cli.Command) erro
 		return err
 	}
 
-	params := courier.NotificationListVersionsParams{}
-
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Notifications.ListVersions(
-		ctx,
-		cmd.Value("id").(string),
-		params,
-		options...,
-	)
+	_, err = client.Broadcasts.Archive(ctx, cmd.Value("broadcast-id").(string), options...)
 	if err != nil {
 		return err
 	}
@@ -593,248 +471,16 @@ func handleNotificationsListVersions(ctx context.Context, cmd *cli.Command) erro
 		ExplicitFormat: explicitFormat,
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "notifications list-versions",
+		Title:          "broadcasts archive",
 		Transform:      transform,
 	})
 }
 
-func handleNotificationsPublish(ctx context.Context, cmd *cli.Command) error {
+func handleBroadcastsCancel(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("id") && len(unusedArgs) > 0 {
-		cmd.Set("id", unusedArgs[0])
-		unusedArgs = unusedArgs[1:]
-	}
-	if len(unusedArgs) > 0 {
-		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
-	}
-
-	options, err := flagOptions(
-		cmd,
-		apiquery.NestedQueryFormatBrackets,
-		apiquery.ArrayQueryFormatComma,
-		ApplicationJSON,
-		false,
-	)
-	if err != nil {
-		return err
-	}
-
-	params := courier.NotificationPublishParams{}
-
-	return client.Notifications.Publish(
-		ctx,
-		cmd.Value("id").(string),
-		params,
-		options...,
-	)
-}
-
-func handleNotificationsPutContent(ctx context.Context, cmd *cli.Command) error {
-	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
-	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("id") && len(unusedArgs) > 0 {
-		cmd.Set("id", unusedArgs[0])
-		unusedArgs = unusedArgs[1:]
-	}
-	if len(unusedArgs) > 0 {
-		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
-	}
-
-	options, err := flagOptions(
-		cmd,
-		apiquery.NestedQueryFormatBrackets,
-		apiquery.ArrayQueryFormatComma,
-		ApplicationJSON,
-		false,
-	)
-	if err != nil {
-		return err
-	}
-
-	params := courier.NotificationPutContentParams{}
-
-	var res []byte
-	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Notifications.PutContent(
-		ctx,
-		cmd.Value("id").(string),
-		params,
-		options...,
-	)
-	if err != nil {
-		return err
-	}
-
-	obj := gjson.ParseBytes(res)
-	format := cmd.Root().String("format")
-	explicitFormat := cmd.Root().IsSet("format")
-	transform := cmd.Root().String("transform")
-	return ShowJSON(obj, ShowJSONOpts{
-		ExplicitFormat: explicitFormat,
-		Format:         format,
-		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "notifications put-content",
-		Transform:      transform,
-	})
-}
-
-func handleNotificationsPutElement(ctx context.Context, cmd *cli.Command) error {
-	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
-	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("element-id") && len(unusedArgs) > 0 {
-		cmd.Set("element-id", unusedArgs[0])
-		unusedArgs = unusedArgs[1:]
-	}
-	if len(unusedArgs) > 0 {
-		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
-	}
-
-	options, err := flagOptions(
-		cmd,
-		apiquery.NestedQueryFormatBrackets,
-		apiquery.ArrayQueryFormatComma,
-		ApplicationJSON,
-		false,
-	)
-	if err != nil {
-		return err
-	}
-
-	params := courier.NotificationPutElementParams{
-		ID: cmd.Value("id").(string),
-	}
-
-	var res []byte
-	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Notifications.PutElement(
-		ctx,
-		cmd.Value("element-id").(string),
-		params,
-		options...,
-	)
-	if err != nil {
-		return err
-	}
-
-	obj := gjson.ParseBytes(res)
-	format := cmd.Root().String("format")
-	explicitFormat := cmd.Root().IsSet("format")
-	transform := cmd.Root().String("transform")
-	return ShowJSON(obj, ShowJSONOpts{
-		ExplicitFormat: explicitFormat,
-		Format:         format,
-		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "notifications put-element",
-		Transform:      transform,
-	})
-}
-
-func handleNotificationsPutLocale(ctx context.Context, cmd *cli.Command) error {
-	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
-	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("locale-id") && len(unusedArgs) > 0 {
-		cmd.Set("locale-id", unusedArgs[0])
-		unusedArgs = unusedArgs[1:]
-	}
-	if len(unusedArgs) > 0 {
-		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
-	}
-
-	options, err := flagOptions(
-		cmd,
-		apiquery.NestedQueryFormatBrackets,
-		apiquery.ArrayQueryFormatComma,
-		ApplicationJSON,
-		false,
-	)
-	if err != nil {
-		return err
-	}
-
-	params := courier.NotificationPutLocaleParams{
-		ID: cmd.Value("id").(string),
-	}
-
-	var res []byte
-	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Notifications.PutLocale(
-		ctx,
-		cmd.Value("locale-id").(string),
-		params,
-		options...,
-	)
-	if err != nil {
-		return err
-	}
-
-	obj := gjson.ParseBytes(res)
-	format := cmd.Root().String("format")
-	explicitFormat := cmd.Root().IsSet("format")
-	transform := cmd.Root().String("transform")
-	return ShowJSON(obj, ShowJSONOpts{
-		ExplicitFormat: explicitFormat,
-		Format:         format,
-		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "notifications put-locale",
-		Transform:      transform,
-	})
-}
-
-func handleNotificationsReplace(ctx context.Context, cmd *cli.Command) error {
-	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
-	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("id") && len(unusedArgs) > 0 {
-		cmd.Set("id", unusedArgs[0])
-		unusedArgs = unusedArgs[1:]
-	}
-	if len(unusedArgs) > 0 {
-		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
-	}
-
-	options, err := flagOptions(
-		cmd,
-		apiquery.NestedQueryFormatBrackets,
-		apiquery.ArrayQueryFormatComma,
-		ApplicationJSON,
-		false,
-	)
-	if err != nil {
-		return err
-	}
-
-	params := courier.NotificationReplaceParams{}
-
-	var res []byte
-	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Notifications.Replace(
-		ctx,
-		cmd.Value("id").(string),
-		params,
-		options...,
-	)
-	if err != nil {
-		return err
-	}
-
-	obj := gjson.ParseBytes(res)
-	format := cmd.Root().String("format")
-	explicitFormat := cmd.Root().IsSet("format")
-	transform := cmd.Root().String("transform")
-	return ShowJSON(obj, ShowJSONOpts{
-		ExplicitFormat: explicitFormat,
-		Format:         format,
-		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "notifications replace",
-		Transform:      transform,
-	})
-}
-
-func handleNotificationsRetrieveContent(ctx context.Context, cmd *cli.Command) error {
-	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
-	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("id") && len(unusedArgs) > 0 {
-		cmd.Set("id", unusedArgs[0])
+	if !cmd.IsSet("broadcast-id") && len(unusedArgs) > 0 {
+		cmd.Set("broadcast-id", unusedArgs[0])
 		unusedArgs = unusedArgs[1:]
 	}
 	if len(unusedArgs) > 0 {
@@ -852,13 +498,97 @@ func handleNotificationsRetrieveContent(ctx context.Context, cmd *cli.Command) e
 		return err
 	}
 
-	params := courier.NotificationGetContentParams{}
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Broadcasts.Cancel(ctx, cmd.Value("broadcast-id").(string), options...)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "broadcasts cancel",
+		Transform:      transform,
+	})
+}
+
+func handleBroadcastsDuplicate(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("broadcast-id") && len(unusedArgs) > 0 {
+		cmd.Set("broadcast-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		EmptyBody,
+		false,
+	)
+	if err != nil {
+		return err
+	}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Notifications.GetContent(
+	_, err = client.Broadcasts.Duplicate(ctx, cmd.Value("broadcast-id").(string), options...)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "broadcasts duplicate",
+		Transform:      transform,
+	})
+}
+
+func handleBroadcastsPutContent(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("broadcast-id") && len(unusedArgs) > 0 {
+		cmd.Set("broadcast-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		ApplicationJSON,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.BroadcastPutContentParams{}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Broadcasts.PutContent(
 		ctx,
-		cmd.Value("id").(string),
+		cmd.Value("broadcast-id").(string),
 		params,
 		options...,
 	)
@@ -874,7 +604,154 @@ func handleNotificationsRetrieveContent(ctx context.Context, cmd *cli.Command) e
 		ExplicitFormat: explicitFormat,
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "notifications retrieve-content",
+		Title:          "broadcasts put-content",
+		Transform:      transform,
+	})
+}
+
+func handleBroadcastsRetrieveContent(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("broadcast-id") && len(unusedArgs) > 0 {
+		cmd.Set("broadcast-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		EmptyBody,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.BroadcastGetContentParams{}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Broadcasts.GetContent(
+		ctx,
+		cmd.Value("broadcast-id").(string),
+		params,
+		options...,
+	)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "broadcasts retrieve-content",
+		Transform:      transform,
+	})
+}
+
+func handleBroadcastsSchedule(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("broadcast-id") && len(unusedArgs) > 0 {
+		cmd.Set("broadcast-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		ApplicationJSON,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.BroadcastScheduleParams{}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Broadcasts.Schedule(
+		ctx,
+		cmd.Value("broadcast-id").(string),
+		params,
+		options...,
+	)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "broadcasts schedule",
+		Transform:      transform,
+	})
+}
+
+func handleBroadcastsSend(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("broadcast-id") && len(unusedArgs) > 0 {
+		cmd.Set("broadcast-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		ApplicationJSON,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.BroadcastSendParams{}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Broadcasts.Send(
+		ctx,
+		cmd.Value("broadcast-id").(string),
+		params,
+		options...,
+	)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "broadcasts send",
 		Transform:      transform,
 	})
 }

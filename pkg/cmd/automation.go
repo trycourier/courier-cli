@@ -16,7 +16,7 @@ import (
 
 var automationsList = cli.Command{
 	Name:    "list",
-	Usage:   "Get the list of automations.",
+	Usage:   "Lists the workspace's saved automation templates, each with its id and a cursor\nfor paging to the next page of results.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

@@ -16,7 +16,7 @@ import (
 
 var tenantsRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Get a Tenant",
+	Usage:   "Returns one tenant with its name, parent tenant id, default preferences,\nproperties, and the user profile applied to its members.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -31,7 +31,7 @@ var tenantsRetrieve = cli.Command{
 
 var tenantsUpdate = requestflag.WithInnerFlags(cli.Command{
 	Name:    "update",
-	Usage:   "Create or Replace a Tenant",
+	Usage:   "Creates or replaces a tenant from a name, parent, brand, properties, and default\npreferences supplied in the request body.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -83,7 +83,7 @@ var tenantsUpdate = requestflag.WithInnerFlags(cli.Command{
 
 var tenantsList = cli.Command{
 	Name:    "list",
-	Usage:   "Get a List of Tenants",
+	Usage:   "Lists the workspace's tenants, each carrying a name, parent tenant, properties,\nand default preferences. Paged.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[*string]{
@@ -108,7 +108,7 @@ var tenantsList = cli.Command{
 
 var tenantsDelete = cli.Command{
 	Name:    "delete",
-	Usage:   "Delete a Tenant",
+	Usage:   "Deletes a tenant. Its members' workspace-level profiles and preferences live\noutside the tenant and are managed separately.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -123,7 +123,7 @@ var tenantsDelete = cli.Command{
 
 var tenantsListUsers = cli.Command{
 	Name:    "list-users",
-	Usage:   "Get Users in Tenant",
+	Usage:   "Returns the users belonging to a tenant with cursor paging. Use it to see who a\ntenant-scoped send will reach.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

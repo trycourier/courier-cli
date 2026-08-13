@@ -16,7 +16,7 @@ import (
 
 var tenantsTemplatesRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Get a Template in Tenant",
+	Usage:   "Returns a tenant's notification template with its content, version, and created,\nupdated, and published timestamps.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -36,7 +36,7 @@ var tenantsTemplatesRetrieve = cli.Command{
 
 var tenantsTemplatesList = cli.Command{
 	Name:    "list",
-	Usage:   "List Templates in Tenant",
+	Usage:   "Lists a tenant's notification templates, each carrying its version and published\ntimestamp. Paged.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -61,7 +61,7 @@ var tenantsTemplatesList = cli.Command{
 
 var tenantsTemplatesDelete = cli.Command{
 	Name:    "delete",
-	Usage:   "Deletes the tenant's notification template with the given `template_id`.",
+	Usage:   "Deletes a tenant's notification template by id. Sends for that tenant then use\nthe workspace template registered under the same id.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -81,7 +81,7 @@ var tenantsTemplatesDelete = cli.Command{
 
 var tenantsTemplatesPublish = cli.Command{
 	Name:    "publish",
-	Usage:   "Publishes a specific version of a notification template for a tenant.",
+	Usage:   "Publishes a version of a tenant's notification template, making it the content\nthat tenant's sends render from until you publish another.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -107,7 +107,7 @@ var tenantsTemplatesPublish = cli.Command{
 
 var tenantsTemplatesReplace = requestflag.WithInnerFlags(cli.Command{
 	Name:    "replace",
-	Usage:   "Creates or updates a notification template for a tenant.",
+	Usage:   "Creates or updates a notification template scoped to one tenant, letting a\ntenant override the content the workspace template would send.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
