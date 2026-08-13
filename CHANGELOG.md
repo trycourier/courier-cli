@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.13.0](https://github.com/trycourier/courier-cli/compare/v3.12.2...v3.13.0) (2026-08-13)
+
+
+### Chores
+
+* **api:** regenerate SDK ([#86](https://github.com/trycourier/courier-cli/issues/86)) ([e59fe4e](https://github.com/trycourier/courier-cli/commit/e59fe4eb6d19388ab2a335b0410f65d4c71a81a8))
+* release 3.13.0 ([609119b](https://github.com/trycourier/courier-cli/commit/609119b4afa27cccf07c6327b54136136d25690b))
+
+
+### Documentation
+
+* sync README from api-spec ([#82](https://github.com/trycourier/courier-cli/issues/82)) ([794fcf1](https://github.com/trycourier/courier-cli/commit/794fcf1664ec0f7d5f0b98d3cb44f84b4b4abfab))
+
 ## 3.12.2 (2026-07-29)
 
 Full Changelog: [v3.12.1...v3.12.2](https://github.com/trycourier/courier-cli/compare/v3.12.1...v3.12.2)
