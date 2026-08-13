@@ -1,0 +1,208 @@
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+package courier
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"net/http"
+	"net/url"
+	"slices"
+
+	"github.com/trycourier/courier-go/v4/internal/apijson"
+	"github.com/trycourier/courier-go/v4/internal/apiquery"
+	"github.com/trycourier/courier-go/v4/internal/requestconfig"
+	"github.com/trycourier/courier-go/v4/option"
+	"github.com/trycourier/courier-go/v4/packages/param"
+	"github.com/trycourier/courier-go/v4/packages/respjson"
+)
+
+// Associate a user with one or more tenants, and read or remove those
+// associations.
+//
+// UserTenantService contains methods and other services that help with interacting
+// with the Courier API.
+//
+// Note, unlike clients, this service does not read variables from the environment
+// automatically. You should not instantiate this service directly, and instead use
+// the [NewUserTenantService] method instead.
+type UserTenantService struct {
+	Options []option.RequestOption
+}
+
+// NewUserTenantService generates a new service that applies the given options to
+// each request. These options are applied after the parent client's options (if
+// there is one), and before any request-specific options.
+func NewUserTenantService(opts ...option.RequestOption) (r UserTenantService) {
+	r = UserTenantService{}
+	r.Options = opts
+	return
+}
+
+// Returns the tenants a user belongs to, with cursor paging. A user can belong to
+// many tenants, each with its own profile and preferences.
+func (r *UserTenantService) List(ctx context.Context, userID string, query UserTenantListParams, opts ...option.RequestOption) (res *UserTenantListResponse, err error) {
+	opts = slices.Concat(r.Options, opts)
+	if userID == "" {
+		err = errors.New("missing required user_id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("users/%s/tenants", userID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	return res, err
+}
+
+// Adds a user to several tenants in one call, each optionally with a per-tenant
+// profile that overrides their workspace profile.
+func (r *UserTenantService) AddMultiple(ctx context.Context, userID string, body UserTenantAddMultipleParams, opts ...option.RequestOption) (err error) {
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
+	if userID == "" {
+		err = errors.New("missing required user_id parameter")
+		return err
+	}
+	path := fmt.Sprintf("users/%s/tenants", userID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, body, nil, opts...)
+	return err
+}
+
+// Adds a user to one tenant, optionally with a tenant-specific profile that
+// overrides their workspace profile for sends in that tenant.
+func (r *UserTenantService) AddSingle(ctx context.Context, tenantID string, params UserTenantAddSingleParams, opts ...option.RequestOption) (err error) {
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
+	if params.UserID == "" {
+		err = errors.New("missing required user_id parameter")
+		return err
+	}
+	if tenantID == "" {
+		err = errors.New("missing required tenant_id parameter")
+		return err
+	}
+	path := fmt.Sprintf("users/%s/tenants/%s", params.UserID, tenantID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, params, nil, opts...)
+	return err
+}
+
+// Removes a user from every tenant they belong to in one call. Their
+// workspace-level profile is a separate resource.
+func (r *UserTenantService) RemoveAll(ctx context.Context, userID string, opts ...option.RequestOption) (err error) {
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
+	if userID == "" {
+		err = errors.New("missing required user_id parameter")
+		return err
+	}
+	path := fmt.Sprintf("users/%s/tenants", userID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
+	return err
+}
+
+// Removes a user from one tenant. Their other tenant memberships and workspace
+// profile are managed through separate endpoints.
+func (r *UserTenantService) RemoveSingle(ctx context.Context, tenantID string, body UserTenantRemoveSingleParams, opts ...option.RequestOption) (err error) {
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
+	if body.UserID == "" {
+		err = errors.New("missing required user_id parameter")
+		return err
+	}
+	if tenantID == "" {
+		err = errors.New("missing required tenant_id parameter")
+		return err
+	}
+	path := fmt.Sprintf("users/%s/tenants/%s", body.UserID, tenantID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
+	return err
+}
+
+type UserTenantListResponse struct {
+	// Set to true when there are more pages that can be retrieved.
+	HasMore bool `json:"has_more" api:"required"`
+	// Always set to `list`. Represents the type of this object.
+	//
+	// Any of "list".
+	Type UserTenantListResponseType `json:"type" api:"required"`
+	// A url that may be used to generate these results.
+	URL string `json:"url" api:"required"`
+	// A pointer to the next page of results. Defined only when `has_more` is set to
+	// true
+	Cursor string              `json:"cursor" api:"nullable"`
+	Items  []TenantAssociation `json:"items" api:"nullable"`
+	// A url that may be used to generate fetch the next set of results. Defined only
+	// when `has_more` is set to true
+	NextURL string `json:"next_url" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		HasMore     respjson.Field
+		Type        respjson.Field
+		URL         respjson.Field
+		Cursor      respjson.Field
+		Items       respjson.Field
+		NextURL     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r UserTenantListResponse) RawJSON() string { return r.JSON.raw }
+func (r *UserTenantListResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Always set to `list`. Represents the type of this object.
+type UserTenantListResponseType string
+
+const (
+	UserTenantListResponseTypeList UserTenantListResponseType = "list"
+)
+
+type UserTenantListParams struct {
+	// Continue the pagination with the next cursor
+	Cursor param.Opt[string] `query:"cursor,omitzero" json:"-"`
+	// The number of accounts to return (defaults to 20, maximum value of 100)
+	Limit param.Opt[int64] `query:"limit,omitzero" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [UserTenantListParams]'s query parameters as `url.Values`.
+func (r UserTenantListParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatComma,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+type UserTenantAddMultipleParams struct {
+	Tenants []TenantAssociationParam `json:"tenants,omitzero" api:"required"`
+	paramObj
+}
+
+func (r UserTenantAddMultipleParams) MarshalJSON() (data []byte, err error) {
+	type shadow UserTenantAddMultipleParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *UserTenantAddMultipleParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type UserTenantAddSingleParams struct {
+	UserID  string         `path:"user_id" api:"required" json:"-"`
+	Profile map[string]any `json:"profile,omitzero"`
+	paramObj
+}
+
+func (r UserTenantAddSingleParams) MarshalJSON() (data []byte, err error) {
+	type shadow UserTenantAddSingleParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *UserTenantAddSingleParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type UserTenantRemoveSingleParams struct {
+	UserID string `path:"user_id" api:"required" json:"-"`
+	paramObj
+}

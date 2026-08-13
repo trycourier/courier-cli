@@ -22,6 +22,8 @@ func TestRoutingStrategiesCreate(t *testing.T) {
 			"--description", "Routes email through sendgrid with SES failover",
 			"--providers", "{sendgrid: {if: if, metadata: {utm: {campaign: campaign, content: content, medium: medium, source: source, term: term}}, override: {}, timeouts: 0}}",
 			"--tag", "[production, email]",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -41,6 +43,8 @@ func TestRoutingStrategiesCreate(t *testing.T) {
 			"--description", "Routes email through sendgrid with SES failover",
 			"--providers", "{sendgrid: {if: if, metadata: {utm: {campaign: campaign, content: content, medium: medium, source: source, term: term}}, override: {}, timeouts: 0}}",
 			"--tag", "[production, email]",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -92,6 +96,8 @@ func TestRoutingStrategiesCreate(t *testing.T) {
 			t, pipeData,
 			"--api-key", "string",
 			"routing-strategies", "create",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }

@@ -1,0 +1,91 @@
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+package courier
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"net/http"
+	"slices"
+
+	"github.com/trycourier/courier-go/v4/internal/apijson"
+	shimjson "github.com/trycourier/courier-go/v4/internal/encoding/json"
+	"github.com/trycourier/courier-go/v4/internal/requestconfig"
+	"github.com/trycourier/courier-go/v4/option"
+)
+
+// Store and retrieve the translation strings Courier uses to render localized
+// template content.
+//
+// TranslationService contains methods and other services that help with
+// interacting with the Courier API.
+//
+// Note, unlike clients, this service does not read variables from the environment
+// automatically. You should not instantiate this service directly, and instead use
+// the [NewTranslationService] method instead.
+type TranslationService struct {
+	Options []option.RequestOption
+}
+
+// NewTranslationService generates a new service that applies the given options to
+// each request. These options are applied after the parent client's options (if
+// there is one), and before any request-specific options.
+func NewTranslationService(opts ...option.RequestOption) (r TranslationService) {
+	r = TranslationService{}
+	r.Options = opts
+	return
+}
+
+// Returns the translation strings stored for one domain and locale, for use in
+// localized notification content.
+func (r *TranslationService) Get(ctx context.Context, locale string, query TranslationGetParams, opts ...option.RequestOption) (res *string, err error) {
+	opts = slices.Concat(r.Options, opts)
+	if query.Domain == "" {
+		err = errors.New("missing required domain parameter")
+		return nil, err
+	}
+	if locale == "" {
+		err = errors.New("missing required locale parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("translations/%s/%s", query.Domain, locale)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	return res, err
+}
+
+// Uploads the translation strings for one domain and locale. Courier uses them to
+// render localized content for recipients in that locale.
+func (r *TranslationService) Update(ctx context.Context, locale string, params TranslationUpdateParams, opts ...option.RequestOption) (err error) {
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
+	if params.Domain == "" {
+		err = errors.New("missing required domain parameter")
+		return err
+	}
+	if locale == "" {
+		err = errors.New("missing required locale parameter")
+		return err
+	}
+	path := fmt.Sprintf("translations/%s/%s", params.Domain, locale)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, params, nil, opts...)
+	return err
+}
+
+type TranslationGetParams struct {
+	Domain string `path:"domain" api:"required" json:"-"`
+	paramObj
+}
+
+type TranslationUpdateParams struct {
+	Domain string `path:"domain" api:"required" json:"-"`
+	Body   string
+	paramObj
+}
+
+func (r TranslationUpdateParams) MarshalJSON() (data []byte, err error) {
+	return shimjson.Marshal(r.Body)
+}
+func (r *TranslationUpdateParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}

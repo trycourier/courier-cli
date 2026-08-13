@@ -16,7 +16,7 @@ import (
 
 var tenantsTemplatesVersionsRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Fetches a specific version of a tenant template.",
+	Usage:   "Returns one version of a tenant template, addressed by version number or by\nlatest, with its content and publish timestamp.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

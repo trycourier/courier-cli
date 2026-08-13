@@ -31,6 +31,8 @@ func TestListsSubscriptionsAdd(t *testing.T) {
 			"lists:subscriptions", "add",
 			"--list-id", "list_id",
 			"--recipient", "{recipientId: recipientId, preferences: {categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}}",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -46,6 +48,8 @@ func TestListsSubscriptionsAdd(t *testing.T) {
 			"--list-id", "list_id",
 			"--recipient.recipient-id", "recipientId",
 			"--recipient.preferences", "{categories: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}, notifications: {foo: {status: OPTED_IN, channel_preferences: [{channel: direct_message}], rules: [{until: until, start: start}]}}}",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -76,6 +80,8 @@ func TestListsSubscriptionsAdd(t *testing.T) {
 			"--api-key", "string",
 			"lists:subscriptions", "add",
 			"--list-id", "list_id",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }

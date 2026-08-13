@@ -16,7 +16,7 @@ import (
 
 var usersPreferencesRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Fetch all user preferences.",
+	Usage:   "Returns a user's preference overrides with paging, one entry per subscription\ntopic they have set a choice for.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -36,7 +36,7 @@ var usersPreferencesRetrieve = cli.Command{
 
 var usersPreferencesBulkReplace = requestflag.WithInnerFlags(cli.Command{
 	Name:    "bulk-replace",
-	Usage:   "Replace a user's complete set of preference overrides in a single request. The\ntopics in the request body become the recipient's entire set of overrides:\nlisted topics are created or updated, and every existing override that is not\nincluded in the body is reset to its topic default. Submitting an empty `topics`\narray is a valid clear-all that resets every existing override.",
+	Usage:   "Replaces a user's entire set of preference overrides. Any topic you leave out is\nreset to its default, so send the full set rather than a subset.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -85,7 +85,7 @@ var usersPreferencesBulkReplace = requestflag.WithInnerFlags(cli.Command{
 
 var usersPreferencesBulkUpdate = requestflag.WithInnerFlags(cli.Command{
 	Name:    "bulk-update",
-	Usage:   "Additively create or update a user's preferences for one or more subscription\ntopics in a single request. Only the topics included in the request body are\ncreated or updated; any existing overrides for topics not listed are left\nuntouched.",
+	Usage:   "Adds or updates a user's preferences for several subscription topics at once.\nTopics you leave out keep whatever they were set to before.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -103,6 +103,14 @@ var usersPreferencesBulkUpdate = requestflag.WithInnerFlags(cli.Command{
 			Name:      "tenant-id",
 			Usage:     "Update the preferences of a user for this specific tenant context.",
 			QueryPath: "tenant_id",
+		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
 		},
 	},
 	Action:          handleUsersPreferencesBulkUpdate,
@@ -134,7 +142,7 @@ var usersPreferencesBulkUpdate = requestflag.WithInnerFlags(cli.Command{
 
 var usersPreferencesDeleteTopic = cli.Command{
 	Name:    "delete-topic",
-	Usage:   "Remove a user's preferences for a specific subscription topic, resetting the\ntopic to its effective default. This operation is idempotent: deleting a\npreference that does not exist succeeds with no error.",
+	Usage:   "Removes a user's override for one subscription topic, resetting it to the\neffective default from the tenant or workspace.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -159,7 +167,7 @@ var usersPreferencesDeleteTopic = cli.Command{
 
 var usersPreferencesRetrieveTopic = cli.Command{
 	Name:    "retrieve-topic",
-	Usage:   "Fetch user preferences for a specific subscription topic.",
+	Usage:   "Returns a user's opt-in status and channel choices for one subscription topic,\nor the effective default if they have set no override.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -184,7 +192,7 @@ var usersPreferencesRetrieveTopic = cli.Command{
 
 var usersPreferencesUpdateOrCreateTopic = requestflag.WithInnerFlags(cli.Command{
 	Name:    "update-or-create-topic",
-	Usage:   "Update or Create user preferences for a specific subscription topic.",
+	Usage:   "Sets a user's opt-in status and channel choices for one subscription topic,\noverriding the tenant default for that topic only.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -219,11 +227,12 @@ var usersPreferencesUpdateOrCreateTopic = requestflag.WithInnerFlags(cli.Command
 		},
 		&requestflag.InnerFlag[any]{
 			Name:       "topic.custom-routing",
-			Usage:      "The Channels a user has chosen to receive notifications through for this topic",
+			Usage:      "The channels to deliver this topic on when has_custom_routing is true. One or more of: direct_message, email, push, sms, webhook, inbox.",
 			InnerField: "custom_routing",
 		},
 		&requestflag.InnerFlag[*bool]{
 			Name:       "topic.has-custom-routing",
+			Usage:      "Set to true to route this topic to the channels in custom_routing instead of the topic's default routing.",
 			InnerField: "has_custom_routing",
 		},
 	},

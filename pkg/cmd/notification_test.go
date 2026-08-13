@@ -16,27 +16,10 @@ func TestNotificationsCreate(t *testing.T) {
 			t,
 			"--api-key", "string",
 			"notifications", "create",
-			"--notification", "{brand: {id: bnd_01kx4mrd0pfzw8wt7pn7p2fzag}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, raw: {foo: bar}, type: channel}], version: '2022-01-01'}, name: Welcome Email, routing: {strategy_id: rs_01kx4h2jdafq8bk9amzvy6hbv0}, subscription: {topic_id: pt_01kx4h2jdafq8bk9a26x0kvd1t}, tags: [onboarding, welcome]}",
+			"--notification", "{brand: {id: bnd_01kx4mrd0pfzw8wt7pn7p2fzag}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}], version: '2022-01-01'}, name: Welcome Email, routing: {strategy_id: rs_01kx4h2jdafq8bk9amzvy6hbv0}, subscription: {topic_id: pt_01kx4h2jdafq8bk9a26x0kvd1t}, tags: [onboarding, welcome], alias: welcome}",
 			"--state", "DRAFT",
-		)
-	})
-
-	t.Run("inner flags", func(t *testing.T) {
-		// Check that inner flags have been set up correctly
-		requestflag.CheckInnerFlags(notificationsCreate)
-
-		// Alternative argument passing style using inner flags
-		mocktest.TestRunMockTestWithFlags(
-			t,
-			"--api-key", "string",
-			"notifications", "create",
-			"--notification.brand", "{id: bnd_01kx4mrd0pfzw8wt7pn7p2fzag}",
-			"--notification.content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, raw: {foo: bar}, type: channel}], version: '2022-01-01'}",
-			"--notification.name", "Welcome Email",
-			"--notification.routing", "{strategy_id: rs_01kx4h2jdafq8bk9amzvy6hbv0}",
-			"--notification.subscription", "{topic_id: pt_01kx4h2jdafq8bk9a26x0kvd1t}",
-			"--notification.tags", "[onboarding, welcome]",
-			"--state", "DRAFT",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -54,6 +37,9 @@ func TestNotificationsCreate(t *testing.T) {
 			"        loop: loop\n" +
 			"        ref: ref\n" +
 			"        channel: email\n" +
+			"        font_size: font_size\n" +
+			"        line_height: line_height\n" +
+			"        padding: padding\n" +
 			"        raw:\n" +
 			"          foo: bar\n" +
 			"        type: channel\n" +
@@ -66,11 +52,14 @@ func TestNotificationsCreate(t *testing.T) {
 			"  tags:\n" +
 			"    - onboarding\n" +
 			"    - welcome\n" +
+			"  alias: welcome\n" +
 			"state: DRAFT\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
 			t, pipeData,
 			"--api-key", "string",
 			"notifications", "create",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }
@@ -149,6 +138,8 @@ func TestNotificationsPublish(t *testing.T) {
 			"notifications", "publish",
 			"--id", "id",
 			"--version", "v321669910225",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -160,6 +151,8 @@ func TestNotificationsPublish(t *testing.T) {
 			"--api-key", "string",
 			"notifications", "publish",
 			"--id", "id",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }
@@ -172,7 +165,7 @@ func TestNotificationsPutContent(t *testing.T) {
 			"--api-key", "string",
 			"notifications", "put-content",
 			"--id", "id",
-			"--content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, raw: {foo: bar}, type: channel}], version: '2022-01-01'}",
+			"--content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}], version: '2022-01-01'}",
 			"--state", "DRAFT",
 		)
 	})
@@ -187,7 +180,7 @@ func TestNotificationsPutContent(t *testing.T) {
 			"--api-key", "string",
 			"notifications", "put-content",
 			"--id", "id",
-			"--content.elements", "[{channels: [string], if: if, loop: loop, ref: ref, channel: email, raw: {foo: bar}, type: channel}]",
+			"--content.elements", "[{channels: [string], if: if, loop: loop, ref: ref, channel: email, font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}]",
 			"--content.version", "2022-01-01",
 			"--state", "DRAFT",
 		)
@@ -204,6 +197,9 @@ func TestNotificationsPutContent(t *testing.T) {
 			"      loop: loop\n" +
 			"      ref: ref\n" +
 			"      channel: email\n" +
+			"      font_size: font_size\n" +
+			"      line_height: line_height\n" +
+			"      padding: padding\n" +
 			"      raw:\n" +
 			"        foo: bar\n" +
 			"      type: channel\n" +
@@ -316,27 +312,7 @@ func TestNotificationsReplace(t *testing.T) {
 			"--api-key", "string",
 			"notifications", "replace",
 			"--id", "id",
-			"--notification", "{brand: {id: id}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, raw: {foo: bar}, type: channel}], version: '2022-01-01'}, name: Updated Name, routing: {strategy_id: strategy_id}, subscription: {topic_id: topic_id}, tags: [updated]}",
-			"--state", "PUBLISHED",
-		)
-	})
-
-	t.Run("inner flags", func(t *testing.T) {
-		// Check that inner flags have been set up correctly
-		requestflag.CheckInnerFlags(notificationsReplace)
-
-		// Alternative argument passing style using inner flags
-		mocktest.TestRunMockTestWithFlags(
-			t,
-			"--api-key", "string",
-			"notifications", "replace",
-			"--id", "id",
-			"--notification.brand", "{id: id}",
-			"--notification.content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, raw: {foo: bar}, type: channel}], version: '2022-01-01'}",
-			"--notification.name", "Updated Name",
-			"--notification.routing", "{strategy_id: strategy_id}",
-			"--notification.subscription", "{topic_id: topic_id}",
-			"--notification.tags", "[updated]",
+			"--notification", "{brand: {id: id}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}], version: '2022-01-01'}, name: Updated Name, routing: {strategy_id: strategy_id}, subscription: {topic_id: topic_id}, tags: [updated], alias: alias}",
 			"--state", "PUBLISHED",
 		)
 	})
@@ -355,6 +331,9 @@ func TestNotificationsReplace(t *testing.T) {
 			"        loop: loop\n" +
 			"        ref: ref\n" +
 			"        channel: email\n" +
+			"        font_size: font_size\n" +
+			"        line_height: line_height\n" +
+			"        padding: padding\n" +
 			"        raw:\n" +
 			"          foo: bar\n" +
 			"        type: channel\n" +
@@ -366,6 +345,7 @@ func TestNotificationsReplace(t *testing.T) {
 			"    topic_id: topic_id\n" +
 			"  tags:\n" +
 			"    - updated\n" +
+			"  alias: alias\n" +
 			"state: PUBLISHED\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
 			t, pipeData,

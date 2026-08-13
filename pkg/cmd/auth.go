@@ -16,7 +16,7 @@ import (
 
 var authIssueToken = cli.Command{
 	Name:    "issue-token",
-	Usage:   "Returns a new access token.",
+	Usage:   "Returns a JWT for authenticating client-side SDKs such as the Inbox. You supply\nthe scope and an expires_in duration, both required.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

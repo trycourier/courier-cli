@@ -23,6 +23,8 @@ func TestWorkspacePreferencesTopicsCreate(t *testing.T) {
 			"--include-unsubscribe-header=true",
 			"--routing-option", "[direct_message]",
 			"--topic-data", "{foo: bar}",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -44,6 +46,8 @@ func TestWorkspacePreferencesTopicsCreate(t *testing.T) {
 			"--api-key", "string",
 			"workspace-preferences:topics", "create",
 			"--section-id", "section_id",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }

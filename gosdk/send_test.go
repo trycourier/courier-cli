@@ -1,0 +1,188 @@
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+package courier_test
+
+import (
+	"context"
+	"errors"
+	"os"
+	"testing"
+
+	"github.com/trycourier/courier-go/v4"
+	"github.com/trycourier/courier-go/v4/internal/testutil"
+	"github.com/trycourier/courier-go/v4/option"
+	"github.com/trycourier/courier-go/v4/shared"
+)
+
+func TestSendMessageWithOptionalParams(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := courier.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.Send.Message(context.TODO(), courier.SendMessageParams{
+		Message: courier.SendMessageParamsMessage{
+			BrandID: courier.String("brand_id"),
+			Channels: shared.MessageChannelsParam{
+				"foo": shared.ChannelParam{
+					BrandID: courier.String("brand_id"),
+					If:      courier.String("if"),
+					Metadata: shared.ChannelMetadataParam{
+						Utm: shared.UtmParam{
+							Campaign: courier.String("campaign"),
+							Content:  courier.String("content"),
+							Medium:   courier.String("medium"),
+							Source:   courier.String("source"),
+							Term:     courier.String("term"),
+						},
+					},
+					Override: map[string]any{
+						"foo": "bar",
+					},
+					Providers:     []string{"string"},
+					RoutingMethod: shared.ChannelRoutingMethodAll,
+					Timeouts: shared.TimeoutsParam{
+						Channel:  courier.Int(0),
+						Provider: courier.Int(0),
+					},
+				},
+			},
+			Content: courier.SendMessageParamsMessageContentUnion{
+				OfElementalContentSugar: &shared.ElementalContentSugarParam{
+					Body:  "body",
+					Title: "title",
+				},
+			},
+			Context: shared.MessageContextParam{
+				TenantID: courier.String("tenant_id"),
+			},
+			Data: map[string]any{
+				"foo": "bar",
+			},
+			Delay: courier.SendMessageParamsMessageDelay{
+				Duration: courier.Int(0),
+				Timezone: courier.String("timezone"),
+				Until:    courier.String("until"),
+			},
+			Expiry: courier.SendMessageParamsMessageExpiry{
+				ExpiresIn: courier.SendMessageParamsMessageExpiryExpiresInUnion{
+					OfString: courier.String("string"),
+				},
+				ExpiresAt: courier.String("expires_at"),
+			},
+			Metadata: courier.SendMessageParamsMessageMetadata{
+				Event:   courier.String("event"),
+				Tags:    []string{"string"},
+				TraceID: courier.String("trace_id"),
+				Utm: shared.UtmParam{
+					Campaign: courier.String("campaign"),
+					Content:  courier.String("content"),
+					Medium:   courier.String("medium"),
+					Source:   courier.String("source"),
+					Term:     courier.String("term"),
+				},
+			},
+			Preferences: courier.SendMessageParamsMessagePreferences{
+				SubscriptionTopicID: "subscription_topic_id",
+			},
+			Providers: shared.MessageProvidersParam{
+				"foo": shared.MessageProvidersTypeParam{
+					If: courier.String("if"),
+					Metadata: shared.MetadataParam{
+						Utm: shared.UtmParam{
+							Campaign: courier.String("campaign"),
+							Content:  courier.String("content"),
+							Medium:   courier.String("medium"),
+							Source:   courier.String("source"),
+							Term:     courier.String("term"),
+						},
+					},
+					Override: map[string]any{
+						"foo": "bar",
+					},
+					Timeouts: courier.Int(0),
+				},
+			},
+			Routing: courier.SendMessageParamsMessageRouting{
+				Channels: []shared.MessageRoutingChannelUnionParam{{
+					OfString: courier.String("string"),
+				}},
+				Method: "all",
+			},
+			Template: courier.String("template_id"),
+			Timeout: courier.SendMessageParamsMessageTimeout{
+				Channel: map[string]int64{
+					"foo": 0,
+				},
+				Criteria:   "no-escalation",
+				Escalation: courier.Int(0),
+				Message:    courier.Int(0),
+				Provider: map[string]int64{
+					"foo": 0,
+				},
+			},
+			To: courier.SendMessageParamsMessageToUnion{
+				OfUserRecipient: &shared.UserRecipientParam{
+					AccountID: courier.String("account_id"),
+					Context: shared.MessageContextParam{
+						TenantID: courier.String("tenant_id"),
+					},
+					Data: map[string]any{
+						"foo": "bar",
+					},
+					Email:       courier.String("email"),
+					ListID:      courier.String("list_id"),
+					Locale:      courier.String("locale"),
+					PhoneNumber: courier.String("phone_number"),
+					Preferences: shared.UserRecipientPreferencesParam{
+						Notifications: map[string]shared.PreferenceParam{
+							"foo": {
+								Status: shared.PreferenceStatusOptedIn,
+								ChannelPreferences: []shared.ChannelPreferenceParam{{
+									Channel: shared.ChannelClassificationDirectMessage,
+								}},
+								Rules: []shared.RuleParam{{
+									Until: "until",
+									Start: courier.String("start"),
+								}},
+								Source: shared.PreferenceSourceSubscription,
+							},
+						},
+						Categories: map[string]shared.PreferenceParam{
+							"foo": {
+								Status: shared.PreferenceStatusOptedIn,
+								ChannelPreferences: []shared.ChannelPreferenceParam{{
+									Channel: shared.ChannelClassificationDirectMessage,
+								}},
+								Rules: []shared.RuleParam{{
+									Until: "until",
+									Start: courier.String("start"),
+								}},
+								Source: shared.PreferenceSourceSubscription,
+							},
+						},
+						TemplateID: courier.String("templateId"),
+					},
+					TenantID: courier.String("tenant_id"),
+					UserID:   courier.String("user_id"),
+				},
+			},
+		},
+		IdempotencyKey:         courier.String("order-ORD-456-user-123"),
+		XIdempotencyExpiration: courier.String("1785312000"),
+	})
+	if err != nil {
+		var apierr *courier.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}

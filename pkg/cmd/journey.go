@@ -16,7 +16,7 @@ import (
 
 var journeysCreate = cli.Command{
 	Name:    "create",
-	Usage:   "Create a journey. Defaults to `DRAFT` state; pass `state: \"PUBLISHED\"` to\npublish on create. Send nodes are not allowed on `POST`. The standard flow is:\ncreate the journey shell here, add notification templates with\n`POST /journeys/{templateId}/templates`, then wire them into the journey with\n`PUT /journeys/{templateId}`. Call `POST /journeys/{templateId}/publish` to\npublish a draft after the fact.",
+	Usage:   "Creates a journey from a set of nodes, in draft state unless you pass a\npublished state. Send nodes cannot be included until their templates exist.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -37,6 +37,14 @@ var journeysCreate = cli.Command{
 			Name:     "state",
 			Usage:    "Lifecycle state of a journey.",
 			BodyPath: "state",
+		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
 		},
 	},
 	Action:          handleJourneysCreate,
@@ -65,7 +73,7 @@ var journeysRetrieve = cli.Command{
 
 var journeysList = cli.Command{
 	Name:    "list",
-	Usage:   "Get the list of journeys.",
+	Usage:   "Lists the workspace's journeys, each carrying a name, state, and enabled flag.\nPaged by cursor.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -86,7 +94,7 @@ var journeysList = cli.Command{
 
 var journeysArchive = cli.Command{
 	Name:    "archive",
-	Usage:   "Archive a journey. Archived journeys cannot be invoked. Existing journey runs\ncontinue to completion.",
+	Usage:   "Archives a journey so it can no longer be invoked. Runs already in flight\ncontinue to completion, so archiving never strands a user mid-sequence.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -101,12 +109,20 @@ var journeysArchive = cli.Command{
 
 var journeysCancel = cli.Command{
 	Name:    "cancel",
-	Usage:   "Cancel journey runs. The request body must include EXACTLY ONE of\n`cancelation_token` (cancels every run associated with the token) or `run_id`\n(cancels a single tenant-scoped run). Supplying both or neither returns a `400`.\nA `run_id` that does not match a run for the tenant returns `404`. Cancelation\nis idempotent: a run that has already finished (`PROCESSED`/`ERROR`) or was\nalready `CANCELED` is left unchanged and its current status is returned.",
+	Usage:   "Cancels in-flight journey runs, either every run sharing a cancelation token or\none run by id. Use it to stop a sequence when the event resolves.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
 			Name:     "cancelation-token",
 			BodyPath: "cancelation_token",
+		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
 		},
 		&requestflag.Flag[string]{
 			Name:     "run-id",
@@ -119,7 +135,7 @@ var journeysCancel = cli.Command{
 
 var journeysInvoke = cli.Command{
 	Name:    "invoke",
-	Usage:   "Invoke a journey by id or alias to start a new run. The response includes a\n`runId` identifying the run.",
+	Usage:   "Starts a journey run for one user and returns a runId. Runs execute\nasynchronously, so the response arrives before any message is sent.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -142,6 +158,14 @@ var journeysInvoke = cli.Command{
 			Usage:    "A unique identifier for the user. If not provided, the system will attempt to resolve the user identifier from profile or data objects.",
 			BodyPath: "user_id",
 		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
+		},
 	},
 	Action:          handleJourneysInvoke,
 	HideHelpCommand: true,
@@ -149,7 +173,7 @@ var journeysInvoke = cli.Command{
 
 var journeysListVersions = cli.Command{
 	Name:    "list-versions",
-	Usage:   "List published versions of a journey, ordered most recent first.",
+	Usage:   "Lists a journey's published versions, most recent first, so you have a version\nid to roll back to. Paged by cursor.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -164,7 +188,7 @@ var journeysListVersions = cli.Command{
 
 var journeysPublish = cli.Command{
 	Name:    "publish",
-	Usage:   "Publish the current draft as a new version. Body is optional; pass\n`{ \"version\": \"vN\" }` to roll back to a prior version instead. Returns 404 if\nthe journey has no draft to publish.",
+	Usage:   "Publishes a journey's current draft as a new version, making it live for new\nruns. Pass a version instead to roll back to an earlier one.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -176,6 +200,14 @@ var journeysPublish = cli.Command{
 			Name:     "version",
 			BodyPath: "version",
 		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
+		},
 	},
 	Action:          handleJourneysPublish,
 	HideHelpCommand: true,
@@ -183,7 +215,7 @@ var journeysPublish = cli.Command{
 
 var journeysReplace = cli.Command{
 	Name:    "replace",
-	Usage:   "Replace the journey draft. Updates the working draft only; call\n`POST /journeys/{templateId}/publish` to make it live, or pass\n`state: \"PUBLISHED\"` in this request to publish immediately. Send-node\n`template` ids must already exist and be scoped to this journey, and node ids\nmust not be claimed by another journey.",
+	Usage:   "Replaces a journey's working draft, leaving the published version live until you\npublish. Reach for this when editing a journey already running.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

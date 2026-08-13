@@ -16,7 +16,7 @@ import (
 
 var notificationsChecksUpdate = requestflag.WithInnerFlags(cli.Command{
 	Name:    "update",
-	Usage:   "Replace the submission checks for a notification template.",
+	Usage:   "Replaces the approval checks on a template submission with the complete set\nsupplied in the request body.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -58,7 +58,7 @@ var notificationsChecksUpdate = requestflag.WithInnerFlags(cli.Command{
 
 var notificationsChecksList = cli.Command{
 	Name:    "list",
-	Usage:   "Retrieve the submission checks for a notification template.",
+	Usage:   "Returns the approval checks recorded for a template submission, each with its\npass or fail result.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -78,7 +78,7 @@ var notificationsChecksList = cli.Command{
 
 var notificationsChecksDelete = cli.Command{
 	Name:    "delete",
-	Usage:   "Cancel a submission for a notification template.",
+	Usage:   "Cancels a pending template submission, withdrawing it from the approval\nworkflow. The template stays in draft and can be resubmitted later.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

@@ -16,7 +16,7 @@ import (
 
 var brandsCreate = requestflag.WithInnerFlags(cli.Command{
 	Name:    "create",
-	Usage:   "Create a new brand. Requires `name` and `settings` (with at least\n`colors.primary` and `colors.secondary`).",
+	Usage:   "Creates a brand from a name and settings, including primary and secondary\ncolors. Brands supply the logo, colors, and styling that templates render with.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -36,6 +36,14 @@ var brandsCreate = requestflag.WithInnerFlags(cli.Command{
 		&requestflag.Flag[map[string]any]{
 			Name:     "snippets",
 			BodyPath: "snippets",
+		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
 		},
 	},
 	Action:          handleBrandsCreate,
@@ -65,7 +73,7 @@ var brandsCreate = requestflag.WithInnerFlags(cli.Command{
 
 var brandsRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Fetch a specific brand by brand ID.",
+	Usage:   "Returns one brand by id, including its colors, logo and styling settings,\nHandlebars snippets, and published version.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -80,7 +88,7 @@ var brandsRetrieve = cli.Command{
 
 var brandsUpdate = requestflag.WithInnerFlags(cli.Command{
 	Name:    "update",
-	Usage:   "Replace an existing brand with the supplied values.",
+	Usage:   "Replaces a brand with the values you supply, so send the complete settings and\nsnippets rather than only the fields you want changed.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -130,7 +138,7 @@ var brandsUpdate = requestflag.WithInnerFlags(cli.Command{
 
 var brandsList = cli.Command{
 	Name:    "list",
-	Usage:   "Get the list of brands.",
+	Usage:   "Lists the workspace's brands. Every entry carries its name, styling settings,\nsnippets, and published version.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[*string]{
@@ -145,7 +153,7 @@ var brandsList = cli.Command{
 
 var brandsDelete = cli.Command{
 	Name:    "delete",
-	Usage:   "Delete a brand by brand ID.",
+	Usage:   "Deletes a brand by id. Reassign any template or tenant that references it before\ndeleting to keep their styling intact.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

@@ -42,6 +42,14 @@ var journeysTemplatesCreate = requestflag.WithInnerFlags(cli.Command{
 			Name:     "state",
 			BodyPath: "state",
 		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
+		},
 	},
 	Action:          handleJourneysTemplatesCreate,
 	HideHelpCommand: true,
@@ -72,7 +80,7 @@ var journeysTemplatesCreate = requestflag.WithInnerFlags(cli.Command{
 
 var journeysTemplatesRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Fetch a journey-scoped notification template by id. Pass `?version=draft`\n(default `published`) to retrieve the working draft, or `?version=vN` for a\nhistorical version.",
+	Usage:   "Returns a journey's own notification template with its name, brand, subscription\ntopic, and content. Defaults to the published version.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -117,7 +125,7 @@ var journeysTemplatesList = cli.Command{
 
 var journeysTemplatesArchive = cli.Command{
 	Name:    "archive",
-	Usage:   "Archive the journey-scoped notification template. Archived templates cannot be\nsent.",
+	Usage:   "Archives one journey's notification template, preventing further sends. Detach\nany send node referencing it beforehand.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -137,7 +145,7 @@ var journeysTemplatesArchive = cli.Command{
 
 var journeysTemplatesListVersions = cli.Command{
 	Name:    "list-versions",
-	Usage:   "List published versions of the journey-scoped notification template, ordered\nmost recent first.",
+	Usage:   "Lists the published versions of a template that belongs to a journey, most\nrecent first. Paged by cursor.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -157,7 +165,7 @@ var journeysTemplatesListVersions = cli.Command{
 
 var journeysTemplatesPublish = cli.Command{
 	Name:    "publish",
-	Usage:   "Publish the current draft of the journey-scoped notification template as a new\nversion. Optionally roll back to a prior version by passing\n`{ \"version\": \"vN\" }`.",
+	Usage:   "Publishes a journey-scoped template's draft as a new version. Pass a version\ninstead to roll back the template to an earlier publish.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -173,6 +181,14 @@ var journeysTemplatesPublish = cli.Command{
 		&requestflag.Flag[string]{
 			Name:     "version",
 			BodyPath: "version",
+		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
 		},
 	},
 	Action:          handleJourneysTemplatesPublish,
@@ -270,7 +286,7 @@ var journeysTemplatesPutLocale = requestflag.WithInnerFlags(cli.Command{
 
 var journeysTemplatesReplace = requestflag.WithInnerFlags(cli.Command{
 	Name:    "replace",
-	Usage:   "Replace the journey-scoped notification template draft.",
+	Usage:   "Replaces the draft content of one journey's notification template. Publish it\nbefore send nodes referencing it render the change.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -322,7 +338,7 @@ var journeysTemplatesReplace = requestflag.WithInnerFlags(cli.Command{
 
 var journeysTemplatesRetrieveContent = cli.Command{
 	Name:    "retrieve-content",
-	Usage:   "Retrieve the elemental content of a journey-scoped notification template. The\nresponse contains the versioned elements along with their content checksums,\nwhich can be used to detect changes between versions. Pass `?version=draft`\n(default `published`) to retrieve the working draft, or `?version=vN` for a\nhistorical version.",
+	Usage:   "Returns the Elemental elements and version of a journey-scoped template's\ncontent. Compare versions to see what changed between publishes.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

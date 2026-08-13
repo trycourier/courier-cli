@@ -19,6 +19,8 @@ func TestWorkspacePreferencesCreate(t *testing.T) {
 			"--description", "description",
 			"--has-custom-routing=true",
 			"--routing-option", "[direct_message]",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -34,6 +36,8 @@ func TestWorkspacePreferencesCreate(t *testing.T) {
 			t, pipeData,
 			"--api-key", "string",
 			"workspace-preferences", "create",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }
@@ -83,6 +87,8 @@ func TestWorkspacePreferencesPublish(t *testing.T) {
 			"--brand-id", "brand_id",
 			"--description", "description",
 			"--heading", "heading",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 
@@ -96,6 +102,8 @@ func TestWorkspacePreferencesPublish(t *testing.T) {
 			t, pipeData,
 			"--api-key", "string",
 			"workspace-preferences", "publish",
+			"--idempotency-key", "order-ORD-456-user-123",
+			"--x-idempotency-expiration", "1785312000",
 		)
 	})
 }
