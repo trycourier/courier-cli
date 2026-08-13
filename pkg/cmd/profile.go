@@ -16,7 +16,7 @@ import (
 
 var profilesCreate = cli.Command{
 	Name:    "create",
-	Usage:   "Merge the supplied values with an existing profile or create a new profile if\none doesn't already exist.",
+	Usage:   "Merges the supplied values into a user's profile, creating it if absent and\nleaving any key you omit untouched. Prefer this for everyday writes.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -29,6 +29,14 @@ var profilesCreate = cli.Command{
 			Required: true,
 			BodyPath: "profile",
 		},
+		&requestflag.Flag[string]{
+			Name:       "idempotency-key",
+			HeaderPath: "Idempotency-Key",
+		},
+		&requestflag.Flag[string]{
+			Name:       "x-idempotency-expiration",
+			HeaderPath: "x-idempotency-expiration",
+		},
 	},
 	Action:          handleProfilesCreate,
 	HideHelpCommand: true,
@@ -36,7 +44,7 @@ var profilesCreate = cli.Command{
 
 var profilesRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Returns the specified user profile.",
+	Usage:   "Returns a user's stored profile and preferences, including the email address,\nphone number, and push tokens Courier can reach them on.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -51,7 +59,7 @@ var profilesRetrieve = cli.Command{
 
 var profilesUpdate = requestflag.WithInnerFlags(cli.Command{
 	Name:    "update",
-	Usage:   "Update a profile",
+	Usage:   "Applies a JSON Patch to a user profile, adding, removing, or replacing\nindividual fields without sending the whole object.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -90,7 +98,7 @@ var profilesUpdate = requestflag.WithInnerFlags(cli.Command{
 
 var profilesDelete = cli.Command{
 	Name:    "delete",
-	Usage:   "Deletes the specified user profile.",
+	Usage:   "Deletes a user's profile and stored contact details. List subscriptions and\npreferences are separate resources, so remove those too if required.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -105,7 +113,7 @@ var profilesDelete = cli.Command{
 
 var profilesReplace = cli.Command{
 	Name:    "replace",
-	Usage:   "When using `PUT`, be sure to include all the key-value pairs required by the\nrecipient's profile. Any key-value pairs that exist in the profile but fail to\nbe included in the `PUT` request will be removed from the profile. Remember, a\n`PUT` update is a full replacement of the data. For partial updates, use the\n[Patch](https://www.courier.com/docs/reference/profiles/patch/) request.",
+	Usage:   "Overwrites a user profile in full, removing any key absent from the request\nbody. Use the patch endpoint when changing a single field.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
