@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.13.1](https://github.com/trycourier/courier-cli/compare/v3.13.0...v3.13.1) (2026-08-13)
+
+
+### Documentation
+
+* **api:** describe every broadcast id path parameter ([#91](https://github.com/trycourier/courier-cli/issues/91)) ([486776e](https://github.com/trycourier/courier-cli/commit/486776e3d9e2f251a3bef73e9fafbec253df3d39))
+* **api:** say what the bulk job endpoints return ([#93](https://github.com/trycourier/courier-cli/issues/93)) ([e9978e7](https://github.com/trycourier/courier-cli/commit/e9978e7c671a8cdcfc5d490331af98cdd004ae36))
+
 ## [3.13.0](https://github.com/trycourier/courier-cli/compare/v3.12.2...v3.13.0) (2026-08-13)
 
 
