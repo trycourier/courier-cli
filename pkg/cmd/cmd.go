@@ -12,8 +12,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/trycourier/courier-cli/v3/internal/autocomplete"
-	"github.com/trycourier/courier-cli/v3/internal/requestflag"
+	"github.com/trycourier/courier-cli/v4/internal/autocomplete"
+	"github.com/trycourier/courier-cli/v4/internal/requestflag"
 	docs "github.com/urfave/cli-docs/v3"
 	"github.com/urfave/cli/v3"
 )
@@ -304,7 +304,6 @@ func init() {
 					&notificationsRetrieve,
 					&notificationsList,
 					&notificationsArchive,
-					&notificationsDuplicate,
 					&notificationsListVersions,
 					&notificationsPublish,
 					&notificationsPutContent,

@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/tidwall/gjson"
 
-	"github.com/trycourier/courier-cli/v3/internal/jsonview"
+	"github.com/trycourier/courier-cli/v4/internal/jsonview"
 )
 
 func TestStreamOutput(t *testing.T) {
