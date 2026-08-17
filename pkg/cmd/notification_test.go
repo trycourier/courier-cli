@@ -5,8 +5,8 @@ package cmd
 import (
 	"testing"
 
-	"github.com/trycourier/courier-cli/v3/internal/mocktest"
-	"github.com/trycourier/courier-cli/v3/internal/requestflag"
+	"github.com/trycourier/courier-cli/v4/internal/mocktest"
+	"github.com/trycourier/courier-cli/v4/internal/requestflag"
 )
 
 func TestNotificationsCreate(t *testing.T) {
@@ -98,18 +98,6 @@ func TestNotificationsArchive(t *testing.T) {
 			t,
 			"--api-key", "string",
 			"notifications", "archive",
-			"--id", "id",
-		)
-	})
-}
-
-func TestNotificationsDuplicate(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
-	t.Run("regular flags", func(t *testing.T) {
-		mocktest.TestRunMockTestWithFlags(
-			t,
-			"--api-key", "string",
-			"notifications", "duplicate",
 			"--id", "id",
 		)
 	})

@@ -5,7 +5,7 @@ package cmd
 import (
 	"testing"
 
-	"github.com/trycourier/courier-cli/v3/internal/mocktest"
+	"github.com/trycourier/courier-cli/v4/internal/mocktest"
 )
 
 func TestWorkspacePreferencesCreate(t *testing.T) {

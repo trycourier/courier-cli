@@ -7,8 +7,8 @@ import (
 	"fmt"
 
 	"github.com/tidwall/gjson"
-	"github.com/trycourier/courier-cli/v3/internal/apiquery"
-	"github.com/trycourier/courier-cli/v3/internal/requestflag"
+	"github.com/trycourier/courier-cli/v4/internal/apiquery"
+	"github.com/trycourier/courier-cli/v4/internal/requestflag"
 	"github.com/trycourier/courier-go/v4"
 	"github.com/trycourier/courier-go/v4/option"
 	"github.com/urfave/cli/v3"
