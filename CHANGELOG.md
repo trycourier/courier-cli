@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.0.0](https://github.com/trycourier/courier-cli/compare/v4.0.0...v5.0.0) (2026-08-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* **api:** match the spec to the backend — apn/expo token types and the phantom notifications.duplicate ([#96](https://github.com/trycourier/courier-cli/issues/96))
+
+### Features
+
+* **api:** match the spec to the backend — apn/expo token types and the phantom notifications.duplicate ([#96](https://github.com/trycourier/courier-cli/issues/96)) ([50bd69b](https://github.com/trycourier/courier-cli/commit/50bd69b323e6a8cb84af5fd8b4a38e0818fa586d))
+
 ## [4.0.0](https://github.com/trycourier/courier-cli/compare/v3.13.1...v4.0.0) (2026-08-17)
 
 
