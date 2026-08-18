@@ -5,8 +5,8 @@ package cmd
 import (
 	"testing"
 
-	"github.com/trycourier/courier-cli/v4/internal/mocktest"
-	"github.com/trycourier/courier-cli/v4/internal/requestflag"
+	"github.com/trycourier/courier-cli/v5/internal/mocktest"
+	"github.com/trycourier/courier-cli/v5/internal/requestflag"
 )
 
 func TestUsersTenantsList(t *testing.T) {
