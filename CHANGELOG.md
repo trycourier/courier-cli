@@ -1,5 +1,18 @@
 # Changelog
 
+## [5.1.0](https://github.com/trycourier/courier-cli/compare/v5.0.0...v5.1.0) (2026-08-19)
+
+
+### Features
+
+* **api:** add automation and journey run log endpoints ([#101](https://github.com/trycourier/courier-cli/issues/101)) ([542db5d](https://github.com/trycourier/courier-cli/commit/542db5df0d89d5fd7a713de352647a0b6ccc6e43))
+* **api:** document section_id and section_name on a user's topic preference ([#100](https://github.com/trycourier/courier-cli/issues/100)) ([1463a6d](https://github.com/trycourier/courier-cli/commit/1463a6daad4c406402e104d47b0b4853f9e799d1))
+
+
+### Chores
+
+* **api:** regenerate SDK ([#98](https://github.com/trycourier/courier-cli/issues/98)) ([4a1c7d5](https://github.com/trycourier/courier-cli/commit/4a1c7d5719f6df5433d4d73251cd530a8ad5b5f8))
+
 ## [5.0.0](https://github.com/trycourier/courier-cli/compare/v4.0.0...v5.0.0) (2026-08-17)
 
 
