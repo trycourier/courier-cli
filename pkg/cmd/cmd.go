@@ -159,6 +159,15 @@ func init() {
 				},
 			},
 			{
+				Name:     "automations:runs",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&automationsRunsList,
+					&automationsRunsListSteps,
+				},
+			},
+			{
 				Name:     "journeys",
 				Category: "API RESOURCE",
 				Suggest:  true,
@@ -189,6 +198,16 @@ func init() {
 					&journeysTemplatesPutLocale,
 					&journeysTemplatesReplace,
 					&journeysTemplatesRetrieveContent,
+				},
+			},
+			{
+				Name:     "journeys:runs",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&journeysRunsRetrieve,
+					&journeysRunsList,
+					&journeysRunsListSteps,
 				},
 			},
 			{
