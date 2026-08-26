@@ -103,6 +103,22 @@ func TestNotificationsArchive(t *testing.T) {
 	})
 }
 
+func TestNotificationsGetMetrics(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t,
+			"--api-key", "string",
+			"notifications", "get-metrics",
+			"--id", "x",
+			"--end", "'2019-12-27T18:11:19.117Z'",
+			"--granularity", "HOUR",
+			"--lookback", "lookback",
+			"--start", "'2019-12-27T18:11:19.117Z'",
+		)
+	})
+}
+
 func TestNotificationsListVersions(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {

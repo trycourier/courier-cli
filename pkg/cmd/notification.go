@@ -104,6 +104,43 @@ var notificationsArchive = cli.Command{
 	HideHelpCommand: true,
 }
 
+var notificationsGetMetrics = cli.Command{
+	Name:    "get-metrics",
+	Usage:   "Fetch the delivery funnel for one Notification Template as a time series — sent,\ndelivered, opened, clicked, errors, and undeliverable — broken out per provider\nand channel inside each bucket. Sum the entries in a bucket for its totals;\nthere is no bucket-level total.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
+		},
+		&requestflag.Flag[any]{
+			Name:      "end",
+			Usage:     "The end of the window, as an ISO 8601 timestamp with an offset. Must be supplied together with `start`. An `end` in the future is accepted and not clamped — the trailing buckets come back empty.",
+			QueryPath: "end",
+		},
+		&requestflag.Flag[string]{
+			Name:      "granularity",
+			Usage:     "The size of each bucket in the series. Defaults to `DAY`. `WEEK` buckets start on Sunday. A fine granularity caps the window it can cover: `HOUR` spans at most 7 days and `DAY` at most 90 days, and a wider window returns `400` — request a coarser granularity instead. `WEEK` and `MONTH` are uncapped, subject to the 1000-bucket limit on a single response.",
+			Default:   "DAY",
+			QueryPath: "granularity",
+		},
+		&requestflag.Flag[string]{
+			Name:      "lookback",
+			Usage:     "The length of the window, counted back from now, as an ISO 8601 duration (`P30D`, `P12W`, `PT12H`). Defaults to `P30D`, and is ignored when `start` and `end` are supplied. A malformed or non-positive duration returns `400`.",
+			Default:   "P30D",
+			QueryPath: "lookback",
+		},
+		&requestflag.Flag[any]{
+			Name:      "start",
+			Usage:     "The inclusive start of the window, as an ISO 8601 timestamp with an offset (`2026-04-01T00:00:00Z`). Must be supplied together with `end` and be earlier than it; either one alone returns `400`.",
+			QueryPath: "start",
+		},
+	},
+	Action:          handleNotificationsGetMetrics,
+	HideHelpCommand: true,
+}
+
 var notificationsListVersions = cli.Command{
 	Name:    "list-versions",
 	Usage:   "Returns a notification template's published versions, most recent first, for\ncomparison or rollback. Paged.",
@@ -490,6 +527,55 @@ func handleNotificationsArchive(ctx context.Context, cmd *cli.Command) error {
 	}
 
 	return client.Notifications.Archive(ctx, cmd.Value("id").(string), options...)
+}
+
+func handleNotificationsGetMetrics(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("id") && len(unusedArgs) > 0 {
+		cmd.Set("id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		EmptyBody,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.NotificationGetMetricsParams{}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Notifications.GetMetrics(
+		ctx,
+		cmd.Value("id").(string),
+		params,
+		options...,
+	)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "notifications get-metrics",
+		Transform:      transform,
+	})
 }
 
 func handleNotificationsListVersions(ctx context.Context, cmd *cli.Command) error {
