@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.2.0](https://github.com/trycourier/courier-cli/compare/v5.1.0...v5.2.0) (2026-08-26)
+
+
+### Features
+
+* **api:** document the template send metrics endpoint ([#102](https://github.com/trycourier/courier-cli/issues/102)) ([8c575b5](https://github.com/trycourier/courier-cli/commit/8c575b575ff9ded9eb3b1400f60eccd4bb343d50))
+
 ## [5.1.0](https://github.com/trycourier/courier-cli/compare/v5.0.0...v5.1.0) (2026-08-19)
 
 
