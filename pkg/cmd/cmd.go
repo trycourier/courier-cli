@@ -323,6 +323,7 @@ func init() {
 					&notificationsRetrieve,
 					&notificationsList,
 					&notificationsArchive,
+					&notificationsGetMetrics,
 					&notificationsListVersions,
 					&notificationsPublish,
 					&notificationsPutContent,
