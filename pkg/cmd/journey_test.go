@@ -17,7 +17,7 @@ func TestJourneysCreate(t *testing.T) {
 			"journeys", "create",
 			"--name", "Welcome Journey",
 			"--node", "{trigger_type: api-invoke, type: trigger, id: trigger-1, conditions: [string, string], schema: {foo: bar}}",
-			"--node", "{message: {context: {tenant_id: x}, data: {foo: bar}, delay: {until: x, timezone: x}, template: nt_01kx4h2jdafq8bk9aftxak4b40, to: {email_override: x, ms_teams: {channel_id: x, channel_name: x, email: x, service_url: x, team_id: x, tenant_id: x, user_id: x}, phone_number_override: x, slack: {channel: x, access_token: x}, user_id_override: x}}, type: send, id: send-1, conditions: [string, string], experiment: {bucketingKey: x, variants: [{id: x, templateId: x, weight: 0, name: name}, {id: x, templateId: x, weight: 0, name: name}], id: x, name: name}}",
+			"--node", "{message: {context: {tenant_id: x}, data: {foo: bar}, delay: {until: x, timezone: x}, template: nt_01kx4h2jdafq8bk9aftxak4b40, to: {email_override: x, ms_teams: {channel_id: x, channel_name: x, email: x, service_url: x, team_id: x, tenant_id: x, user_id: x}, phone_number_override: x, slack: {channel: x, access_token: x}, user_id_override: x}}, type: send, id: send-1, channel: email, conditions: [string, string], experiment: {bucketingKey: x, variants: [{id: x, templateId: x, weight: 0, name: name}, {id: x, templateId: x, weight: 0, name: name}], id: x, name: name}}",
 			"--node", "{type: exit, id: exit-1}",
 			"--enabled=true",
 			"--state", "DRAFT",
@@ -65,6 +65,7 @@ func TestJourneysCreate(t *testing.T) {
 			"        user_id_override: x\n" +
 			"    type: send\n" +
 			"    id: send-1\n" +
+			"    channel: email\n" +
 			"    conditions:\n" +
 			"      - string\n" +
 			"      - string\n" +
