@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.4.0](https://github.com/trycourier/courier-cli/compare/v5.3.0...v5.4.0) (2026-08-28)
+
+
+### Features
+
+* **api:** document channel on journey send nodes [C-20309] ([#107](https://github.com/trycourier/courier-cli/issues/107)) ([44fbb32](https://github.com/trycourier/courier-cli/commit/44fbb32c6d7c81288db7a1d2b59bac925ac7fc30))
+
 ## [5.3.0](https://github.com/trycourier/courier-cli/compare/v5.2.0...v5.3.0) (2026-08-27)
 
 
