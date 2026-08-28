@@ -84,7 +84,7 @@ func TestTenantsTemplatesReplace(t *testing.T) {
 			"tenants:templates", "replace",
 			"--tenant-id", "tenant_id",
 			"--template-id", "template_id",
-			"--template", "{content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, type: text}], version: '2022-01-01'}, channels: {foo: {brand_id: brand_id, if: if, metadata: {utm: {campaign: campaign, content: content, medium: medium, source: source, term: term}}, override: {foo: bar}, providers: [string], routing_method: all, timeouts: {channel: 0, provider: 0}}}, providers: {foo: {if: if, metadata: {utm: {campaign: campaign, content: content, medium: medium, source: source, term: term}}, override: {foo: bar}, timeouts: 0}}, routing: {channels: [email], method: single}}",
+			"--template", "{content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, content: 'Hello {{name}}', align: left, bold: bold, color: color, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], version: '2022-01-01'}, channels: {foo: {brand_id: brand_id, if: if, metadata: {utm: {campaign: campaign, content: content, medium: medium, source: source, term: term}}, override: {foo: bar}, providers: [string], routing_method: all, timeouts: {channel: 0, provider: 0}}}, providers: {foo: {if: if, metadata: {utm: {campaign: campaign, content: content, medium: medium, source: source, term: term}}, override: {foo: bar}, timeouts: 0}}, routing: {channels: [email], method: single}}",
 			"--published=true",
 		)
 	})
@@ -100,7 +100,7 @@ func TestTenantsTemplatesReplace(t *testing.T) {
 			"tenants:templates", "replace",
 			"--tenant-id", "tenant_id",
 			"--template-id", "template_id",
-			"--template.content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, type: text}], version: '2022-01-01'}",
+			"--template.content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, content: 'Hello {{name}}', align: left, bold: bold, color: color, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], version: '2022-01-01'}",
 			"--template.channels", "{foo: {brand_id: brand_id, if: if, metadata: {utm: {campaign: campaign, content: content, medium: medium, source: source, term: term}}, override: {foo: bar}, providers: [string], routing_method: all, timeouts: {channel: 0, provider: 0}}}",
 			"--template.providers", "{foo: {if: if, metadata: {utm: {campaign: campaign, content: content, medium: medium, source: source, term: term}}, override: {foo: bar}, timeouts: 0}}",
 			"--template.routing", "{channels: [email], method: single}",
@@ -119,6 +119,20 @@ func TestTenantsTemplatesReplace(t *testing.T) {
 			"        if: if\n" +
 			"        loop: loop\n" +
 			"        ref: ref\n" +
+			"        content: Hello {{name}}\n" +
+			"        align: left\n" +
+			"        bold: bold\n" +
+			"        color: color\n" +
+			"        font_size: font_size\n" +
+			"        format: markdown\n" +
+			"        italic: italic\n" +
+			"        line_height: line_height\n" +
+			"        locales:\n" +
+			"          foo:\n" +
+			"            content: content\n" +
+			"        strikethrough: strikethrough\n" +
+			"        text_style: text\n" +
+			"        underline: underline\n" +
 			"        type: text\n" +
 			"    version: '2022-01-01'\n" +
 			"  channels:\n" +
