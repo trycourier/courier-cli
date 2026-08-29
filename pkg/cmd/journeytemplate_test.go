@@ -18,7 +18,7 @@ func TestJourneysTemplatesCreate(t *testing.T) {
 			"journeys:templates", "create",
 			"--template-id", "x",
 			"--channel", "email",
-			"--notification", "{brand: {id: id}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, content: Welcome!, align: left, bold: bold, color: color, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], version: '2022-01-01', scope: default}, name: Welcome email, subscription: {topic_id: topic_id}, tags: [string]}",
+			"--notification", "{brand: {id: id}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: Welcome!, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], version: '2022-01-01', scope: default}, name: Welcome email, subscription: {topic_id: topic_id}, tags: [string]}",
 			"--provider-key", "x",
 			"--state", "state",
 			"--idempotency-key", "order-ORD-456-user-123",
@@ -38,7 +38,7 @@ func TestJourneysTemplatesCreate(t *testing.T) {
 			"--template-id", "x",
 			"--channel", "email",
 			"--notification.brand", "{id: id}",
-			"--notification.content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, content: Welcome!, align: left, bold: bold, color: color, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], version: '2022-01-01', scope: default}",
+			"--notification.content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: Welcome!, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], version: '2022-01-01', scope: default}",
 			"--notification.name", "Welcome email",
 			"--notification.subscription", "{topic_id: topic_id}",
 			"--notification.tags", "[string]",
@@ -63,10 +63,10 @@ func TestJourneysTemplatesCreate(t *testing.T) {
 			"        if: if\n" +
 			"        loop: loop\n" +
 			"        ref: ref\n" +
-			"        content: Welcome!\n" +
 			"        align: left\n" +
 			"        bold: bold\n" +
 			"        color: color\n" +
+			"        content: Welcome!\n" +
 			"        font_size: font_size\n" +
 			"        format: markdown\n" +
 			"        italic: italic\n" +
@@ -302,7 +302,7 @@ func TestJourneysTemplatesReplace(t *testing.T) {
 			"journeys:templates", "replace",
 			"--template-id", "x",
 			"--notification-id", "x",
-			"--notification", "{brand: {id: id}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, content: content, align: left, bold: bold, color: color, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], version: '2022-01-01', scope: default}, name: name, subscription: {topic_id: topic_id}, tags: [string]}",
+			"--notification", "{brand: {id: id}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: content, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], version: '2022-01-01', scope: default}, name: name, subscription: {topic_id: topic_id}, tags: [string]}",
 			"--state", "state",
 		)
 	})
@@ -319,7 +319,7 @@ func TestJourneysTemplatesReplace(t *testing.T) {
 			"--template-id", "x",
 			"--notification-id", "x",
 			"--notification.brand", "{id: id}",
-			"--notification.content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, content: content, align: left, bold: bold, color: color, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], version: '2022-01-01', scope: default}",
+			"--notification.content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: content, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], version: '2022-01-01', scope: default}",
 			"--notification.name", "name",
 			"--notification.subscription", "{topic_id: topic_id}",
 			"--notification.tags", "[string]",
@@ -340,10 +340,10 @@ func TestJourneysTemplatesReplace(t *testing.T) {
 			"        if: if\n" +
 			"        loop: loop\n" +
 			"        ref: ref\n" +
-			"        content: content\n" +
 			"        align: left\n" +
 			"        bold: bold\n" +
 			"        color: color\n" +
+			"        content: content\n" +
 			"        font_size: font_size\n" +
 			"        format: markdown\n" +
 			"        italic: italic\n" +
