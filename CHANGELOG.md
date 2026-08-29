@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.4.2](https://github.com/trycourier/courier-cli/compare/v5.4.1...v5.4.2) (2026-08-29)
+
+
+### Bug Fixes
+
+* **api:** correct two Elemental field names the REST API rejects ([#111](https://github.com/trycourier/courier-cli/issues/111)) ([c40d84f](https://github.com/trycourier/courier-cli/commit/c40d84f9043829d4aa5df82ab9ccbaefdb5fb19c))
+
 ## [5.4.1](https://github.com/trycourier/courier-cli/compare/v5.4.0...v5.4.1) (2026-08-28)
 
 
