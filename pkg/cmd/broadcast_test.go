@@ -127,7 +127,7 @@ func TestBroadcastsPutContent(t *testing.T) {
 			"--api-key", "string",
 			"broadcasts", "put-content",
 			"--broadcast-id", "broadcastId",
-			"--content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, title: Spring Sale is here, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, content: Hello! Check out our spring sale., align: left, bold: bold, color: color, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], version: '2022-01-01'}",
+			"--content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, title: Spring Sale is here, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: Hello! Check out our spring sale., font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], version: '2022-01-01'}",
 			"--state", "DRAFT",
 		)
 	})
@@ -142,7 +142,7 @@ func TestBroadcastsPutContent(t *testing.T) {
 			"--api-key", "string",
 			"broadcasts", "put-content",
 			"--broadcast-id", "broadcastId",
-			"--content.elements", "[{channels: [string], if: if, loop: loop, ref: ref, title: Spring Sale is here, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, content: Hello! Check out our spring sale., align: left, bold: bold, color: color, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}]",
+			"--content.elements", "[{channels: [string], if: if, loop: loop, ref: ref, title: Spring Sale is here, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: Hello! Check out our spring sale., font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}]",
 			"--content.version", "2022-01-01",
 			"--state", "DRAFT",
 		)
@@ -165,10 +165,10 @@ func TestBroadcastsPutContent(t *testing.T) {
 			"      if: if\n" +
 			"      loop: loop\n" +
 			"      ref: ref\n" +
-			"      content: Hello! Check out our spring sale.\n" +
 			"      align: left\n" +
 			"      bold: bold\n" +
 			"      color: color\n" +
+			"      content: Hello! Check out our spring sale.\n" +
 			"      font_size: font_size\n" +
 			"      format: markdown\n" +
 			"      italic: italic\n" +
