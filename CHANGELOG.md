@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.4.3](https://github.com/trycourier/courier-cli/compare/v5.4.2...v5.4.3) (2026-08-29)
+
+
+### Bug Fixes
+
+* **api:** text content is not required ([#113](https://github.com/trycourier/courier-cli/issues/113)) ([04c8fce](https://github.com/trycourier/courier-cli/commit/04c8fce34037f8d1fd3be604fce70a58e1a4a739))
+
 ## [5.4.2](https://github.com/trycourier/courier-cli/compare/v5.4.1...v5.4.2) (2026-08-29)
 
 
