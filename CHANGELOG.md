@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.4.4](https://github.com/trycourier/courier-cli/compare/v5.4.3...v5.4.4) (2026-09-03)
+
+
+### Documentation
+
+* **api:** document the channel-block requirement on template creation ([#115](https://github.com/trycourier/courier-cli/issues/115)) ([90afa18](https://github.com/trycourier/courier-cli/commit/90afa182a3222bfd33c9d1b6f22105f6bb27199e))
+
 ## [5.4.3](https://github.com/trycourier/courier-cli/compare/v5.4.2...v5.4.3) (2026-08-29)
 
 
