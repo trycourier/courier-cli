@@ -69,9 +69,9 @@ var usersTokensUpdate = requestflag.WithInnerFlags(cli.Command{
 			Usage:      "The JSON path specifying the part of the profile to operate on.",
 			InnerField: "path",
 		},
-		&requestflag.InnerFlag[*string]{
+		&requestflag.InnerFlag[any]{
 			Name:       "patch.value",
-			Usage:      "The value for the operation.",
+			Usage:      "The value for the operation. A string for most fields; boolean `false` when disabling token expiration via `expiry_date`, which cannot be expressed as a string.",
 			InnerField: "value",
 		},
 	},
@@ -155,7 +155,7 @@ var usersTokensAddSingle = requestflag.WithInnerFlags(cli.Command{
 		},
 		&requestflag.Flag[any]{
 			Name:     "expiry-date",
-			Usage:    "ISO 8601 formatted date the token expires. Defaults to 2 months. Set to false to disable expiration.",
+			Usage:    "When the token expires. Accepts a date, or the boolean `false` to disable expiration entirely. ISO 8601 is recommended (for example `2026-10-25T00:00:00.000Z`). A value that cannot be parsed as a date is rejected; it is not treated as \"no expiration\" and does not fall back to the default. `true` is not a supported value. Omit the field to use the default, which expires a token that has not been re-registered for 60 days.",
 			BodyPath: "expiry_date",
 		},
 		&requestflag.Flag[any]{
