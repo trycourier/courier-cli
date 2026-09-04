@@ -17,7 +17,7 @@ func TestBrandsCreate(t *testing.T) {
 			"--api-key", "string",
 			"brands", "create",
 			"--name", "My Brand",
-			"--settings", "{colors: {primary: '#9D3789', secondary: '#FFFFFF'}, email: {footer: {content: content, inheritDefault: true}, head: {inheritDefault: true, content: content}, header: {logo: {href: href, image: image}, barColor: barColor, inheritDefault: true}, templateOverride: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width, mjml: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width}, footerBackgroundColor: footerBackgroundColor, footerFullWidth: true}}, inapp: {colors: {primary: primary, secondary: secondary}, icons: {bell: bell, message: message}, widgetBackground: {bottomColor: bottomColor, topColor: topColor}, borderRadius: borderRadius, disableMessageIcon: true, fontFamily: fontFamily, placement: top}}",
+			"--settings", "{colors: {primary: '#9D3789', secondary: '#FFFFFF'}, email: {footer: {inheritDefault: true, markdown: markdown, social: {facebook: {url: url}, instagram: {url: url}, linkedin: {url: url}, medium: {url: url}, twitter: {url: url}}}, head: {inheritDefault: true, content: content}, header: {logo: {href: href, image: image}, barColor: barColor, inheritDefault: true}, templateOverride: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width, mjml: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width}, footerBackgroundColor: footerBackgroundColor, footerFullWidth: true}}, inapp: {colors: {primary: primary, secondary: secondary}, icons: {bell: bell, message: message}, widgetBackground: {bottomColor: bottomColor, topColor: topColor}, borderRadius: borderRadius, disableMessageIcon: true, fontFamily: fontFamily, placement: top}}",
 			"--id", "id",
 			"--snippets", "{items: [{name: name, value: value}]}",
 			"--idempotency-key", "order-ORD-456-user-123",
@@ -36,7 +36,7 @@ func TestBrandsCreate(t *testing.T) {
 			"brands", "create",
 			"--name", "My Brand",
 			"--settings.colors", "{primary: '#9D3789', secondary: '#FFFFFF'}",
-			"--settings.email", "{footer: {content: content, inheritDefault: true}, head: {inheritDefault: true, content: content}, header: {logo: {href: href, image: image}, barColor: barColor, inheritDefault: true}, templateOverride: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width, mjml: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width}, footerBackgroundColor: footerBackgroundColor, footerFullWidth: true}}",
+			"--settings.email", "{footer: {inheritDefault: true, markdown: markdown, social: {facebook: {url: url}, instagram: {url: url}, linkedin: {url: url}, medium: {url: url}, twitter: {url: url}}}, head: {inheritDefault: true, content: content}, header: {logo: {href: href, image: image}, barColor: barColor, inheritDefault: true}, templateOverride: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width, mjml: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width}, footerBackgroundColor: footerBackgroundColor, footerFullWidth: true}}",
 			"--settings.inapp", "{colors: {primary: primary, secondary: secondary}, icons: {bell: bell, message: message}, widgetBackground: {bottomColor: bottomColor, topColor: topColor}, borderRadius: borderRadius, disableMessageIcon: true, fontFamily: fontFamily, placement: top}",
 			"--id", "id",
 			"--snippets.items", "[{name: name, value: value}]",
@@ -55,8 +55,19 @@ func TestBrandsCreate(t *testing.T) {
 			"    secondary: '#FFFFFF'\n" +
 			"  email:\n" +
 			"    footer:\n" +
-			"      content: content\n" +
 			"      inheritDefault: true\n" +
+			"      markdown: markdown\n" +
+			"      social:\n" +
+			"        facebook:\n" +
+			"          url: url\n" +
+			"        instagram:\n" +
+			"          url: url\n" +
+			"        linkedin:\n" +
+			"          url: url\n" +
+			"        medium:\n" +
+			"          url: url\n" +
+			"        twitter:\n" +
+			"          url: url\n" +
 			"    head:\n" +
 			"      inheritDefault: true\n" +
 			"      content: content\n" +
@@ -134,7 +145,7 @@ func TestBrandsUpdate(t *testing.T) {
 			"brands", "update",
 			"--brand-id", "brand_id",
 			"--name", "My Brand",
-			"--settings", "{colors: {primary: '#9D3789', secondary: '#FFFFFF'}, email: {footer: {content: content, inheritDefault: true}, head: {inheritDefault: true, content: content}, header: {logo: {href: href, image: image}, barColor: barColor, inheritDefault: true}, templateOverride: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width, mjml: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width}, footerBackgroundColor: footerBackgroundColor, footerFullWidth: true}}, inapp: {colors: {primary: primary, secondary: secondary}, icons: {bell: bell, message: message}, widgetBackground: {bottomColor: bottomColor, topColor: topColor}, borderRadius: borderRadius, disableMessageIcon: true, fontFamily: fontFamily, placement: top}}",
+			"--settings", "{colors: {primary: '#9D3789', secondary: '#FFFFFF'}, email: {footer: {inheritDefault: true, markdown: markdown, social: {facebook: {url: url}, instagram: {url: url}, linkedin: {url: url}, medium: {url: url}, twitter: {url: url}}}, head: {inheritDefault: true, content: content}, header: {logo: {href: href, image: image}, barColor: barColor, inheritDefault: true}, templateOverride: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width, mjml: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width}, footerBackgroundColor: footerBackgroundColor, footerFullWidth: true}}, inapp: {colors: {primary: primary, secondary: secondary}, icons: {bell: bell, message: message}, widgetBackground: {bottomColor: bottomColor, topColor: topColor}, borderRadius: borderRadius, disableMessageIcon: true, fontFamily: fontFamily, placement: top}}",
 			"--snippets", "{items: [{name: name, value: value}]}",
 		)
 	})
@@ -151,7 +162,7 @@ func TestBrandsUpdate(t *testing.T) {
 			"--brand-id", "brand_id",
 			"--name", "My Brand",
 			"--settings.colors", "{primary: '#9D3789', secondary: '#FFFFFF'}",
-			"--settings.email", "{footer: {content: content, inheritDefault: true}, head: {inheritDefault: true, content: content}, header: {logo: {href: href, image: image}, barColor: barColor, inheritDefault: true}, templateOverride: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width, mjml: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width}, footerBackgroundColor: footerBackgroundColor, footerFullWidth: true}}",
+			"--settings.email", "{footer: {inheritDefault: true, markdown: markdown, social: {facebook: {url: url}, instagram: {url: url}, linkedin: {url: url}, medium: {url: url}, twitter: {url: url}}}, head: {inheritDefault: true, content: content}, header: {logo: {href: href, image: image}, barColor: barColor, inheritDefault: true}, templateOverride: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width, mjml: {enabled: true, backgroundColor: backgroundColor, blocksBackgroundColor: blocksBackgroundColor, footer: footer, head: head, header: header, width: width}, footerBackgroundColor: footerBackgroundColor, footerFullWidth: true}}",
 			"--settings.inapp", "{colors: {primary: primary, secondary: secondary}, icons: {bell: bell, message: message}, widgetBackground: {bottomColor: bottomColor, topColor: topColor}, borderRadius: borderRadius, disableMessageIcon: true, fontFamily: fontFamily, placement: top}",
 			"--snippets.items", "[{name: name, value: value}]",
 		)
@@ -167,8 +178,19 @@ func TestBrandsUpdate(t *testing.T) {
 			"    secondary: '#FFFFFF'\n" +
 			"  email:\n" +
 			"    footer:\n" +
-			"      content: content\n" +
 			"      inheritDefault: true\n" +
+			"      markdown: markdown\n" +
+			"      social:\n" +
+			"        facebook:\n" +
+			"          url: url\n" +
+			"        instagram:\n" +
+			"          url: url\n" +
+			"        linkedin:\n" +
+			"          url: url\n" +
+			"        medium:\n" +
+			"          url: url\n" +
+			"        twitter:\n" +
+			"          url: url\n" +
 			"    head:\n" +
 			"      inheritDefault: true\n" +
 			"      content: content\n" +
