@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.5.0](https://github.com/trycourier/courier-cli/compare/v5.4.4...v5.5.0) (2026-09-04)
+
+
+### Features
+
+* **api:** document the expiry_date contract and allow boolean patch values ([#118](https://github.com/trycourier/courier-cli/issues/118)) ([0f2c304](https://github.com/trycourier/courier-cli/commit/0f2c304376e92f6313063db26ab3743e8360bc6b))
+
 ## [5.4.4](https://github.com/trycourier/courier-cli/compare/v5.4.3...v5.4.4) (2026-09-03)
 
 
