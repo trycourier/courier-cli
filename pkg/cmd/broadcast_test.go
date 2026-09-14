@@ -212,7 +212,7 @@ func TestBroadcastsSchedule(t *testing.T) {
 			"--api-key", "string",
 			"broadcasts", "schedule",
 			"--broadcast-id", "broadcastId",
-			"--recipient-id", "aud_01kx4h2jdafq8bk9amzvy6hbv0",
+			"--recipient-id", "active-business-users",
 			"--recipient-type", "audience",
 			"--scheduled-to", "2026-08-01T15:00:00",
 			"--timezone", "America/New_York",
@@ -222,7 +222,7 @@ func TestBroadcastsSchedule(t *testing.T) {
 	t.Run("piping data", func(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
-			"recipient_id: aud_01kx4h2jdafq8bk9amzvy6hbv0\n" +
+			"recipient_id: active-business-users\n" +
 			"recipient_type: audience\n" +
 			"scheduled_to: '2026-08-01T15:00:00'\n" +
 			"timezone: America/New_York\n")
