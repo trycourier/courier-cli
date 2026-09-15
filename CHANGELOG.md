@@ -1,5 +1,18 @@
 # Changelog
 
+## [5.6.0](https://github.com/trycourier/courier-cli/compare/v5.5.0...v5.6.0) (2026-09-15)
+
+
+### Features
+
+* **api:** digest configuration, per-recipient schedules, and release ([#124](https://github.com/trycourier/courier-cli/issues/124)) ([e6ede45](https://github.com/trycourier/courier-cli/commit/e6ede454bbecbbc6ab6682426ba21086d44e1a13))
+
+
+### Documentation
+
+* **api:** group the topic digest endpoints under Digests, and match the docs voice ([#125](https://github.com/trycourier/courier-cli/issues/125)) ([2834dbf](https://github.com/trycourier/courier-cli/commit/2834dbfa0191471118a6856130a636edc5bf21d4))
+* **api:** stop teaching an aud_ prefix that Courier does not issue ([#122](https://github.com/trycourier/courier-cli/issues/122)) ([fbfc170](https://github.com/trycourier/courier-cli/commit/fbfc17096fb33e482bbe828726a56315c86a7819))
+
 ## [5.5.0](https://github.com/trycourier/courier-cli/compare/v5.4.4...v5.5.0) (2026-09-04)
 
 
