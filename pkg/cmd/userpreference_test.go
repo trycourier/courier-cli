@@ -177,7 +177,7 @@ func TestUsersPreferencesUpdateOrCreateTopic(t *testing.T) {
 			"users:preferences", "update-or-create-topic",
 			"--user-id", "user_id",
 			"--topic-id", "topic_id",
-			"--topic", "{status: OPTED_IN, custom_routing: [inbox, email], has_custom_routing: true}",
+			"--topic", "{status: OPTED_IN, custom_routing: [inbox, email], digest_schedule_id: x, has_custom_routing: true}",
 			"--tenant-id", "tenant_id",
 		)
 	})
@@ -195,6 +195,7 @@ func TestUsersPreferencesUpdateOrCreateTopic(t *testing.T) {
 			"--topic-id", "topic_id",
 			"--topic.status", "OPTED_IN",
 			"--topic.custom-routing", "[inbox, email]",
+			"--topic.digest-schedule-id", "x",
 			"--topic.has-custom-routing=true",
 			"--tenant-id", "tenant_id",
 		)
@@ -208,6 +209,7 @@ func TestUsersPreferencesUpdateOrCreateTopic(t *testing.T) {
 			"  custom_routing:\n" +
 			"    - inbox\n" +
 			"    - email\n" +
+			"  digest_schedule_id: x\n" +
 			"  has_custom_routing: true\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
 			t, pipeData,

@@ -230,6 +230,11 @@ var usersPreferencesUpdateOrCreateTopic = requestflag.WithInnerFlags(cli.Command
 			Usage:      "The channels to deliver this topic on when has_custom_routing is true. One or more of: direct_message, email, push, sms, webhook, inbox.",
 			InnerField: "custom_routing",
 		},
+		&requestflag.InnerFlag[*string]{
+			Name:       "topic.digest-schedule-id",
+			Usage:      "Put this recipient on one of the topic's digest schedules. Send `null` to clear the choice and return them to the topic's default. Omit to leave an existing choice alone -- unlike the routing fields, which this endpoint replaces. An id that is not an active schedule on the topic is rejected with a `400` before anything is written.",
+			InnerField: "digest_schedule_id",
+		},
 		&requestflag.InnerFlag[*bool]{
 			Name:       "topic.has-custom-routing",
 			Usage:      "Set to true to route this topic to the channels in custom_routing instead of the topic's default routing.",

@@ -378,6 +378,8 @@ func init() {
 					&workspacePreferencesTopicsRetrieve,
 					&workspacePreferencesTopicsList,
 					&workspacePreferencesTopicsArchive,
+					&workspacePreferencesTopicsDeleteDigest,
+					&workspacePreferencesTopicsReleaseDigest,
 					&workspacePreferencesTopicsReplace,
 				},
 			},

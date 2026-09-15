@@ -14,7 +14,7 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-var workspacePreferencesTopicsCreate = cli.Command{
+var workspacePreferencesTopicsCreate = requestflag.WithInnerFlags(cli.Command{
 	Name:    "create",
 	Usage:   "Creates a subscription topic inside a workspace preference. The default status\nsets whether users start opted in, opted out, or required.",
 	Suggest: true,
@@ -46,6 +46,11 @@ var workspacePreferencesTopicsCreate = cli.Command{
 			Usage:    "Optional description shown under the topic on the hosted preferences page.",
 			BodyPath: "description",
 		},
+		&requestflag.Flag[map[string]any]{
+			Name:     "digest",
+			Usage:    "A topic's digest configuration: the template that renders it, the cadences it delivers on, and how collected events are retained.\n\nSend `null` for the whole object to turn a digest off, which unlinks the template and removes its schedules. There is no `enabled` flag, and `schedules: []` is rejected -- both states are un-deliverable rather than merely off.",
+			BodyPath: "digest",
+		},
 		&requestflag.Flag[*bool]{
 			Name:     "include-unsubscribe-header",
 			Usage:    "Whether to include a list-unsubscribe header on emails for this topic.",
@@ -72,7 +77,35 @@ var workspacePreferencesTopicsCreate = cli.Command{
 	},
 	Action:          handleWorkspacePreferencesTopicsCreate,
 	HideHelpCommand: true,
-}
+}, map[string][]requestflag.HasOuterFlag{
+	"digest": {
+		&requestflag.InnerFlag[[]map[string]any]{
+			Name:       "digest.schedules",
+			Usage:      "The cadences this digest delivers on. At least one is required: a digest with no schedule collects events into an instance that can never fire. Omitting the key on a replace leaves stored schedules untouched; sending `[]` is a `400`.",
+			InnerField: "schedules",
+		},
+		&requestflag.InnerFlag[string]{
+			Name:       "digest.template-id",
+			Usage:      "The notification template that renders the digest. A digest with no template collects nothing, so this is required.",
+			InnerField: "template_id",
+		},
+		&requestflag.InnerFlag[string]{
+			Name:       "digest.audience-id",
+			Usage:      "Optional audience the digest is scoped to.",
+			InnerField: "audience_id",
+		},
+		&requestflag.InnerFlag[[]map[string]any]{
+			Name:       "digest.categories",
+			Usage:      "Retention rules per category key. Defaults to a single `digest` category retaining `FIRST`.",
+			InnerField: "categories",
+		},
+		&requestflag.InnerFlag[bool]{
+			Name:       "digest.trigger-empty",
+			Usage:      "Whether to deliver the digest even when nothing was collected.",
+			InnerField: "trigger_empty",
+		},
+	},
+})
 
 var workspacePreferencesTopicsRetrieve = cli.Command{
 	Name:    "retrieve",
@@ -129,7 +162,58 @@ var workspacePreferencesTopicsArchive = cli.Command{
 	HideHelpCommand: true,
 }
 
-var workspacePreferencesTopicsReplace = cli.Command{
+var workspacePreferencesTopicsDeleteDigest = cli.Command{
+	Name:    "delete-digest",
+	Usage:   "Turn off a topic's digest, leaving the topic itself in place. The template is\nunlinked and the digest's schedules are removed along with their delivery rules.\nEquivalent to sending `digest: null` on a topic replace.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "section-id",
+			Required:  true,
+			PathParam: "section_id",
+		},
+		&requestflag.Flag[string]{
+			Name:      "topic-id",
+			Required:  true,
+			PathParam: "topic_id",
+		},
+	},
+	Action:          handleWorkspacePreferencesTopicsDeleteDigest,
+	HideHelpCommand: true,
+}
+
+var workspacePreferencesTopicsReleaseDigest = cli.Command{
+	Name:    "release-digest",
+	Usage:   "Send one recipient's held digest now, instead of waiting for its schedule. Use\nit to preview what a digest will look like, or to let someone flush their own.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "section-id",
+			Required:  true,
+			PathParam: "section_id",
+		},
+		&requestflag.Flag[string]{
+			Name:      "topic-id",
+			Required:  true,
+			PathParam: "topic_id",
+		},
+		&requestflag.Flag[string]{
+			Name:     "user-id",
+			Usage:    `The recipient whose digest to release. Required: there is no "release everyone on this topic" form, because a whole-schedule flush already has its own endpoint and a body-shaped difference between one recipient and all of them is too easy to get wrong.`,
+			Required: true,
+			BodyPath: "user_id",
+		},
+		&requestflag.Flag[string]{
+			Name:     "tenant-id",
+			Usage:    "The recipient's tenant, when they were sent to as part of one -- the same value returned as `tenant_id` on a digest instance and sent as `message.context.tenant_id`. It is part of the held digest's key, so a tenanted recipient cannot be found without it. Omit for an ordinary recipient.",
+			BodyPath: "tenant_id",
+		},
+	},
+	Action:          handleWorkspacePreferencesTopicsReleaseDigest,
+	HideHelpCommand: true,
+}
+
+var workspacePreferencesTopicsReplace = requestflag.WithInnerFlags(cli.Command{
 	Name:    "replace",
 	Usage:   "Replace a topic within a workspace preference. Full document replacement;\nmissing optional fields are cleared. Same 404 rules as GET.",
 	Suggest: true,
@@ -166,6 +250,11 @@ var workspacePreferencesTopicsReplace = cli.Command{
 			Usage:    "Optional description shown under the topic on the hosted preferences page. Omit to clear.",
 			BodyPath: "description",
 		},
+		&requestflag.Flag[map[string]any]{
+			Name:     "digest",
+			Usage:    "A topic's digest configuration: the template that renders it, the cadences it delivers on, and how collected events are retained.\n\nSend `null` for the whole object to turn a digest off, which unlinks the template and removes its schedules. There is no `enabled` flag, and `schedules: []` is rejected -- both states are un-deliverable rather than merely off.",
+			BodyPath: "digest",
+		},
 		&requestflag.Flag[*bool]{
 			Name:     "include-unsubscribe-header",
 			Usage:    "Whether to include a list-unsubscribe header on emails for this topic.",
@@ -184,7 +273,35 @@ var workspacePreferencesTopicsReplace = cli.Command{
 	},
 	Action:          handleWorkspacePreferencesTopicsReplace,
 	HideHelpCommand: true,
-}
+}, map[string][]requestflag.HasOuterFlag{
+	"digest": {
+		&requestflag.InnerFlag[[]map[string]any]{
+			Name:       "digest.schedules",
+			Usage:      "The cadences this digest delivers on. At least one is required: a digest with no schedule collects events into an instance that can never fire. Omitting the key on a replace leaves stored schedules untouched; sending `[]` is a `400`.",
+			InnerField: "schedules",
+		},
+		&requestflag.InnerFlag[string]{
+			Name:       "digest.template-id",
+			Usage:      "The notification template that renders the digest. A digest with no template collects nothing, so this is required.",
+			InnerField: "template_id",
+		},
+		&requestflag.InnerFlag[string]{
+			Name:       "digest.audience-id",
+			Usage:      "Optional audience the digest is scoped to.",
+			InnerField: "audience_id",
+		},
+		&requestflag.InnerFlag[[]map[string]any]{
+			Name:       "digest.categories",
+			Usage:      "Retention rules per category key. Defaults to a single `digest` category retaining `FIRST`.",
+			InnerField: "categories",
+		},
+		&requestflag.InnerFlag[bool]{
+			Name:       "digest.trigger-empty",
+			Usage:      "Whether to deliver the digest even when nothing was collected.",
+			InnerField: "trigger_empty",
+		},
+	},
+})
 
 func handleWorkspacePreferencesTopicsCreate(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
@@ -355,6 +472,74 @@ func handleWorkspacePreferencesTopicsArchive(ctx context.Context, cmd *cli.Comma
 	}
 
 	return client.WorkspacePreferences.Topics.Archive(
+		ctx,
+		cmd.Value("topic-id").(string),
+		params,
+		options...,
+	)
+}
+
+func handleWorkspacePreferencesTopicsDeleteDigest(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("topic-id") && len(unusedArgs) > 0 {
+		cmd.Set("topic-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		EmptyBody,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.WorkspacePreferenceTopicDeleteDigestParams{
+		SectionID: cmd.Value("section-id").(string),
+	}
+
+	return client.WorkspacePreferences.Topics.DeleteDigest(
+		ctx,
+		cmd.Value("topic-id").(string),
+		params,
+		options...,
+	)
+}
+
+func handleWorkspacePreferencesTopicsReleaseDigest(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("topic-id") && len(unusedArgs) > 0 {
+		cmd.Set("topic-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		ApplicationJSON,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.WorkspacePreferenceTopicReleaseDigestParams{
+		SectionID: cmd.Value("section-id").(string),
+	}
+
+	return client.WorkspacePreferences.Topics.ReleaseDigest(
 		ctx,
 		cmd.Value("topic-id").(string),
 		params,
