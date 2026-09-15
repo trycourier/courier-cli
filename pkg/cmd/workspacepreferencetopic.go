@@ -48,7 +48,7 @@ var workspacePreferencesTopicsCreate = requestflag.WithInnerFlags(cli.Command{
 		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "digest",
-			Usage:    "A topic's digest configuration: the template that renders it, the cadences it delivers on, and how collected events are retained.\n\nSend `null` for the whole object to turn a digest off, which unlinks the template and removes its schedules. There is no `enabled` flag, and `schedules: []` is rejected -- both states are un-deliverable rather than merely off.",
+			Usage:    "A topic's digest configuration: the template that renders it, the cadences it delivers on, and how collected events are retained.\n\nSend `null` for the whole object to turn a digest off, which unlinks the template and removes its schedules. There is no `enabled` flag, and `schedules: []` is rejected, because both states are un-deliverable rather than merely off.",
 			BodyPath: "digest",
 		},
 		&requestflag.Flag[*bool]{
@@ -252,7 +252,7 @@ var workspacePreferencesTopicsReplace = requestflag.WithInnerFlags(cli.Command{
 		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "digest",
-			Usage:    "A topic's digest configuration: the template that renders it, the cadences it delivers on, and how collected events are retained.\n\nSend `null` for the whole object to turn a digest off, which unlinks the template and removes its schedules. There is no `enabled` flag, and `schedules: []` is rejected -- both states are un-deliverable rather than merely off.",
+			Usage:    "A topic's digest configuration: the template that renders it, the cadences it delivers on, and how collected events are retained.\n\nSend `null` for the whole object to turn a digest off, which unlinks the template and removes its schedules. There is no `enabled` flag, and `schedules: []` is rejected, because both states are un-deliverable rather than merely off.",
 			BodyPath: "digest",
 		},
 		&requestflag.Flag[*bool]{
