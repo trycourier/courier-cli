@@ -48,7 +48,7 @@ var workspacePreferencesTopicsCreate = requestflag.WithInnerFlags(cli.Command{
 		},
 		&requestflag.Flag[map[string]any]{
 			Name:     "digest",
-			Usage:    "A topic's digest configuration: the template that renders it, the cadences it delivers on, and how collected events are retained.\n\nSend `null` for the whole object to turn a digest off, which unlinks the template and removes its schedules. There is no `enabled` flag, and `schedules: []` is rejected, because both states are un-deliverable rather than merely off.",
+			Usage:    "A topic's digest, as supplied when the topic itself is created: the template that renders it, the cadences it delivers on, and how collected events are retained.\n\nIdentical to `TopicDigestRequest`, which a replace uses, except that `schedules` is required — a topic being created has no stored schedules for an absent key to leave alone.\n\nSend `null` for the whole object to turn a digest off, which unlinks the template and removes its schedules. There is no `enabled` flag, and `schedules: []` is rejected, because both states are un-deliverable rather than merely off.",
 			BodyPath: "digest",
 		},
 		&requestflag.Flag[*bool]{
@@ -81,7 +81,7 @@ var workspacePreferencesTopicsCreate = requestflag.WithInnerFlags(cli.Command{
 	"digest": {
 		&requestflag.InnerFlag[[]map[string]any]{
 			Name:       "digest.schedules",
-			Usage:      "The cadences this digest delivers on. At least one is required: a digest with no schedule collects events into an instance that can never fire. Omitting the key on a replace leaves stored schedules untouched; sending `[]` is a `400`.",
+			Usage:      "The cadences this digest delivers on.\n\nThe array replaces the stored schedules wholesale, so a schedule you leave out of it is deleted along with its delivery rule. Omit the key entirely to leave the stored schedules untouched — useful for changing `template_id` or `categories` without restating every schedule.\n\nA digest must end up with at least one schedule, because one with none collects events into an instance that can never fire. So sending `[]` is always a `400`, and so is omitting the key on a topic that has no schedules stored yet.\n\nOn **create** the key is required outright: a topic being created has nothing stored to leave alone, and the topic row is written before its digest, so rejecting it any later would leave the topic behind and let a retry duplicate it.",
 			InnerField: "schedules",
 		},
 		&requestflag.InnerFlag[string]{
@@ -275,11 +275,6 @@ var workspacePreferencesTopicsReplace = requestflag.WithInnerFlags(cli.Command{
 	HideHelpCommand: true,
 }, map[string][]requestflag.HasOuterFlag{
 	"digest": {
-		&requestflag.InnerFlag[[]map[string]any]{
-			Name:       "digest.schedules",
-			Usage:      "The cadences this digest delivers on. At least one is required: a digest with no schedule collects events into an instance that can never fire. Omitting the key on a replace leaves stored schedules untouched; sending `[]` is a `400`.",
-			InnerField: "schedules",
-		},
 		&requestflag.InnerFlag[string]{
 			Name:       "digest.template-id",
 			Usage:      "The notification template that renders the digest. A digest with no template collects nothing, so this is required.",
@@ -294,6 +289,11 @@ var workspacePreferencesTopicsReplace = requestflag.WithInnerFlags(cli.Command{
 			Name:       "digest.categories",
 			Usage:      "Retention rules per category key. Defaults to a single `digest` category retaining `FIRST`.",
 			InnerField: "categories",
+		},
+		&requestflag.InnerFlag[[]map[string]any]{
+			Name:       "digest.schedules",
+			Usage:      "The cadences this digest delivers on.\n\nThe array replaces the stored schedules wholesale, so a schedule you leave out of it is deleted along with its delivery rule. Omit the key entirely to leave the stored schedules untouched — useful for changing `template_id` or `categories` without restating every schedule.\n\nA digest must end up with at least one schedule, because one with none collects events into an instance that can never fire. So sending `[]` is always a `400`, and so is omitting the key on a topic that has no schedules stored yet.\n\nOn **create** the key is required outright: a topic being created has nothing stored to leave alone, and the topic row is written before its digest, so rejecting it any later would leave the topic behind and let a retry duplicate it.",
+			InnerField: "schedules",
 		},
 		&requestflag.InnerFlag[bool]{
 			Name:       "digest.trigger-empty",
