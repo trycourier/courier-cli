@@ -194,7 +194,7 @@ func TestWorkspacePreferencesTopicsReplace(t *testing.T) {
 			"--name", "Product Updates",
 			"--allowed-preference", "[channel_preferences]",
 			"--description", "description",
-			"--digest", "{schedules: [{frequency: instant, day_of_month: 1, day_of_week: sunday, days_of_week: [sunday], disabled: true, is_default: true, schedule_id: schedule_id, time: time, timezone: timezone}], template_id: template_id, audience_id: audience_id, categories: [{category_key: category_key, limit: 1, retain: FIRST, sort_key: sort_key}], trigger_empty: true}",
+			"--digest", "{template_id: template_id, audience_id: audience_id, categories: [{category_key: category_key, limit: 1, retain: FIRST, sort_key: sort_key}], schedules: [{frequency: instant, day_of_month: 1, day_of_week: sunday, days_of_week: [sunday], disabled: true, is_default: true, schedule_id: schedule_id, time: time, timezone: timezone}], trigger_empty: true}",
 			"--include-unsubscribe-header=true",
 			"--routing-option", "[email, inbox]",
 			"--topic-data", "{foo: bar}",
@@ -216,10 +216,10 @@ func TestWorkspacePreferencesTopicsReplace(t *testing.T) {
 			"--name", "Product Updates",
 			"--allowed-preference", "[channel_preferences]",
 			"--description", "description",
-			"--digest.schedules", "[{frequency: instant, day_of_month: 1, day_of_week: sunday, days_of_week: [sunday], disabled: true, is_default: true, schedule_id: schedule_id, time: time, timezone: timezone}]",
 			"--digest.template-id", "template_id",
 			"--digest.audience-id", "audience_id",
 			"--digest.categories", "[{category_key: category_key, limit: 1, retain: FIRST, sort_key: sort_key}]",
+			"--digest.schedules", "[{frequency: instant, day_of_month: 1, day_of_week: sunday, days_of_week: [sunday], disabled: true, is_default: true, schedule_id: schedule_id, time: time, timezone: timezone}]",
 			"--digest.trigger-empty=true",
 			"--include-unsubscribe-header=true",
 			"--routing-option", "[email, inbox]",
@@ -236,6 +236,13 @@ func TestWorkspacePreferencesTopicsReplace(t *testing.T) {
 			"  - channel_preferences\n" +
 			"description: description\n" +
 			"digest:\n" +
+			"  template_id: template_id\n" +
+			"  audience_id: audience_id\n" +
+			"  categories:\n" +
+			"    - category_key: category_key\n" +
+			"      limit: 1\n" +
+			"      retain: FIRST\n" +
+			"      sort_key: sort_key\n" +
 			"  schedules:\n" +
 			"    - frequency: instant\n" +
 			"      day_of_month: 1\n" +
@@ -247,13 +254,6 @@ func TestWorkspacePreferencesTopicsReplace(t *testing.T) {
 			"      schedule_id: schedule_id\n" +
 			"      time: time\n" +
 			"      timezone: timezone\n" +
-			"  template_id: template_id\n" +
-			"  audience_id: audience_id\n" +
-			"  categories:\n" +
-			"    - category_key: category_key\n" +
-			"      limit: 1\n" +
-			"      retain: FIRST\n" +
-			"      sort_key: sort_key\n" +
 			"  trigger_empty: true\n" +
 			"include_unsubscribe_header: true\n" +
 			"routing_options:\n" +
