@@ -29,6 +29,11 @@ var journeysCreate = cli.Command{
 			Required: true,
 			BodyPath: "nodes",
 		},
+		&requestflag.Flag[string]{
+			Name:     "cancelation-token",
+			Usage:    "Cancelation token stored on the journey definition. It tags every run the journey creates so that `POST /journeys/cancel` can later cancel those runs by token. Accepts a templated string such as `order-{{data.order_id}}`, which is resolved per run when the journey is invoked. On a replace, omitting this field preserves any existing token and sending a value replaces it.",
+			BodyPath: "cancelation_token",
+		},
 		&requestflag.Flag[bool]{
 			Name:     "enabled",
 			BodyPath: "enabled",
@@ -232,6 +237,11 @@ var journeysReplace = cli.Command{
 			Name:     "node",
 			Required: true,
 			BodyPath: "nodes",
+		},
+		&requestflag.Flag[string]{
+			Name:     "cancelation-token",
+			Usage:    "Cancelation token stored on the journey definition. It tags every run the journey creates so that `POST /journeys/cancel` can later cancel those runs by token. Accepts a templated string such as `order-{{data.order_id}}`, which is resolved per run when the journey is invoked. On a replace, omitting this field preserves any existing token and sending a value replaces it.",
+			BodyPath: "cancelation_token",
 		},
 		&requestflag.Flag[bool]{
 			Name:     "enabled",

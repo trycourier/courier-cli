@@ -19,6 +19,7 @@ func TestJourneysCreate(t *testing.T) {
 			"--node", "{trigger_type: api-invoke, type: trigger, id: trigger-1, conditions: [string, string], schema: {foo: bar}}",
 			"--node", "{message: {context: {tenant_id: x}, data: {foo: bar}, delay: {until: x, timezone: x}, template: nt_01kx4h2jdafq8bk9aftxak4b40, to: {email_override: x, ms_teams: {channel_id: x, channel_name: x, email: x, service_url: x, team_id: x, tenant_id: x, user_id: x}, phone_number_override: x, slack: {channel: x, access_token: x}, user_id_override: x}}, type: send, id: send-1, channel: email, conditions: [string, string], experiment: {bucketingKey: x, variants: [{id: x, templateId: x, weight: 0, name: name}, {id: x, templateId: x, weight: 0, name: name}], id: x, name: name}}",
 			"--node", "{type: exit, id: exit-1}",
+			"--cancelation-token", "order-{{data.order_id}}",
 			"--enabled=true",
 			"--state", "DRAFT",
 			"--idempotency-key", "order-ORD-456-user-123",
@@ -84,6 +85,7 @@ func TestJourneysCreate(t *testing.T) {
 			"      name: name\n" +
 			"  - type: exit\n" +
 			"    id: exit-1\n" +
+			"cancelation_token: order-{{data.order_id}}\n" +
 			"enabled: true\n" +
 			"state: DRAFT\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
@@ -246,6 +248,7 @@ func TestJourneysReplace(t *testing.T) {
 			"--template-id", "x",
 			"--name", "Welcome Journey v2",
 			"--node", "{trigger_type: api-invoke, type: trigger, id: x, conditions: [string, string], schema: {foo: bar}}",
+			"--cancelation-token", "order-{{data.order_id}}",
 			"--enabled=true",
 			"--state", "DRAFT",
 		)
@@ -264,6 +267,7 @@ func TestJourneysReplace(t *testing.T) {
 			"      - string\n" +
 			"    schema:\n" +
 			"      foo: bar\n" +
+			"cancelation_token: order-{{data.order_id}}\n" +
 			"enabled: true\n" +
 			"state: DRAFT\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
