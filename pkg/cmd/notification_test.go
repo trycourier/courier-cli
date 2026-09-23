@@ -115,6 +115,7 @@ func TestNotificationsList(t *testing.T) {
 			"--cursor", "cursor",
 			"--event-id", "event_id",
 			"--notes=true",
+			"--tags", "tags",
 		)
 	})
 }
