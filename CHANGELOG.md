@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.8.0](https://github.com/trycourier/courier-cli/compare/v5.7.0...v5.8.0) (2026-09-23)
+
+
+### Features
+
+* **api:** publish the secondary and tertiary action styles [C-19961] ([#129](https://github.com/trycourier/courier-cli/issues/129)) ([11a082c](https://github.com/trycourier/courier-cli/commit/11a082c2570e9241b7ad3c47bc0b13f2ec1b98c9))
+
 ## [5.7.0](https://github.com/trycourier/courier-cli/compare/v5.6.0...v5.7.0) (2026-09-22)
 
 
