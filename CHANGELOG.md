@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.11.1](https://github.com/trycourier/courier-cli/compare/v5.11.0...v5.11.1) (2026-09-24)
+
+
+### Documentation
+
+* **api:** use OpenAPI 3.0 example on the preview schemas ([#137](https://github.com/trycourier/courier-cli/issues/137)) ([a462f16](https://github.com/trycourier/courier-cli/commit/a462f16ffb40d4ea2bcda6b645056beeb4e6dfce))
+
 ## [5.11.0](https://github.com/trycourier/courier-cli/compare/v5.10.0...v5.11.0) (2026-09-24)
 
 
