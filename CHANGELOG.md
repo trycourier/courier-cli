@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.11.0](https://github.com/trycourier/courier-cli/compare/v5.10.0...v5.11.0) (2026-09-24)
+
+
+### Features
+
+* **api:** cross-client previews endpoints ([#135](https://github.com/trycourier/courier-cli/issues/135)) ([bb79e24](https://github.com/trycourier/courier-cli/commit/bb79e24318d49781b0a363bcbfe76d2abc954a8a))
+
 ## [5.10.0](https://github.com/trycourier/courier-cli/compare/v5.9.0...v5.10.0) (2026-09-24)
 
 
