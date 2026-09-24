@@ -365,6 +365,7 @@ func init() {
 					&workspacePreferencesRetrieve,
 					&workspacePreferencesList,
 					&workspacePreferencesArchive,
+					&workspacePreferencesListLogs,
 					&workspacePreferencesPublish,
 					&workspacePreferencesReplace,
 				},

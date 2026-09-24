@@ -77,6 +77,22 @@ func TestWorkspacePreferencesArchive(t *testing.T) {
 	})
 }
 
+func TestWorkspacePreferencesListLogs(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t,
+			"--api-key", "string",
+			"workspace-preferences", "list-logs",
+			"--cursor", "cursor",
+			"--limit", "1",
+			"--since", "since",
+			"--tenant-id", "tenant_id",
+			"--user-id", "user_id",
+		)
+	})
+}
+
 func TestWorkspacePreferencesPublish(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {

@@ -92,6 +92,42 @@ var workspacePreferencesArchive = cli.Command{
 	HideHelpCommand: true,
 }
 
+var workspacePreferencesListLogs = cli.Command{
+	Name:    "list-logs",
+	Usage:   "Returns the history of preference changes in this environment, newest first.\nEach entry records one change a user made to one subscription topic, and carries\nthe value before it where there was one. Supply user_id to read a single user's\nhistory instead of the whole environment.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "cursor",
+			Usage:     "A cursor from a previous response's paging.cursor. Continue only while paging.more is true; the cursor is omitted on the last page.",
+			QueryPath: "cursor",
+		},
+		&requestflag.Flag[int64]{
+			Name:      "limit",
+			Usage:     "How many entries to return. Defaults to 25.",
+			Default:   25,
+			QueryPath: "limit",
+		},
+		&requestflag.Flag[string]{
+			Name:      "since",
+			Usage:     "Return only changes at or after this time, as an ISO-8601 date or date-time. A date alone is read as the start of that day in UTC.",
+			QueryPath: "since",
+		},
+		&requestflag.Flag[string]{
+			Name:      "tenant-id",
+			Usage:     "Narrow to the changes this user made in one tenant context. Only valid together with user_id.",
+			QueryPath: "tenant_id",
+		},
+		&requestflag.Flag[string]{
+			Name:      "user-id",
+			Usage:     "Return only this user's changes. Omit it to read every change in the environment.",
+			QueryPath: "user_id",
+		},
+	},
+	Action:          handleWorkspacePreferencesListLogs,
+	HideHelpCommand: true,
+}
+
 var workspacePreferencesPublish = cli.Command{
 	Name:    "publish",
 	Usage:   "Publishes the workspace preference page, snapshotting every preference and\ntopic, and returns the page id and a preview URL.",
@@ -306,6 +342,47 @@ func handleWorkspacePreferencesArchive(ctx context.Context, cmd *cli.Command) er
 	}
 
 	return client.WorkspacePreferences.Archive(ctx, cmd.Value("section-id").(string), options...)
+}
+
+func handleWorkspacePreferencesListLogs(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		EmptyBody,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.WorkspacePreferenceListLogsParams{}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.WorkspacePreferences.ListLogs(ctx, params, options...)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "workspace-preferences list-logs",
+		Transform:      transform,
+	})
 }
 
 func handleWorkspacePreferencesPublish(ctx context.Context, cmd *cli.Command) error {
