@@ -229,6 +229,19 @@ func init() {
 				},
 			},
 			{
+				Name:     "previews",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&previewsArchiveDeviceSet,
+					&previewsCreateDeviceSet,
+					&previewsListDeviceSets,
+					&previewsListDevices,
+					&previewsRetrieveDeviceSet,
+					&previewsUpdateDeviceSet,
+				},
+			},
+			{
 				Name:     "bulk",
 				Category: "API RESOURCE",
 				Suggest:  true,
@@ -341,6 +354,16 @@ func init() {
 					&notificationsChecksUpdate,
 					&notificationsChecksList,
 					&notificationsChecksDelete,
+				},
+			},
+			{
+				Name:     "notifications:previews:runs",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&notificationsPreviewsRunsCreate,
+					&notificationsPreviewsRunsRetrieve,
+					&notificationsPreviewsRunsList,
 				},
 			},
 			{
