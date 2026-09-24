@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.10.0](https://github.com/trycourier/courier-cli/compare/v5.9.0...v5.10.0) (2026-09-24)
+
+
+### Features
+
+* **api:** add GET /preferences/logs [C-21018] ([bba0c18](https://github.com/trycourier/courier-cli/commit/bba0c185580b4f39f0fb67fb3ef40ecaf5526918))
+
 ## [5.9.0](https://github.com/trycourier/courier-cli/compare/v5.8.0...v5.9.0) (2026-09-23)
 
 
