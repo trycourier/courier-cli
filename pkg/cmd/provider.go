@@ -134,6 +134,41 @@ var providersDelete = cli.Command{
 	HideHelpCommand: true,
 }
 
+var providersPatch = cli.Command{
+	Name:    "patch",
+	Usage:   "Updates part of a provider's configuration and keeps every field you omit.\nSettings merge into the stored settings key by key, and a setting sent as null\nis removed.",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "id",
+			Required:  true,
+			PathParam: "id",
+		},
+		&requestflag.Flag[*string]{
+			Name:     "alias",
+			Usage:    "Updated alias. Set to null to clear it.",
+			BodyPath: "alias",
+		},
+		&requestflag.Flag[string]{
+			Name:     "provider",
+			Usage:    "The provider key identifying the type. Optional. When sent, it must match the stored provider, otherwise the request returns a 400.",
+			BodyPath: "provider",
+		},
+		&requestflag.Flag[map[string]any]{
+			Name:     "settings",
+			Usage:    "Provider-specific settings (snake_case keys) to merge into the stored settings, using JSON Merge Patch (RFC 7396). Each key you send replaces the stored value, a key set to null is removed, nested objects merge recursively, and arrays replace the stored value. Keys you omit keep their stored values. Set `rate_limit` to null to remove this configuration's send rate limit.",
+			BodyPath: "settings",
+		},
+		&requestflag.Flag[string]{
+			Name:     "title",
+			Usage:    "Updated display title.",
+			BodyPath: "title",
+		},
+	},
+	Action:          handleProvidersPatch,
+	HideHelpCommand: true,
+}
+
 func handleProvidersCreate(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
@@ -330,4 +365,53 @@ func handleProvidersDelete(ctx context.Context, cmd *cli.Command) error {
 	}
 
 	return client.Providers.Delete(ctx, cmd.Value("id").(string), options...)
+}
+
+func handleProvidersPatch(ctx context.Context, cmd *cli.Command) error {
+	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("id") && len(unusedArgs) > 0 {
+		cmd.Set("id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		ApplicationJSON,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := courier.ProviderPatchParams{}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Providers.Patch(
+		ctx,
+		cmd.Value("id").(string),
+		params,
+		options...,
+	)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "providers patch",
+		Transform:      transform,
+	})
 }

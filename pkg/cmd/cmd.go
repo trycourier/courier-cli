@@ -114,6 +114,7 @@ func init() {
 					&providersUpdate,
 					&providersList,
 					&providersDelete,
+					&providersPatch,
 				},
 			},
 			{

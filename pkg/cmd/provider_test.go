@@ -109,3 +109,35 @@ func TestProvidersDelete(t *testing.T) {
 		)
 	})
 }
+
+func TestProvidersPatch(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t,
+			"--api-key", "string",
+			"providers", "patch",
+			"--id", "id",
+			"--alias", "alias",
+			"--provider", "provider",
+			"--settings", "{api_key: bar}",
+			"--title", "Production SendGrid",
+		)
+	})
+
+	t.Run("piping data", func(t *testing.T) {
+		// Test piping YAML data over stdin
+		pipeData := []byte("" +
+			"alias: alias\n" +
+			"provider: provider\n" +
+			"settings:\n" +
+			"  api_key: bar\n" +
+			"title: Production SendGrid\n")
+		mocktest.TestRunMockTestWithPipeAndFlags(
+			t, pipeData,
+			"--api-key", "string",
+			"providers", "patch",
+			"--id", "id",
+		)
+	})
+}
