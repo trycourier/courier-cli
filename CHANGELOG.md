@@ -1,5 +1,19 @@
 # Changelog
 
+## [5.12.0](https://github.com/trycourier/courier-cli/compare/v5.11.1...v5.12.0) (2026-10-21)
+
+
+### Features
+
+* **api:** add PATCH /providers/{id} for partial provider updates [C-21790] ([#143](https://github.com/trycourier/courier-cli/issues/143)) ([07c52ef](https://github.com/trycourier/courier-cli/commit/07c52ef81543c417d48968a643132d4451672ec0))
+* **api:** expose email From, Reply-to, CC and BCC on notification templates [C-21709] ([#142](https://github.com/trycourier/courier-cli/issues/142)) ([d824f54](https://github.com/trycourier/courier-cli/commit/d824f54d7adaae2689a6defb3a42bb5f52af37a3))
+
+
+### Documentation
+
+* **api:** describe the AI node model constraint [C-21614] ([#139](https://github.com/trycourier/courier-cli/issues/139)) ([92f257c](https://github.com/trycourier/courier-cli/commit/92f257c4a8920c509e5a0d43b0c2b3689a7d1558))
+* **api:** document provider settings.rate_limit [C-21732] ([#141](https://github.com/trycourier/courier-cli/issues/141)) ([c7d04cd](https://github.com/trycourier/courier-cli/commit/c7d04cdf06c786072a4e9317e3775912a0544a3e))
+
 ## [5.11.1](https://github.com/trycourier/courier-cli/compare/v5.11.0...v5.11.1) (2026-09-24)
 
 
