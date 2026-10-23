@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.13.0](https://github.com/trycourier/courier-cli/compare/v5.12.0...v5.13.0) (2026-10-23)
+
+
+### Features
+
+* **api:** journey run steps return error and skip_reason ([#144](https://github.com/trycourier/courier-cli/issues/144)) ([2ca0f33](https://github.com/trycourier/courier-cli/commit/2ca0f33e90e25f044b3667bbc761dc18dbae8b17))
+
+
+### Chores
+
+* **api:** regenerate SDK ([#146](https://github.com/trycourier/courier-cli/issues/146)) ([10966b7](https://github.com/trycourier/courier-cli/commit/10966b785fde81a3b95499e5c13cc84ca59daa7e))
+
 ## [5.12.0](https://github.com/trycourier/courier-cli/compare/v5.11.1...v5.12.0) (2026-10-21)
 
 
