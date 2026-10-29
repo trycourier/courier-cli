@@ -1,5 +1,16 @@
 # Changelog
 
+## [6.0.0](https://github.com/trycourier/courier-cli/compare/v5.13.0...v6.0.0) (2026-10-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* **api:** PATCH /providers/{id} takes JSON Patch operations [C-22022] ([#147](https://github.com/trycourier/courier-cli/issues/147))
+
+### Features
+
+* **api:** PATCH /providers/{id} takes JSON Patch operations [C-22022] ([#147](https://github.com/trycourier/courier-cli/issues/147)) ([23449e3](https://github.com/trycourier/courier-cli/commit/23449e34ae49346cfc66ddea3787b8e173ee769e))
+
 ## [5.13.0](https://github.com/trycourier/courier-cli/compare/v5.12.0...v5.13.0) (2026-10-23)
 
 
