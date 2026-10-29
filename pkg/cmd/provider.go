@@ -134,9 +134,9 @@ var providersDelete = cli.Command{
 	HideHelpCommand: true,
 }
 
-var providersPatch = cli.Command{
+var providersPatch = requestflag.WithInnerFlags(cli.Command{
 	Name:    "patch",
-	Usage:   "Updates part of a provider's configuration and keeps every field you omit.\nSettings merge into the stored settings key by key, and a setting sent as null\nis removed.",
+	Usage:   "Applies JSON Patch (RFC 6902) operations to a provider configuration and keeps\nevery field the operations don't touch. Paths address the provider as it is\nreturned: /title, /alias and /settings/<key>. The operations apply in order, and\nif one fails, nothing is saved.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -144,30 +144,39 @@ var providersPatch = cli.Command{
 			Required:  true,
 			PathParam: "id",
 		},
-		&requestflag.Flag[*string]{
-			Name:     "alias",
-			Usage:    "Updated alias. Set to null to clear it.",
-			BodyPath: "alias",
-		},
-		&requestflag.Flag[string]{
-			Name:     "provider",
-			Usage:    "The provider key identifying the type. Optional. When sent, it must match the stored provider, otherwise the request returns a 400.",
-			BodyPath: "provider",
-		},
-		&requestflag.Flag[map[string]any]{
-			Name:     "settings",
-			Usage:    "Provider-specific settings (snake_case keys) to merge into the stored settings, using JSON Merge Patch (RFC 7396). Each key you send replaces the stored value, a key set to null is removed, nested objects merge recursively, and arrays replace the stored value. Keys you omit keep their stored values. Set `rate_limit` to null to remove this configuration's send rate limit.",
-			BodyPath: "settings",
-		},
-		&requestflag.Flag[string]{
-			Name:     "title",
-			Usage:    "Updated display title.",
-			BodyPath: "title",
+		&requestflag.Flag[[]map[string]any]{
+			Name:     "patch",
+			Usage:    "Operations to apply, in order. Paths address the provider as it is returned: `/title`, `/alias`, `/provider`, and `/settings/<key>` with the snake_case setting keys, including nested paths such as `/settings/rate_limit/rate`. If any operation fails, for example a `test`, nothing is saved and the request returns a 400. The result can't change `provider`, remove `title`, or add other top-level fields. Removing `/alias` clears it.",
+			Required: true,
+			BodyPath: "patch",
 		},
 	},
 	Action:          handleProvidersPatch,
 	HideHelpCommand: true,
-}
+}, map[string][]requestflag.HasOuterFlag{
+	"patch": {
+		&requestflag.InnerFlag[string]{
+			Name:       "patch.op",
+			Usage:      "The operation to perform.",
+			InnerField: "op",
+		},
+		&requestflag.InnerFlag[string]{
+			Name:       "patch.path",
+			Usage:      "JSON Pointer to the field to operate on, such as `/settings/api_key`.",
+			InnerField: "path",
+		},
+		&requestflag.InnerFlag[string]{
+			Name:       "patch.from",
+			Usage:      "JSON Pointer to the source field for `move` and `copy`.",
+			InnerField: "from",
+		},
+		&requestflag.InnerFlag[any]{
+			Name:       "patch.value",
+			Usage:      "The value for `add`, `replace` and `test`. Any JSON value.",
+			InnerField: "value",
+		},
+	},
+})
 
 func handleProvidersCreate(ctx context.Context, cmd *cli.Command) error {
 	client := courier.NewClient(getDefaultRequestOptions(cmd)...)
