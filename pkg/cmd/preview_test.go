@@ -5,7 +5,7 @@ package cmd
 import (
 	"testing"
 
-	"github.com/trycourier/courier-cli/v5/internal/mocktest"
+	"github.com/trycourier/courier-cli/v6/internal/mocktest"
 )
 
 func TestPreviewsArchiveDeviceSet(t *testing.T) {

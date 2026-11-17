@@ -5,7 +5,7 @@ package cmd
 import (
 	"testing"
 
-	"github.com/trycourier/courier-cli/v5/internal/mocktest"
+	"github.com/trycourier/courier-cli/v6/internal/mocktest"
 )
 
 func TestAuditEventsRetrieve(t *testing.T) {

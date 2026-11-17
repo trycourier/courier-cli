@@ -1,4 +1,4 @@
-module github.com/trycourier/courier-cli/v5
+module github.com/trycourier/courier-cli/v6
 
 go 1.25
 

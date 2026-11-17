@@ -12,8 +12,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/trycourier/courier-cli/v5/internal/autocomplete"
-	"github.com/trycourier/courier-cli/v5/internal/requestflag"
+	"github.com/trycourier/courier-cli/v6/internal/autocomplete"
+	"github.com/trycourier/courier-cli/v6/internal/requestflag"
 	docs "github.com/urfave/cli-docs/v3"
 	"github.com/urfave/cli/v3"
 )
