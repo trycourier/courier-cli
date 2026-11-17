@@ -16,7 +16,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/trycourier/courier-cli/v5/internal/jsonview"
+	"github.com/trycourier/courier-cli/v6/internal/jsonview"
 	"github.com/trycourier/courier-go/v4/option"
 
 	"github.com/charmbracelet/x/term"
