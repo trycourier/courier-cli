@@ -276,6 +276,14 @@ func init() {
 				},
 			},
 			{
+				Name:     "feedback",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&feedbackCreate,
+				},
+			},
+			{
 				Name:     "inbound",
 				Category: "API RESOURCE",
 				Suggest:  true,
