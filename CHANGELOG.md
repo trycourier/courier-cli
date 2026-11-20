@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.1.1](https://github.com/trycourier/courier-cli/compare/v6.1.0...v6.1.1) (2026-11-20)
+
+
+### Chores
+
+* add context7.json to claim the Context7 library ([#156](https://github.com/trycourier/courier-cli/issues/156)) ([3b721fa](https://github.com/trycourier/courier-cli/commit/3b721faaf10a734df2f2b117fa87c4b67b0f3ab2))
+
 ## [6.1.0](https://github.com/trycourier/courier-cli/compare/v6.0.1...v6.1.0) (2026-11-19)
 
 
