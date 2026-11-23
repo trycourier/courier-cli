@@ -203,7 +203,7 @@ func TestJourneysTemplatesPutContent(t *testing.T) {
 			"journeys:templates", "put-content",
 			"--template-id", "x",
 			"--notification-id", "x",
-			"--content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, elements: [{channels: [string], if: if, loop: loop, ref: ref, title: Welcome!, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: 'Hello {{data.name}}.', font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}], version: '2022-01-01'}",
+			"--content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, elements: [{channels: [string], if: if, loop: loop, ref: ref, title: Welcome!, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: 'Hello {{data.name}}.', font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}], scope: default, version: '2022-01-01'}",
 			"--state", "DRAFT",
 		)
 	})
@@ -220,6 +220,7 @@ func TestJourneysTemplatesPutContent(t *testing.T) {
 			"--template-id", "x",
 			"--notification-id", "x",
 			"--content.elements", "[{channels: [string], if: if, loop: loop, ref: ref, channel: email, elements: [{channels: [string], if: if, loop: loop, ref: ref, title: Welcome!, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: 'Hello {{data.name}}.', font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}]",
+			"--content.scope", "default",
 			"--content.version", "2022-01-01",
 			"--state", "DRAFT",
 		)
@@ -270,6 +271,7 @@ func TestJourneysTemplatesPutContent(t *testing.T) {
 			"      raw:\n" +
 			"        foo: bar\n" +
 			"      type: channel\n" +
+			"  scope: default\n" +
 			"  version: '2022-01-01'\n" +
 			"state: DRAFT\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
