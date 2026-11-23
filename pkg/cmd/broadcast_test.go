@@ -127,7 +127,7 @@ func TestBroadcastsPutContent(t *testing.T) {
 			"--api-key", "string",
 			"broadcasts", "put-content",
 			"--broadcast-id", "broadcastId",
-			"--content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, title: Spring Sale is here, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: Hello! Check out our spring sale., font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], version: '2022-01-01'}",
+			"--content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, title: Spring Sale is here, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: Hello! Check out our spring sale., font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], scope: default, version: '2022-01-01'}",
 			"--state", "DRAFT",
 		)
 	})
@@ -143,6 +143,7 @@ func TestBroadcastsPutContent(t *testing.T) {
 			"broadcasts", "put-content",
 			"--broadcast-id", "broadcastId",
 			"--content.elements", "[{channels: [string], if: if, loop: loop, ref: ref, title: Spring Sale is here, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: Hello! Check out our spring sale., font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}]",
+			"--content.scope", "default",
 			"--content.version", "2022-01-01",
 			"--state", "DRAFT",
 		)
@@ -180,6 +181,7 @@ func TestBroadcastsPutContent(t *testing.T) {
 			"      text_style: text\n" +
 			"      underline: underline\n" +
 			"      type: text\n" +
+			"  scope: default\n" +
 			"  version: '2022-01-01'\n" +
 			"state: DRAFT\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
