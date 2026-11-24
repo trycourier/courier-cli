@@ -16,7 +16,7 @@ func TestNotificationsCreate(t *testing.T) {
 			t,
 			"--api-key", "string",
 			"notifications", "create",
-			"--notification", "{brand: {id: bnd_01kx4mrd0pfzw8wt7pn7p2fzag}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, elements: [{channels: [string], if: if, loop: loop, ref: ref, title: Welcome!, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: 'Hello {{data.name}}.', font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}], version: '2022-01-01', scope: default}, name: Welcome Email, routing: {strategy_id: rs_01kx4h2jdafq8bk9amzvy6hbv0}, subscription: {topic_id: pt_01kx4h2jdafq8bk9a26x0kvd1t}, tags: [onboarding, welcome], email: {bcc: [string], cc: [string], from: from, reply_to: reply_to}, alias: welcome}",
+			"--notification", "{brand: {id: bnd_01kx4mrd0pfzw8wt7pn7p2fzag}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, elements: [{channels: [string], if: if, loop: loop, ref: ref, title: Welcome!, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: 'Hello {{data.name}}.', font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}], version: '2022-01-01'}, name: Welcome Email, routing: {strategy_id: rs_01kx4h2jdafq8bk9amzvy6hbv0}, subscription: {topic_id: pt_01kx4h2jdafq8bk9a26x0kvd1t}, tags: [onboarding, welcome], email: {bcc: [string], cc: [string], from: from, reply_to: reply_to}, alias: welcome}",
 			"--state", "DRAFT",
 			"--idempotency-key", "order-ORD-456-user-123",
 			"--x-idempotency-expiration", "1785312000",
@@ -72,7 +72,6 @@ func TestNotificationsCreate(t *testing.T) {
 			"          foo: bar\n" +
 			"        type: channel\n" +
 			"    version: '2022-01-01'\n" +
-			"    scope: default\n" +
 			"  name: Welcome Email\n" +
 			"  routing:\n" +
 			"    strategy_id: rs_01kx4h2jdafq8bk9amzvy6hbv0\n" +
@@ -206,7 +205,7 @@ func TestNotificationsPutContent(t *testing.T) {
 			"--api-key", "string",
 			"notifications", "put-content",
 			"--id", "id",
-			"--content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, elements: [{channels: [string], if: if, loop: loop, ref: ref, title: Welcome!, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: 'Hello {{data.name}}.', font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}], scope: default, version: '2022-01-01'}",
+			"--content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, elements: [{channels: [string], if: if, loop: loop, ref: ref, title: Welcome!, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: 'Hello {{data.name}}.', font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}], version: '2022-01-01'}",
 			"--state", "DRAFT",
 		)
 	})
@@ -222,7 +221,6 @@ func TestNotificationsPutContent(t *testing.T) {
 			"notifications", "put-content",
 			"--id", "id",
 			"--content.elements", "[{channels: [string], if: if, loop: loop, ref: ref, channel: email, elements: [{channels: [string], if: if, loop: loop, ref: ref, title: Welcome!, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: 'Hello {{data.name}}.', font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}]",
-			"--content.scope", "default",
 			"--content.version", "2022-01-01",
 			"--state", "DRAFT",
 		)
@@ -273,7 +271,6 @@ func TestNotificationsPutContent(t *testing.T) {
 			"      raw:\n" +
 			"        foo: bar\n" +
 			"      type: channel\n" +
-			"  scope: default\n" +
 			"  version: '2022-01-01'\n" +
 			"state: DRAFT\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
@@ -383,7 +380,7 @@ func TestNotificationsReplace(t *testing.T) {
 			"--api-key", "string",
 			"notifications", "replace",
 			"--id", "id",
-			"--notification", "{brand: {id: id}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, elements: [{channels: [string], if: if, loop: loop, ref: ref, title: Updated, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: Updated content., font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}], version: '2022-01-01', scope: default}, name: Updated Name, routing: {strategy_id: strategy_id}, subscription: {topic_id: topic_id}, tags: [updated], email: {bcc: [string], cc: [string], from: from, reply_to: reply_to}, alias: alias}",
+			"--notification", "{brand: {id: id}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, elements: [{channels: [string], if: if, loop: loop, ref: ref, title: Updated, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: Updated content., font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}], version: '2022-01-01'}, name: Updated Name, routing: {strategy_id: strategy_id}, subscription: {topic_id: topic_id}, tags: [updated], email: {bcc: [string], cc: [string], from: from, reply_to: reply_to}, alias: alias}",
 			"--state", "PUBLISHED",
 		)
 	})
@@ -437,7 +434,6 @@ func TestNotificationsReplace(t *testing.T) {
 			"          foo: bar\n" +
 			"        type: channel\n" +
 			"    version: '2022-01-01'\n" +
-			"    scope: default\n" +
 			"  name: Updated Name\n" +
 			"  routing:\n" +
 			"    strategy_id: strategy_id\n" +
