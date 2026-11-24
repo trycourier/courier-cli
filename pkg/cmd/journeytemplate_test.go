@@ -18,7 +18,7 @@ func TestJourneysTemplatesCreate(t *testing.T) {
 			"journeys:templates", "create",
 			"--template-id", "x",
 			"--channel", "email",
-			"--notification", "{brand: {id: id}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, elements: [{channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: Welcome!, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}], version: '2022-01-01', scope: default}, name: Welcome email, subscription: {topic_id: topic_id}, tags: [string]}",
+			"--notification", "{brand: {id: id}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, elements: [{channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: Welcome!, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}], version: '2022-01-01'}, name: Welcome email, subscription: {topic_id: topic_id}, tags: [string]}",
 			"--provider-key", "x",
 			"--state", "state",
 			"--idempotency-key", "order-ORD-456-user-123",
@@ -38,7 +38,7 @@ func TestJourneysTemplatesCreate(t *testing.T) {
 			"--template-id", "x",
 			"--channel", "email",
 			"--notification.brand", "{id: id}",
-			"--notification.content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, elements: [{channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: Welcome!, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}], version: '2022-01-01', scope: default}",
+			"--notification.content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, elements: [{channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: Welcome!, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}], version: '2022-01-01'}",
 			"--notification.name", "Welcome email",
 			"--notification.subscription", "{topic_id: topic_id}",
 			"--notification.tags", "[string]",
@@ -92,7 +92,6 @@ func TestJourneysTemplatesCreate(t *testing.T) {
 			"          foo: bar\n" +
 			"        type: channel\n" +
 			"    version: '2022-01-01'\n" +
-			"    scope: default\n" +
 			"  name: Welcome email\n" +
 			"  subscription:\n" +
 			"    topic_id: topic_id\n" +
@@ -203,7 +202,7 @@ func TestJourneysTemplatesPutContent(t *testing.T) {
 			"journeys:templates", "put-content",
 			"--template-id", "x",
 			"--notification-id", "x",
-			"--content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, elements: [{channels: [string], if: if, loop: loop, ref: ref, title: Welcome!, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: 'Hello {{data.name}}.', font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}], scope: default, version: '2022-01-01'}",
+			"--content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, channel: email, elements: [{channels: [string], if: if, loop: loop, ref: ref, title: Welcome!, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: 'Hello {{data.name}}.', font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}], version: '2022-01-01'}",
 			"--state", "DRAFT",
 		)
 	})
@@ -220,7 +219,6 @@ func TestJourneysTemplatesPutContent(t *testing.T) {
 			"--template-id", "x",
 			"--notification-id", "x",
 			"--content.elements", "[{channels: [string], if: if, loop: loop, ref: ref, channel: email, elements: [{channels: [string], if: if, loop: loop, ref: ref, title: Welcome!, type: meta}, {channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: 'Hello {{data.name}}.', font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], font_size: font_size, line_height: line_height, padding: padding, raw: {foo: bar}, type: channel}]",
-			"--content.scope", "default",
 			"--content.version", "2022-01-01",
 			"--state", "DRAFT",
 		)
@@ -271,7 +269,6 @@ func TestJourneysTemplatesPutContent(t *testing.T) {
 			"      raw:\n" +
 			"        foo: bar\n" +
 			"      type: channel\n" +
-			"  scope: default\n" +
 			"  version: '2022-01-01'\n" +
 			"state: DRAFT\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
@@ -345,7 +342,7 @@ func TestJourneysTemplatesReplace(t *testing.T) {
 			"journeys:templates", "replace",
 			"--template-id", "x",
 			"--notification-id", "x",
-			"--notification", "{brand: {id: id}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: content, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], version: '2022-01-01', scope: default}, name: name, subscription: {topic_id: topic_id}, tags: [string]}",
+			"--notification", "{brand: {id: id}, content: {elements: [{channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: content, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], version: '2022-01-01'}, name: name, subscription: {topic_id: topic_id}, tags: [string]}",
 			"--state", "state",
 		)
 	})
@@ -362,7 +359,7 @@ func TestJourneysTemplatesReplace(t *testing.T) {
 			"--template-id", "x",
 			"--notification-id", "x",
 			"--notification.brand", "{id: id}",
-			"--notification.content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: content, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], version: '2022-01-01', scope: default}",
+			"--notification.content", "{elements: [{channels: [string], if: if, loop: loop, ref: ref, align: left, bold: bold, color: color, content: content, font_size: font_size, format: markdown, italic: italic, line_height: line_height, locales: {foo: {content: content}}, strikethrough: strikethrough, text_style: text, underline: underline, type: text}], version: '2022-01-01'}",
 			"--notification.name", "name",
 			"--notification.subscription", "{topic_id: topic_id}",
 			"--notification.tags", "[string]",
@@ -399,7 +396,6 @@ func TestJourneysTemplatesReplace(t *testing.T) {
 			"        underline: underline\n" +
 			"        type: text\n" +
 			"    version: '2022-01-01'\n" +
-			"    scope: default\n" +
 			"  name: name\n" +
 			"  subscription:\n" +
 			"    topic_id: topic_id\n" +
