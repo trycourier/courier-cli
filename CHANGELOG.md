@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.3.0](https://github.com/trycourier/courier-cli/compare/v6.2.0...v6.3.0) (2026-11-24)
+
+
+### Features
+
+* **api:** remove `scope` from v2 notification, journey and broadcast template content ([#159](https://github.com/trycourier/courier-cli/issues/159)) ([42a0bfe](https://github.com/trycourier/courier-cli/commit/42a0bfe8fffd3766e29227eefa7270e7cb8c5b9b))
+
 ## [6.2.0](https://github.com/trycourier/courier-cli/compare/v6.1.0...v6.2.0) (2026-11-23)
 
 
