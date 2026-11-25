@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.3.1](https://github.com/trycourier/courier-cli/compare/v6.3.0...v6.3.1) (2026-11-25)
+
+
+### Chores
+
+* **api:** regenerate SDK ([#161](https://github.com/trycourier/courier-cli/issues/161)) ([ae0e2a0](https://github.com/trycourier/courier-cli/commit/ae0e2a04e0d17c21ddb7156feae239f25fb64533))
+
 ## [6.3.0](https://github.com/trycourier/courier-cli/compare/v6.2.0...v6.3.0) (2026-11-24)
 
 
